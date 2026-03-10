@@ -12,7 +12,14 @@ const ENDPOINT = '/testimonials';
 export const testimonialService = {
   async getAll(params?: QueryParams) {
     const response = await apiClient.get<StrapiListResponse<Testimonial>>(ENDPOINT, params);
-    return response.data;
+    // Strapi v5 returns flat data
+    return response.data.data.map((item: any) => ({
+      quote: item.content || '',
+      clientName: item.name || 'Anonymous',
+      company: item.company || '',
+      rating: item.rating || 5,
+      featured: item.featured || false,
+    })).filter((item: any) => item.quote);
   },
 
   async getFeatured(limit = 3) {
@@ -21,6 +28,13 @@ export const testimonialService = {
       pagination: { limit },
       sort: ['order:asc'],
     });
-    return response.data;
+    // Strapi v5 returns flat data
+    return response.data.data.map((item: any) => ({
+      quote: item.content || '',
+      clientName: item.name || 'Anonymous',
+      company: item.company || '',
+      rating: item.rating || 5,
+      featured: item.featured || false,
+    })).filter((item: any) => item.quote);
   },
 };

@@ -1,0 +1,156 @@
+/**
+ * Projects Section
+ * Display featured projects from Strapi CMS
+ */
+
+import Image from 'next/image';
+import Link from 'next/link';
+import { Container } from '@/components/container';
+import { cn } from '@/lib/utils';
+
+// API Project interface (matches Strapi response)
+export interface ApiProject {
+  title: string;
+  slug: string;
+  description: string; // Plain text extracted from blocks
+  featured?: boolean;
+}
+
+interface Project {
+  title: string;
+  client: string;
+  description: string;
+  image: string;
+  tags: string[];
+  href: string;
+}
+
+interface ProjectsSectionProps {
+  title?: string;
+  subtitle?: string;
+  projects?: ApiProject[];
+}
+
+// Remove unused Project interface and default constants
+// const defaultImage = '/images/project-1.jpg';
+// const defaultTags = ['Next.js', 'React', 'TypeScript'];
+
+export function ProjectsSection({
+  title = 'Featured Projects',
+  subtitle = 'See how we have helped businesses transform their digital presence with tailored solutions.',
+  projects = [],
+}: ProjectsSectionProps) {
+  // Don't render if no projects
+  if (!projects || projects.length === 0) {
+    return null;
+  }
+
+  // Filter featured projects or take first 3
+  const displayProjects = projects.filter((p) => p.featured).length > 0
+    ? projects.filter((p) => p.featured)
+    : projects.slice(0, 3);
+  return (
+    <section className={cn('py-20 md:py-28', 'bg-[#F9FAFB]', 'dark:bg-[#0C0C0C]')}>
+      <Container>
+        {/* Section Header */}
+        <div className="mb-16 flex flex-col items-start justify-between gap-4 md:flex-row md:items-end">
+          <div>
+            <span className="text-sm font-semibold tracking-wider text-[#C9A227] uppercase">
+              Portfolio
+            </span>
+            <h2
+              className={cn(
+                'mt-3 text-3xl font-bold tracking-tight md:text-4xl',
+                'text-[#0F2A44]',
+                'dark:text-white'
+              )}
+            >
+              {title}
+            </h2>
+            <p className={cn('mt-4 max-w-xl text-lg', 'text-[#6B7280]', 'dark:text-[#9CA3AF]')}>
+              {subtitle}
+            </p>
+          </div>
+          <Link
+            href="/projects"
+            className={cn(
+              'inline-flex items-center text-sm font-medium',
+              'text-[#0F2A44] hover:text-[#C9A227]',
+              'dark:text-[#E5E7EB] dark:hover:text-[#C9A227]'
+            )}
+          >
+            View All Projects
+            <ArrowIcon className="ml-2 h-4 w-4" />
+          </Link>
+        </div>
+
+        {/* Projects Grid */}
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {displayProjects.map((project, index) => (
+            <ProjectCard key={project.slug} project={project} priority={index === 0} />
+          ))}
+        </div>
+      </Container>
+    </section>
+  );
+}
+
+function ProjectCard({ project, priority }: { project: ApiProject; priority: boolean }) {
+  const href = `/projects/${project.slug}`;
+  
+  return (
+    <Link href={href} className="group block">
+      <article
+        className={cn(
+          'overflow-hidden rounded-xl transition-all duration-300',
+          'bg-white shadow-sm hover:shadow-xl',
+          'dark:bg-[#1F2937]'
+        )}
+      >
+        {/* Image Placeholder */}
+        <div className="relative aspect-[16/10] overflow-hidden bg-[#0F2A44]">
+          <div className="flex h-full items-center justify-center text-white">
+            <span className="text-lg font-semibold">{project.title}</span>
+          </div>
+          {/* Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0F2A44]/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+        </div>
+
+        {/* Content */}
+        <div className="p-6">
+          {/* Title */}
+          <h3 className={cn('mb-2 text-xl font-semibold', 'text-[#0F2A44]', 'dark:text-white')}>
+            {project.title}
+          </h3>
+
+          {/* Description */}
+          <p
+            className={cn('text-sm leading-relaxed', 'text-[#6B7280]', 'dark:text-[#9CA3AF]')}
+          >
+            {project.description}
+          </p>
+
+          {/* View Project Link */}
+          <div className="mt-4 flex items-center text-sm font-medium text-[#C9A227]">
+            <span>View project</span>
+            <ArrowIcon className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+          </div>
+        </div>
+      </article>
+    </Link>
+  );
+}
+
+function ArrowIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth={2}
+    >
+      <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+    </svg>
+  );
+}

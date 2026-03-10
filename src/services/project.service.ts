@@ -12,7 +12,13 @@ const ENDPOINT = '/projects';
 export const projectService = {
   async getAll(params?: QueryParams) {
     const response = await apiClient.get<StrapiListResponse<Project>>(ENDPOINT, params);
-    return response.data;
+    // Strapi v5 returns flat data
+    return response.data.data.map((item: any) => ({
+      title: item.title,
+      slug: item.slug,
+      description: item.description || item.summary || '',
+      featured: item.featured,
+    })).filter(Boolean);
   },
 
   async getBySlug(slug: string, params?: QueryParams) {
@@ -20,7 +26,13 @@ export const projectService = {
       ...params,
       filters: { slug: { $eq: slug } },
     });
-    return response.data.data[0] || undefined;
+    const item = response.data.data[0];
+    return item ? {
+      title: item.attributes.title || '',
+      slug: item.attributes.slug || '',
+      description: item.attributes.description || item.attributes.summary || '',
+      featured: item.attributes.featured || false,
+    } : undefined;
   },
 
   async getFeatured(limit = 6) {
@@ -29,6 +41,12 @@ export const projectService = {
       pagination: { limit },
       sort: ['order:asc'],
     });
-    return response.data;
+    // Strapi v5 returns flat data
+    return response.data.data.map((item: any) => ({
+      title: item.title,
+      slug: item.slug,
+      description: item.description || item.summary || '',
+      featured: item.featured,
+    })).filter(Boolean);
   },
 };

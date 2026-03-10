@@ -227,6 +227,10 @@ export interface SiteSettings {
   email: string;
   phone?: string;
   address?: string;
+  companyEmail?: string;
+  companyPhone?: string;
+  companyAddress?: string;
+  workingHours?: string;
   logo: StrapiMedia | null;
   favicon: StrapiMedia | null;
   socialLinks: SocialLink[];
