@@ -11,32 +11,25 @@ export const metadata: Metadata = {
 
 export default async function AboutPage() {
   let aboutPage: AboutPageType | null = null;
+  let errorMessage: string | null = null;
   
   try {
     aboutPage = await pageService.about();
+    console.log('About page data:', aboutPage);
   } catch (error) {
+    errorMessage = error instanceof Error ? error.message : 'Unknown error';
     console.error('Failed to fetch about page:', error);
   }
 
-  const title = aboutPage?.title || 'About Digital Aksumite';
-  const mission = aboutPage?.mission || 'To build digital solutions that honor African heritage while delivering world-class technology.';
-  const vision = aboutPage?.vision || 'A future where African innovation leads global technology development.';
-  const teamIntro = aboutPage?.teamIntro || 'Our team combines deep technical expertise with cultural understanding.';
-  const history = aboutPage?.history || 'Founded in 2020, Digital Aksumite has grown from a small startup to a trusted technology partner for businesses across Africa and beyond.';
+  const title = aboutPage?.title;
+  const mission = aboutPage?.mission;
+  const vision = aboutPage?.vision;
+  const teamIntro = aboutPage?.teamIntro;
+  const history = aboutPage?.history;
   
-  // Default values if not in Strapi
-  const values = aboutPage?.values || [
-    { title: 'Excellence', description: 'We deliver nothing less than exceptional quality.', icon: 'star' },
-    { title: 'Innovation', description: 'We push boundaries to create groundbreaking solutions.', icon: 'lightbulb' },
-    { title: 'Integrity', description: 'We build trust through transparency and honesty.', icon: 'shield' },
-  ];
-  
-  const stats = aboutPage?.stats || [
-    { value: '50+', label: 'Projects Delivered' },
-    { value: '5+', label: 'Years Experience' },
-    { value: '20+', label: 'Team Members' },
-    { value: '100%', label: 'Client Satisfaction' },
-  ];
+  // Only use Strapi data, no fallbacks
+  const values = aboutPage?.values ?? [];
+  const stats = aboutPage?.stats ?? [];
 
   return (
     <main className="min-h-screen bg-white dark:bg-[#121212]">
@@ -48,32 +41,41 @@ export default async function AboutPage() {
               Who We Are
             </span>
             <h1 className="mt-4 text-4xl font-bold text-white md:text-5xl">
-              {title}
+              {title || 'About Us'}
             </h1>
-            <p className="mx-auto mt-6 max-w-2xl text-lg text-[#E5E7EB]/80">
-              {mission}
-            </p>
+            {mission && (
+              <p className="mx-auto mt-6 max-w-2xl text-lg text-[#E5E7EB]/80">
+                {mission}
+              </p>
+            )}
           </div>
         </Container>
       </section>
 
       {/* Mission & Vision */}
+      {(mission || vision) && (
       <section className="py-20">
         <Container>
           <div className="grid gap-12 md:grid-cols-2">
+            {mission && (
             <div className="rounded-xl bg-[#F9FAFB] p-8 dark:bg-[#1F2937]/50">
               <h2 className="text-2xl font-bold text-[#0F2A44] dark:text-white">Our Mission</h2>
               <p className="mt-4 text-[#6B7280] dark:text-[#9CA3AF]">{mission}</p>
             </div>
+            )}
+            {vision && (
             <div className="rounded-xl bg-[#F9FAFB] p-8 dark:bg-[#1F2937]/50">
               <h2 className="text-2xl font-bold text-[#0F2A44] dark:text-white">Our Vision</h2>
               <p className="mt-4 text-[#6B7280] dark:text-[#9CA3AF]">{vision}</p>
             </div>
+            )}
           </div>
         </Container>
       </section>
+      )}
 
       {/* Values */}
+      {values.length > 0 && (
       <section className="bg-[#F9FAFB] py-20 dark:bg-[#1F2937]/30">
         <Container>
           <div className="text-center">
@@ -99,16 +101,19 @@ export default async function AboutPage() {
           </div>
         </Container>
       </section>
+      )}
 
       {/* Team */}
+      {(teamIntro || history || stats.length > 0) && (
       <section className="py-20">
         <Container>
           <div className="grid gap-12 lg:grid-cols-2">
             <div>
               <h2 className="text-3xl font-bold text-[#0F2A44] dark:text-white">Our Team</h2>
-              <p className="mt-4 text-lg text-[#6B7280] dark:text-[#9CA3AF]">{teamIntro}</p>
-              <p className="mt-4 text-[#6B7280] dark:text-[#9CA3AF]">{history}</p>
+              {teamIntro && <p className="mt-4 text-lg text-[#6B7280] dark:text-[#9CA3AF]">{teamIntro}</p>}
+              {history && <p className="mt-4 text-[#6B7280] dark:text-[#9CA3AF]">{history}</p>}
             </div>
+            {stats.length > 0 && (
             <div className="grid grid-cols-2 gap-6">
               {stats.map((stat) => (
                 <div
@@ -120,9 +125,11 @@ export default async function AboutPage() {
                 </div>
               ))}
             </div>
+            )}
           </div>
         </Container>
       </section>
+      )}
     </main>
   );
 }

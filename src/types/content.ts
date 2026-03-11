@@ -74,11 +74,10 @@ export interface Project {
 // ============================================================================
 
 export interface Testimonial {
-  name: string;
-  role: string;
+  clientName: string;
   company: string;
-  content: string;
-  avatar: StrapiMedia | null;
+  quote: string;
+  clientPhoto: StrapiMedia | null;
   rating: number;
   featured: boolean;
   order: number;
@@ -163,6 +162,9 @@ export interface HomePage {
   heroPrimaryButtonText: string;
   heroSecondaryButtonText: string;
   heroSlides: HeroSlide[];
+  aboutTitle: string;
+  aboutShortText: string;
+  aboutButtonText: string;
   aboutSummary: string;
   servicesIntro: string;
   projectsIntro: string;
@@ -199,11 +201,6 @@ export interface ContactPage {
   title: string;
   subtitle: string;
   description: string;
-  email: string;
-  phone?: string;
-  address?: string;
-  officeHours?: string;
-  mapEmbedUrl?: string;
   formTitle: string;
   formDescription: string;
   seoTitle?: string;
@@ -224,19 +221,18 @@ export interface SocialLink {
 export interface SiteSettings {
   siteName: string;
   tagline: string;
-  email: string;
-  phone?: string;
-  address?: string;
-  companyEmail?: string;
+  companyEmail: string;
   companyPhone?: string;
   companyAddress?: string;
   workingHours?: string;
+  instagram?: string;
+  twitter?: string;
+  linkedin?: string;
+  facebook?: string;
+  github?: string;
+  defaultSEODescription?: string;
   logo: StrapiMedia | null;
   favicon: StrapiMedia | null;
-  socialLinks: SocialLink[];
-  defaultSeoTitle: string;
-  defaultSeoDescription: string;
-  googleAnalyticsId?: string;
   updatedAt: string;
 }
 

@@ -17,7 +17,8 @@ export function Hero({ homePage }: HeroProps) {
   // Use Strapi data if available, otherwise fallback to defaults
   const title = homePage?.heroTitle || 'Ancient Power.\nModern Technology.';
   const subtitle = homePage?.heroSubtitle || 'Digital Aksumite blends African heritage with cutting-edge engineering to build digital solutions that stand the test of time.';
-  const ctaButtonText = homePage?.ctaButtonText || 'Start Your Project';
+  const ctaButtonText = homePage?.heroPrimaryButtonText || 'Start Your Project';
+  const secondaryButtonText = homePage?.heroSecondaryButtonText || 'View Our Work';
   
   return (
     <section className="relative overflow-hidden bg-[#0F2A44]">
@@ -37,12 +38,6 @@ export function Hero({ homePage }: HeroProps) {
 
       <Container className="relative">
         <div className="flex min-h-[600px] flex-col items-center justify-center py-24 text-center md:min-h-[700px] md:py-32">
-          {/* Badge */}
-          <div className="mb-8 inline-flex items-center rounded-full border border-[#C9A227]/30 bg-[#C9A227]/10 px-4 py-1.5">
-            <span className="mr-2 h-2 w-2 rounded-full bg-[#C9A227]" />
-            <span className="text-sm font-medium text-[#E5E7EB]">Premium Digital Solutions</span>
-          </div>
-
           {/* Title */}
           <h1 className="max-w-4xl text-4xl leading-tight font-bold tracking-tight text-white md:text-5xl lg:text-6xl">
             {title.split('\n').map((line, i) => (
@@ -83,23 +78,8 @@ export function Hero({ homePage }: HeroProps) {
                 'focus:ring-2 focus:ring-[#C9A227] focus:ring-offset-2 focus:ring-offset-[#0F2A44] focus:outline-none'
               )}
             >
-              View Our Work
+              {secondaryButtonText}
             </Link>
-          </div>
-
-          {/* Stats */}
-          <div className="mt-16 grid grid-cols-2 gap-8 border-t border-[#E5E7EB]/20 pt-8 md:grid-cols-4">
-            {[
-              { value: '50+', label: 'Projects Delivered' },
-              { value: '98%', label: 'Client Satisfaction' },
-              { value: '5+', label: 'Years Experience' },
-              { value: '24/7', label: 'Support Available' },
-            ].map((stat) => (
-              <div key={stat.label} className="text-center">
-                <div className="text-2xl font-bold text-[#C9A227] md:text-3xl">{stat.value}</div>
-                <div className="mt-1 text-sm text-[#E5E7EB]/60">{stat.label}</div>
-              </div>
-            ))}
           </div>
         </div>
       </Container>

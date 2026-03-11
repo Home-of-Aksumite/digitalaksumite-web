@@ -27,10 +27,7 @@ export interface ApiError {
 }
 
 export interface StrapiListResponse<T> {
-  data: Array<{
-    id: number;
-    attributes: T;
-  }>;
+  data: T[];
   meta: {
     pagination?: {
       page: number;
@@ -42,10 +39,7 @@ export interface StrapiListResponse<T> {
 }
 
 export interface StrapiSingleResponse<T> {
-  data: {
-    id: number;
-    attributes: T;
-  };
+  data: T;
   meta: Record<string, unknown>;
 }
 

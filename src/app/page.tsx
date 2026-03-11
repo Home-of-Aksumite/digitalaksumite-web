@@ -1,4 +1,5 @@
 import { Hero } from '@/components/hero';
+import { AboutSection } from '@/components/about-section';
 import { ServicesSection } from '@/components/services-section';
 import { ProjectsSection } from '@/components/projects-section';
 import { TestimonialsSection } from '@/components/testimonials-section';
@@ -24,6 +25,7 @@ export default async function Home() {
   let testimonials: ApiTestimonial[] = [];
   let blogPosts: ApiBlogPost[] = [];
   let homePage: HomePage | undefined = undefined;
+  let aboutPage: AboutPage | undefined = undefined;
   let contactPage: ContactPage | undefined = undefined;
   let siteSettings: SiteSettings | undefined = undefined;
 
@@ -77,6 +79,12 @@ export default async function Home() {
   }
 
   try {
+    aboutPage = await pageService.about();
+  } catch (error) {
+    console.error('Failed to fetch about page:', error);
+  }
+
+  try {
     contactPage = await pageService.contact();
   } catch (error) {
     console.error('Failed to fetch contact page:', error);
@@ -91,6 +99,7 @@ export default async function Home() {
   return (
     <>
       <Hero homePage={homePage} />
+      <AboutSection aboutPage={aboutPage} />
       <ServicesSection services={services} />
       <ProjectsSection projects={projects} />
       <TestimonialsSection testimonials={testimonials} />
