@@ -13,11 +13,13 @@ export const serviceService = {
   async getAll(params?: QueryParams) {
     const response = await apiClient.get<StrapiListResponse<Service>>(ENDPOINT, params);
     // Strapi v5 returns flat data, v4 had attributes wrapper
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return response.data.data.map((item: any) => ({
       title: item.title || '',
       slug: item.slug || '',
       shortDescription: item.shortDescription || item.description || '',
       fullDescription: item.fullDescription || item.description || '',
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     })).filter((item: any) => item.title && item.slug);
   },
 

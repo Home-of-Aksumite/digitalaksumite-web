@@ -23,10 +23,9 @@ export default async function Home() {
   let projects: ApiProject[] = [];
   let testimonials: ApiTestimonial[] = [];
   let blogPosts: ApiBlogPost[] = [];
-  let homePage: HomePage | null = null;
-  let aboutPage: AboutPage | null = null;
-  let contactPage: ContactPage | null = null;
-  let siteSettings: SiteSettings | null = null;
+  let homePage: HomePage | undefined = undefined;
+  let contactPage: ContactPage | undefined = undefined;
+  let siteSettings: SiteSettings | undefined = undefined;
 
   try {
     const servicesData = await serviceService.getAll();
@@ -75,12 +74,6 @@ export default async function Home() {
     homePage = await pageService.home();
   } catch (error) {
     console.error('Failed to fetch home page:', error);
-  }
-
-  try {
-    aboutPage = await pageService.about();
-  } catch (error) {
-    console.error('Failed to fetch about page:', error);
   }
 
   try {
