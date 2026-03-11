@@ -13,11 +13,13 @@ import { cn } from '@/lib/utils';
 
 const navLinks = [
   { href: '/', label: 'Home' },
-  { href: '/about', label: 'About' },
-  { href: '/services', label: 'Services' },
-  { href: '/projects', label: 'Projects' },
-  { href: '/blog', label: 'Blog' },
-  { href: '/contact', label: 'Contact' },
+  { href: '/#about', label: 'About' },
+  { href: '/#services', label: 'Services' },
+  { href: '/#projects', label: 'Projects' },
+  { href: '/#testimonials', label: 'Testimonials' },
+  { href: '/#blog', label: 'Blog' },
+  { href: '/careers', label: 'Careers' },
+  { href: '/#contact', label: 'Contact' },
 ];
 
 export function Navbar() {

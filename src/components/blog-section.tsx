@@ -37,7 +37,7 @@ export function BlogSection({
   const displayPosts = posts.slice(0, 3);
 
   return (
-    <section className={cn('py-20 md:py-28', 'bg-[#F9FAFB]', 'dark:bg-[#121212]')}>
+    <section id="blog" className={cn('py-20 md:py-28', 'bg-[#F9FAFB]', 'dark:bg-[#121212]')}>
       <Container>
         {/* Section Header */}
         <div className="mb-16 text-center">
@@ -69,22 +69,6 @@ export function BlogSection({
           {displayPosts.map((post) => (
             <BlogCard key={post.slug} post={post} />
           ))}
-        </div>
-
-        {/* View All Button */}
-        <div className="mt-12 text-center">
-          <Link
-            href="/blog"
-            className={cn(
-              'inline-flex items-center rounded-lg px-6 py-3 text-sm font-medium',
-              'border border-[#0F2A44] text-[#0F2A44] transition-colors',
-              'hover:bg-[#0F2A44] hover:text-white',
-              'dark:border-[#E5E7EB] dark:text-[#E5E7EB] dark:hover:bg-[#E5E7EB] dark:hover:text-[#121212]'
-            )}
-          >
-            View All Posts
-            <ArrowIcon className="ml-2 h-4 w-4" />
-          </Link>
         </div>
       </Container>
     </section>

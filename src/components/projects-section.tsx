@@ -4,7 +4,6 @@
  */
 
 import Image from 'next/image';
-import Link from 'next/link';
 import { Container } from '@/components/container';
 import { cn } from '@/lib/utils';
 
@@ -50,7 +49,7 @@ export function ProjectsSection({
     ? projects.filter((p) => p.featured)
     : projects.slice(0, 3);
   return (
-    <section className={cn('py-20 md:py-28', 'bg-[#F9FAFB]', 'dark:bg-[#0C0C0C]')}>
+    <section id="projects" className={cn('py-20 md:py-28', 'bg-[#F9FAFB]', 'dark:bg-[#0C0C0C]')}>
       <Container>
         {/* Section Header */}
         <div className="mb-16 flex flex-col items-start justify-between gap-4 md:flex-row md:items-end">
@@ -71,17 +70,6 @@ export function ProjectsSection({
               {subtitle}
             </p>
           </div>
-          <Link
-            href="/projects"
-            className={cn(
-              'inline-flex items-center text-sm font-medium',
-              'text-[#0F2A44] hover:text-[#C9A227]',
-              'dark:text-[#E5E7EB] dark:hover:text-[#C9A227]'
-            )}
-          >
-            View All Projects
-            <ArrowIcon className="ml-2 h-4 w-4" />
-          </Link>
         </div>
 
         {/* Projects Grid */}
@@ -99,7 +87,7 @@ function ProjectCard({ project, priority }: { project: ApiProject; priority: boo
   const href = `/projects/${project.slug}`;
   
   return (
-    <Link href={href} className="group block">
+    <div className="group block">
       <article
         className={cn(
           'overflow-hidden rounded-xl transition-all duration-300',
@@ -129,15 +117,9 @@ function ProjectCard({ project, priority }: { project: ApiProject; priority: boo
           >
             {project.description}
           </p>
-
-          {/* View Project Link */}
-          <div className="mt-4 flex items-center text-sm font-medium text-[#C9A227]">
-            <span>View project</span>
-            <ArrowIcon className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-          </div>
         </div>
       </article>
-    </Link>
+    </div>
   );
 }
 

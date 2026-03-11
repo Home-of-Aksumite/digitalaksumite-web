@@ -19,7 +19,7 @@ export function AboutSection({ aboutPage }: AboutSectionProps) {
   const buttonText = 'Discover Our Story';
 
   return (
-    <section className={cn('py-20 md:py-28', 'bg-[#F9FAFB]', 'dark:bg-[#0C0C0C]')}>
+    <section id="about" className={cn('py-20 md:py-28', 'bg-[#F9FAFB]', 'dark:bg-[#0C0C0C]')}>
       <Container>
         <div className="mx-auto max-w-4xl text-center">
           {/* Section Label */}

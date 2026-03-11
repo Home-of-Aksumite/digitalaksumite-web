@@ -90,20 +90,16 @@ export interface Testimonial {
 // ============================================================================
 
 export interface JobOpening {
+  id: number;
   title: string;
   slug: string;
   department: string;
   location: string;
-  type: 'full-time' | 'part-time' | 'contract' | 'remote';
-  summary: string;
-  description: string;
-  requirements: string[];
-  responsibilities: string[];
-  benefits: string[];
-  salaryRange?: string;
-  isActive: boolean;
+  employmentType: '- Full-time' | '- Part-time' | '- Internship' | '- Contract';
+  description: string | null;
+  publishedDate: string | null;
+  isInternship: boolean;
   publishedAt: string;
-  expiresAt?: string;
   createdAt: string;
   updatedAt: string;
 }

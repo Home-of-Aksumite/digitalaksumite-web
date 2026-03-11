@@ -17,7 +17,7 @@ export const jobService = {
         ...params,
         filters: { isActive: { $eq: true } },
       });
-      return response.data;
+      return response.data.data;
     },
 
     async getBySlug(slug: string, params?: QueryParams) {

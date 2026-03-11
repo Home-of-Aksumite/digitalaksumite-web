@@ -8,22 +8,17 @@ import { Container } from '@/components/container';
 
 const footerLinks = {
   company: [
-    { href: '/about', label: 'About Us' },
-    { href: '/services', label: 'Services' },
-    { href: '/projects', label: 'Projects' },
-    { href: '/blog', label: 'Blog' },
+    { href: '/#about', label: 'About Us' },
+    { href: '/#services', label: 'Services' },
+    { href: '/#projects', label: 'Projects' },
+    { href: '/#testimonials', label: 'Testimonials' },
+    { href: '/#blog', label: 'Blog' },
     { href: '/careers', label: 'Careers' },
-  ],
-  services: [
-    { href: '/services/web-development', label: 'Web Development' },
-    { href: '/services/mobile-apps', label: 'Mobile Apps' },
-    { href: '/services/cloud-solutions', label: 'Cloud Solutions' },
-    { href: '/services/consulting', label: 'Consulting' },
+    { href: '/#contact', label: 'Contact' },
   ],
   legal: [
     { href: '/privacy-policy', label: 'Privacy Policy' },
     { href: '/terms-of-service', label: 'Terms of Service' },
-    { href: '/cookie-policy', label: 'Cookie Policy' },
   ],
 };
 
@@ -41,7 +36,7 @@ export function Footer() {
       <Container>
         <div className="py-16">
           {/* Main Footer Content */}
-          <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-3">
             {/* Brand */}
             <div className="lg:col-span-1">
               <Link href="/" className="flex items-center gap-2 text-xl font-bold text-white">
@@ -88,35 +83,33 @@ export function Footer() {
               </ul>
             </div>
 
-            {/* Services Links */}
-            <div>
-              <h3 className="text-sm font-semibold tracking-wider text-[#C9A227] uppercase">
-                Services
-              </h3>
-              <ul className="mt-4 space-y-3">
-                {footerLinks.services.map((link) => (
-                  <li key={link.href}>
-                    <Link
-                      href={link.href}
-                      className="text-sm text-[#E5E7EB]/80 transition-colors hover:text-white"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
             {/* Contact Info */}
             <div>
               <h3 className="text-sm font-semibold tracking-wider text-[#C9A227] uppercase">
                 Contact
               </h3>
               <ul className="mt-4 space-y-3 text-sm text-[#E5E7EB]/80">
-                <li>info@digitalaksumite.com</li>
-                <li>+251 911 234 567</li>
+                <li>
+                  <a href="mailto:info@digitalaksumite.com" className="hover:text-white transition-colors">
+                    info@digitalaksumite.com
+                  </a>
+                </li>
+                <li>
+                  <a href="tel:+251911234567" className="hover:text-white transition-colors">
+                    +251 911 234 567
+                  </a>
+                </li>
                 <li>Addis Ababa, Ethiopia</li>
               </ul>
+              <div className="mt-6">
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center text-sm font-medium text-[#C9A227] hover:text-[#A18220]"
+                >
+                  Get in Touch
+                  <ArrowIcon className="ml-2 h-4 w-4" />
+                </Link>
+              </div>
             </div>
           </div>
 
@@ -143,6 +136,20 @@ export function Footer() {
         </div>
       </Container>
     </footer>
+  );
+}
+
+function ArrowIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth={2}
+    >
+      <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+    </svg>
   );
 }
 

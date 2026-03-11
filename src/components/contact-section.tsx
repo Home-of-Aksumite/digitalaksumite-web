@@ -44,7 +44,7 @@ export function ContactSection({ contactPage, siteSettings }: ContactSectionProp
   };
 
   return (
-    <section className={cn('py-20 md:py-28', 'bg-[#0F2A44]', 'dark:bg-[#0F2A44]')}>
+    <section id="contact" className={cn('py-20 md:py-28', 'bg-[#0F2A44]', 'dark:bg-[#0F2A44]')}>
       <Container>
         {/* Header */}
         <div className="mb-12 text-center">

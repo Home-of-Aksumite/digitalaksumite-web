@@ -32,7 +32,7 @@ export function TestimonialsSection({
     return null;
   }
   return (
-    <section className={cn('py-20 md:py-28', 'bg-white', 'dark:bg-[#121212]')}>
+    <section id="testimonials" className={cn('py-20 md:py-28', 'bg-white', 'dark:bg-[#121212]')}>
       <Container>
         {/* Section Header */}
         <div className="mb-16 text-center">

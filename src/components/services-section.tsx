@@ -3,7 +3,6 @@
  * Display featured services from Strapi CMS
  */
 
-import Link from 'next/link';
 import { Container } from '@/components/container';
 import { cn } from '@/lib/utils';
 
@@ -42,7 +41,7 @@ export function ServicesSection({
     return null;
   }
   return (
-    <section className={cn('py-20 md:py-28', 'bg-white', 'dark:bg-[#121212]')}>
+    <section id="services" className={cn('py-20 md:py-28', 'bg-white', 'dark:bg-[#121212]')}>
       <Container>
         {/* Section Header */}
         <div className="mb-16 text-center">
@@ -76,9 +75,8 @@ export function ServicesSection({
             const href = `/services/${service.slug}`;
 
             return (
-              <Link
+              <div
                 key={service.slug}
-                href={href}
                 className={cn(
                   'group rounded-xl border p-8 transition-all duration-200',
                   'border-[#E5E7EB] bg-white hover:border-[#C9A227] hover:shadow-lg',
@@ -103,31 +101,9 @@ export function ServicesSection({
                 <p className={cn('text-sm leading-relaxed', 'text-[#6B7280]', 'dark:text-[#9CA3AF]')}>
                   {service.description}
                 </p>
-
-                {/* Learn More Link */}
-                <div className="mt-6 flex items-center text-sm font-medium text-[#C9A227]">
-                  <span>Learn more</span>
-                  <ArrowIcon className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </div>
-              </Link>
+              </div>
             );
           })}
-        </div>
-
-        {/* View All Button */}
-        <div className="mt-12 text-center">
-          <Link
-            href="/services"
-            className={cn(
-              'inline-flex items-center rounded-lg px-6 py-3 text-sm font-medium',
-              'border border-[#0F2A44] text-[#0F2A44] transition-colors',
-              'hover:bg-[#0F2A44] hover:text-white',
-              'dark:border-[#E5E7EB] dark:text-[#E5E7EB] dark:hover:bg-[#E5E7EB] dark:hover:text-[#121212]'
-            )}
-          >
-            View All Services
-            <ArrowIcon className="ml-2 h-4 w-4" />
-          </Link>
         </div>
       </Container>
     </section>

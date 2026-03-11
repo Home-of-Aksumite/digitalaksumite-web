@@ -18,20 +18,40 @@ class ApiErrorClass extends Error {
 }
 
 /**
- * Build query string from parameters
+ * Build query string from parameters using Strapi bracket notation
  */
-function buildQueryString(params: QueryParams): string {
+function buildQueryString(params: QueryParams, prefix = ''): string {
   const query = new URLSearchParams();
 
   Object.entries(params).forEach(([key, value]) => {
     if (value === undefined || value === null) return;
 
+    const fullKey = prefix ? `${prefix}[${key}]` : key;
+
     if (Array.isArray(value)) {
-      value.forEach((v) => query.append(`${key}[]`, String(v)));
+      value.forEach((v) => {
+        if (typeof v === 'object' && v !== null) {
+          const nested = buildQueryString(v, `${fullKey}[]`);
+          if (nested) {
+            nested.substring(1).split('&').forEach((pair) => {
+              const [k, v] = pair.split('=');
+              if (k && v) query.append(decodeURIComponent(k), decodeURIComponent(v));
+            });
+          }
+        } else {
+          query.append(`${fullKey}[]`, String(v));
+        }
+      });
     } else if (typeof value === 'object') {
-      query.append(key, JSON.stringify(value));
+      const nested = buildQueryString(value, fullKey);
+      if (nested) {
+        nested.substring(1).split('&').forEach((pair) => {
+          const [k, v] = pair.split('=');
+          if (k && v) query.append(decodeURIComponent(k), decodeURIComponent(v));
+        });
+      }
     } else {
-      query.append(key, String(value));
+      query.append(fullKey, String(value));
     }
   });
 
@@ -72,6 +92,11 @@ async function fetchApi<T>(
 
     if (!response.ok) {
       const errorData = (await response.json().catch(() => ({}))) as ApiError;
+      console.error('API Error:', {
+        url: url,
+        status: response.status,
+        errorData: errorData,
+      });
       throw new ApiErrorClass(
         response.status,
         errorData.error?.message || `HTTP ${response.status}: ${response.statusText}`,

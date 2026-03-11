@@ -15,15 +15,7 @@ export const blogPostService = {
    */
   async getAll(params?: QueryParams) {
     const response = await apiClient.get<StrapiListResponse<BlogPost>>(ENDPOINT, params);
-    // Strapi v5 returns flat data
-    return response.data.data.map((item: any) => ({
-      title: item.title || '',
-      slug: item.slug || '',
-      excerpt: item.excerpt || '',
-      featured: item.featured || false,
-      publishedAt: item.publishedAt || '',
-      author: item.author || '',
-    })).filter((item: any) => item.title && item.slug);
+    return response.data.data;
   },
 
   /**
@@ -34,14 +26,7 @@ export const blogPostService = {
       `${ENDPOINT}/${id}`,
       params
     );
-    return {
-      title: response.data.data.title || '',
-      slug: response.data.data.slug || '',
-      excerpt: response.data.data.excerpt || '',
-      featured: response.data.data.featured || false,
-      publishedAt: response.data.data.publishedAt || '',
-      author: response.data.data.author || '',
-    };
+    return response.data.data;
   },
 
   /**
@@ -51,19 +36,10 @@ export const blogPostService = {
     const response = await apiClient.get<StrapiListResponse<BlogPost>>(ENDPOINT, {
       ...params,
       filters: {
-        slug: {
-          $eq: slug,
-        },
+        slug: { $eq: slug },
       },
     });
-    return response.data.data[0] ? {
-      title: response.data.data[0].title || '',
-      slug: response.data.data[0].slug || '',
-      excerpt: response.data.data[0].excerpt || '',
-      featured: response.data.data[0].featured || false,
-      publishedAt: response.data.data[0].publishedAt || '',
-      author: response.data.data[0].author || '',
-    } : undefined;
+    return response.data.data[0] || undefined;
   },
 
   /**
@@ -72,24 +48,12 @@ export const blogPostService = {
   async getFeatured(limit = 3) {
     const response = await apiClient.get<StrapiListResponse<BlogPost>>(ENDPOINT, {
       filters: {
-        featured: {
-          $eq: true,
-        },
+        featured: { $eq: true },
       },
-      pagination: {
-        limit,
-      },
+      pagination: { limit },
       sort: ['publishedAt:desc'],
     });
-    // Strapi v5 returns flat data
-    return response.data.data.map((item: any) => ({
-      title: item.title || '',
-      slug: item.slug || '',
-      excerpt: item.excerpt || '',
-      featured: item.featured || false,
-      publishedAt: item.publishedAt || '',
-      author: item.author || '',
-    })).filter((item: any) => item.title && item.slug);
+    return response.data.data;
   },
 
   /**
@@ -97,19 +61,10 @@ export const blogPostService = {
    */
   async getRecent(limit = 5) {
     const response = await apiClient.get<StrapiListResponse<BlogPost>>(ENDPOINT, {
-      pagination: {
-        limit,
-      },
+      pagination: { limit },
       sort: ['publishedAt:desc'],
     });
-    // Strapi v5 returns flat data
-    return response.data.data.map((item: any) => ({
-      title: item.title || '',
-      slug: item.slug || '',
-      excerpt: item.excerpt || '',
-      featured: item.featured || false,
-      publishedAt: item.publishedAt || '',
-      author: item.author || '',
-    })).filter((item: any) => item.title && item.slug);
+    return response.data.data;
   },
 };
+
