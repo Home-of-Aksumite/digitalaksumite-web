@@ -30,7 +30,7 @@ export function BlogSection({
 }: BlogSectionProps) {
   // Don't render if no posts
   if (!posts || posts.length === 0) {
-    return null;
+    return;
   }
 
   // Show max 3 posts
@@ -77,7 +77,7 @@ export function BlogSection({
 
 function BlogCard({ post }: { post: ApiBlogPost }) {
   const href = `/blog/${post.slug}`;
-  
+
   return (
     <Link href={href} className="group block">
       <article
@@ -102,9 +102,7 @@ function BlogCard({ post }: { post: ApiBlogPost }) {
           </h3>
 
           {/* Excerpt */}
-          <p
-            className={cn('text-sm leading-relaxed', 'text-[#6B7280]', 'dark:text-[#9CA3AF]')}
-          >
+          <p className={cn('text-sm leading-relaxed', 'text-[#6B7280]', 'dark:text-[#9CA3AF]')}>
             {post.excerpt}
           </p>
 

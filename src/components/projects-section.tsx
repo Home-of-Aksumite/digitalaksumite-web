@@ -41,13 +41,14 @@ export function ProjectsSection({
 }: ProjectsSectionProps) {
   // Don't render if no projects
   if (!projects || projects.length === 0) {
-    return null;
+    return;
   }
 
   // Filter featured projects or take first 3
-  const displayProjects = projects.filter((p) => p.featured).length > 0
-    ? projects.filter((p) => p.featured)
-    : projects.slice(0, 3);
+  const displayProjects =
+    projects.filter((p) => p.featured).length > 0
+      ? projects.filter((p) => p.featured)
+      : projects.slice(0, 3);
   return (
     <section id="projects" className={cn('py-20 md:py-28', 'bg-[#F9FAFB]', 'dark:bg-[#0C0C0C]')}>
       <Container>
@@ -85,7 +86,7 @@ export function ProjectsSection({
 
 function ProjectCard({ project, priority }: { project: ApiProject; priority: boolean }) {
   const href = `/projects/${project.slug}`;
-  
+
   return (
     <div className="group block">
       <article
@@ -112,9 +113,7 @@ function ProjectCard({ project, priority }: { project: ApiProject; priority: boo
           </h3>
 
           {/* Description */}
-          <p
-            className={cn('text-sm leading-relaxed', 'text-[#6B7280]', 'dark:text-[#9CA3AF]')}
-          >
+          <p className={cn('text-sm leading-relaxed', 'text-[#6B7280]', 'dark:text-[#9CA3AF]')}>
             {project.description}
           </p>
         </div>

@@ -29,7 +29,7 @@ export function TestimonialsSection({
 }: TestimonialsSectionProps) {
   // Don't render if no testimonials
   if (!testimonials || testimonials.length === 0) {
-    return null;
+    return;
   }
   return (
     <section id="testimonials" className={cn('py-20 md:py-28', 'bg-white', 'dark:bg-[#121212]')}>
@@ -84,7 +84,7 @@ function TestimonialCard({ testimonial }: { testimonial: ApiTestimonial }) {
       {/* Author */}
       <div className="flex items-center gap-4">
         <div className="relative h-12 w-12 overflow-hidden rounded-full bg-[#0F2A44]">
-          <div className="flex h-full w-full items-center justify-center text-white font-semibold">
+          <div className="flex h-full w-full items-center justify-center font-semibold text-white">
             {(testimonial.clientName || 'A').charAt(0)}
           </div>
         </div>
@@ -92,9 +92,7 @@ function TestimonialCard({ testimonial }: { testimonial: ApiTestimonial }) {
           <div className={cn('font-semibold', 'text-[#0F2A44]', 'dark:text-white')}>
             {testimonial.clientName}
           </div>
-          <div className="text-sm text-[#6B7280] dark:text-[#9CA3AF]">
-            {testimonial.company}
-          </div>
+          <div className="text-sm text-[#6B7280] dark:text-[#9CA3AF]">{testimonial.company}</div>
         </div>
       </div>
     </div>
