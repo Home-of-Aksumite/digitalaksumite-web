@@ -16,10 +16,12 @@ interface HeroProps {
 export function Hero({ homePage }: HeroProps) {
   // Use Strapi data if available, otherwise fallback to defaults
   const title = homePage?.heroTitle || 'Ancient Power.\nModern Technology.';
-  const subtitle = homePage?.heroSubtitle || 'Digital Aksumite blends African heritage with cutting-edge engineering to build digital solutions that stand the test of time.';
-  const ctaButtonText = homePage?.heroPrimaryButtonText || 'Start Your Project';
-  const secondaryButtonText = homePage?.heroSecondaryButtonText || 'View Our Work';
-  
+  const subtitle =
+    homePage?.heroSubtitle ||
+    'Digital Aksumite blends African heritage with cutting-edge engineering to build digital solutions that stand the test of time.';
+  const ctaButtonText = homePage?.heroPrimaryButtonText || 'Get in Touch';
+  const secondaryButtonText = homePage?.heroSecondaryButtonText || 'Our Services';
+
   return (
     <section className="relative overflow-hidden bg-[#0F2A44]">
       {/* Background Pattern */}
@@ -69,7 +71,7 @@ export function Hero({ homePage }: HeroProps) {
             </Link>
 
             <Link
-              href="/projects"
+              href="#/contact"
               className={cn(
                 'inline-flex items-center justify-center rounded-lg px-8 py-4',
                 'text-base font-medium transition-all duration-200',

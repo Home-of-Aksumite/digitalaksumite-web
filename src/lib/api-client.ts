@@ -3,7 +3,7 @@
  * Base HTTP client for all API communications with Strapi CMS
  */
 
-import { env, strapiApiUrl } from '@/config/env';
+import { strapiApiToken } from '@/config/env';
 import type { ApiError, ApiResponse, QueryParams } from '@/types/api';
 
 class ApiErrorClass extends Error {
@@ -33,10 +33,13 @@ function buildQueryString(params: QueryParams, prefix = ''): string {
         if (typeof v === 'object' && v !== null) {
           const nested = buildQueryString(v, `${fullKey}[]`);
           if (nested) {
-            nested.substring(1).split('&').forEach((pair) => {
-              const [k, v] = pair.split('=');
-              if (k && v) query.append(decodeURIComponent(k), decodeURIComponent(v));
-            });
+            nested
+              .substring(1)
+              .split('&')
+              .forEach((pair) => {
+                const [k, v] = pair.split('=');
+                if (k && v) query.append(decodeURIComponent(k), decodeURIComponent(v));
+              });
           }
         } else {
           query.append(`${fullKey}[]`, String(v));
@@ -45,10 +48,13 @@ function buildQueryString(params: QueryParams, prefix = ''): string {
     } else if (typeof value === 'object') {
       const nested = buildQueryString(value, fullKey);
       if (nested) {
-        nested.substring(1).split('&').forEach((pair) => {
-          const [k, v] = pair.split('=');
-          if (k && v) query.append(decodeURIComponent(k), decodeURIComponent(v));
-        });
+        nested
+          .substring(1)
+          .split('&')
+          .forEach((pair) => {
+            const [k, v] = pair.split('=');
+            if (k && v) query.append(decodeURIComponent(k), decodeURIComponent(v));
+          });
       }
     } else {
       query.append(fullKey, String(value));
@@ -68,7 +74,7 @@ async function fetchApi<T>(
   params?: QueryParams
 ): Promise<ApiResponse<T>> {
   const queryString = params ? buildQueryString(params) : '';
-  const url = `${strapiApiUrl}/api${endpoint}${queryString}`;
+  const url = `/api${endpoint}${queryString}`;
 
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -77,8 +83,8 @@ async function fetchApi<T>(
   };
 
   // Add API token if available
-  if (env.STRAPI_API_TOKEN) {
-    headers.Authorization = `Bearer ${env.STRAPI_API_TOKEN}`;
+  if (strapiApiToken) {
+    headers.Authorization = `Bearer ${strapiApiToken}`;
   }
 
   try {
@@ -96,6 +102,7 @@ async function fetchApi<T>(
         url: url,
         status: response.status,
         errorData: errorData,
+        fullError: JSON.stringify(errorData, undefined, 2),
       });
       throw new ApiErrorClass(
         response.status,

@@ -8,7 +8,7 @@ import { z } from 'zod';
 const envSchema = z.object({
   // Strapi CMS
   NEXT_PUBLIC_STRAPI_API_URL: z.string().url().default('http://localhost:1337'),
-  STRAPI_API_TOKEN: z.string().min(1).optional(),
+  NEXT_PUBLIC_STRAPI_API_TOKEN: z.string().min(1).optional(),
 
   // Application
   NEXT_PUBLIC_SITE_URL: z.string().url().default('http://localhost:3000'),
@@ -39,6 +39,9 @@ export const isDevelopment = env.NODE_ENV === 'development';
 
 // Strapi API URL with trailing slash handling
 export const strapiApiUrl = env.NEXT_PUBLIC_STRAPI_API_URL.replace(/\/$/, '');
+
+// Strapi API Token (public for client-side use)
+export const strapiApiToken = env.NEXT_PUBLIC_STRAPI_API_TOKEN;
 
 // Site URL with trailing slash handling
 export const siteUrl = env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, '');

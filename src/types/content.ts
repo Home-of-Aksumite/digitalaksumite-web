@@ -91,6 +91,7 @@ export interface Testimonial {
 
 export interface JobOpening {
   id: number;
+  documentId: string;
   title: string;
   slug: string;
   department: string;

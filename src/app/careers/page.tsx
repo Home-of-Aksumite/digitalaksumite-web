@@ -1,13 +1,15 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { Container } from '@/components/container';
+import { InternshipApplicationForm } from '@/components/internship-form';
 import { jobService } from '@/services/job.service';
 import { cn } from '@/lib/utils';
 import type { JobOpening } from '@/types/content';
 
 export const metadata: Metadata = {
   title: 'Careers | Digital Aksumite',
-  description: 'Join our team of digital craftsmen. Explore open positions and build the future with us.',
+  description:
+    'Join our team of digital craftsmen. Explore open positions and build the future with us.',
 };
 
 export default async function CareersPage() {
@@ -54,10 +56,7 @@ export default async function CareersPage() {
           </div>
           <div className="mt-12 grid gap-8 md:grid-cols-3">
             {benefits.map((benefit) => (
-              <div
-                key={benefit.title}
-                className="rounded-xl bg-[#F9FAFB] p-8 dark:bg-[#1F2937]/50"
-              >
+              <div key={benefit.title} className="rounded-xl bg-[#F9FAFB] p-8 dark:bg-[#1F2937]/50">
                 <div className="mb-4 text-3xl">{benefit.icon}</div>
                 <h3 className="text-xl font-bold text-[#0F2A44] dark:text-white">
                   {benefit.title}
@@ -138,25 +137,22 @@ export default async function CareersPage() {
         </section>
       )}
 
-      {/* General CTA */}
+      {/* General Internship Application */}
       <section className="bg-[#0F2A44] py-20">
         <Container>
-          <div className="text-center">
-            <h2 className="text-3xl font-bold text-white">Do Not See The Right Fit?</h2>
-            <p className="mx-auto mt-4 max-w-2xl text-lg text-[#E5E7EB]/80">
-              We are always interested in meeting talented individuals. Send us your resume and tell
-              us why you would be a great addition to our team.
+          <div className="mx-auto max-w-3xl text-center">
+            <span className="text-sm font-semibold tracking-wider text-[#C9A227] uppercase">
+              Always Open
+            </span>
+            <h2 className="mt-3 text-3xl font-bold text-white">Apply for Internship</h2>
+            <p className="mt-4 text-lg text-[#E5E7EB]/80">
+              Looking for hands-on experience? We accept internship applications year-round. Submit
+              your details and we will contact you when opportunities arise.
             </p>
-            <Link
-              href="mailto:careers@digitalaksumite.com"
-              className={cn(
-                'mt-8 inline-flex items-center rounded-lg px-8 py-4',
-                'bg-[#C9A227] text-[#121212] font-semibold',
-                'hover:bg-[#A18220] transition-colors'
-              )}
-            >
-              Send Your Resume
-            </Link>
+          </div>
+
+          <div className="mt-12 rounded-xl bg-white p-8 dark:bg-[#1F2937]">
+            <InternshipApplicationForm />
           </div>
         </Container>
       </section>
@@ -188,17 +184,29 @@ function JobCard({ job }: { job: JobOpening }) {
             )}
           </div>
         </div>
-        <Link
-          href={`/careers/${job.slug}`}
-          className={cn(
-            'inline-flex items-center justify-center rounded-lg px-6 py-3',
-            'border-2 border-[#0F2A44] text-[#0F2A44] font-medium',
-            'hover:bg-[#0F2A44] hover:text-white transition-colors',
-            'dark:border-[#C9A227] dark:text-[#C9A227] dark:hover:bg-[#C9A227] dark:hover:text-[#121212]'
-          )}
-        >
-          View Details
-        </Link>
+        <div className="flex gap-3">
+          <Link
+            href={`/careers/${job.slug}`}
+            className={cn(
+              'inline-flex items-center justify-center rounded-lg px-6 py-3',
+              'border-2 border-[#0F2A44] font-medium text-[#0F2A44]',
+              'transition-colors hover:bg-[#0F2A44] hover:text-white',
+              'dark:border-[#C9A227] dark:text-[#C9A227] dark:hover:bg-[#C9A227] dark:hover:text-[#121212]'
+            )}
+          >
+            View Details
+          </Link>
+          <Link
+            href={`/careers/${job.slug}`}
+            className={cn(
+              'inline-flex items-center justify-center rounded-lg px-6 py-3',
+              'bg-[#C9A227] font-medium text-[#121212]',
+              'transition-colors hover:bg-[#A18220]'
+            )}
+          >
+            Apply
+          </Link>
+        </div>
       </div>
     </div>
   );

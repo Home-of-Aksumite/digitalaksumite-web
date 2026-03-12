@@ -3,8 +3,8 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { Container } from '@/components/container';
 import { jobService } from '@/services/job.service';
-import { cn } from '@/lib/utils';
 import { extractTextFromBlocks } from '@/lib/content-utils';
+import { ApplicationForm } from './application-form';
 
 interface JobDetailPageProps {
   params: Promise<{
@@ -71,10 +71,8 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
         <div className="grid gap-12 lg:grid-cols-3">
           {/* Job Description */}
           <div className="lg:col-span-2">
-            <div className="prose max-w-none dark:prose-invert">
-              <h2 className="text-2xl font-bold text-[#0F2A44] dark:text-white">
-                About This Role
-              </h2>
+            <div className="prose dark:prose-invert max-w-none">
+              <h2 className="text-2xl font-bold text-[#0F2A44] dark:text-white">About This Role</h2>
               <p className="mt-4 text-[#6B7280] dark:text-[#9CA3AF]">
                 {descriptionText || 'No description available for this position.'}
               </p>
@@ -87,7 +85,7 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
                 Fill out the form below to apply for this position. We will get back to you within 5
                 business days.
               </p>
-              <ApplicationForm jobTitle={job.title} />
+              <ApplicationForm job={job} />
             </div>
           </div>
 
@@ -141,124 +139,6 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
         </div>
       </Container>
     </main>
-  );
-}
-
-function ApplicationForm({ jobTitle }: { jobTitle: string }) {
-  'use client';
-
-  return (
-    <form className="mt-6 space-y-4">
-      <div className="grid gap-4 md:grid-cols-2">
-        <div>
-          <label className="block text-sm font-medium text-[#0F2A44] dark:text-white">
-            First Name
-          </label>
-          <input
-            type="text"
-            required
-            className={cn(
-              'mt-1 block w-full rounded-lg border px-4 py-3',
-              'border-[#E5E7EB] bg-white focus:border-[#C9A227] focus:outline-none focus:ring-1 focus:ring-[#C9A227]',
-              'dark:border-[#374151] dark:bg-[#1F2937] dark:text-white'
-            )}
-            placeholder="Your first name"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-[#0F2A44] dark:text-white">
-            Last Name
-          </label>
-          <input
-            type="text"
-            required
-            className={cn(
-              'mt-1 block w-full rounded-lg border px-4 py-3',
-              'border-[#E5E7EB] bg-white focus:border-[#C9A227] focus:outline-none focus:ring-1 focus:ring-[#C9A227]',
-              'dark:border-[#374151] dark:bg-[#1F2937] dark:text-white'
-            )}
-            placeholder="Your last name"
-          />
-        </div>
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-[#0F2A44] dark:text-white">
-          Email Address
-        </label>
-        <input
-          type="email"
-          required
-          className={cn(
-            'mt-1 block w-full rounded-lg border px-4 py-3',
-            'border-[#E5E7EB] bg-white focus:border-[#C9A227] focus:outline-none focus:ring-1 focus:ring-[#C9A227]',
-            'dark:border-[#374151] dark:bg-[#1F2937] dark:text-white'
-          )}
-          placeholder="your@email.com"
-        />
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-[#0F2A44] dark:text-white">
-          Phone Number
-        </label>
-        <input
-          type="tel"
-          className={cn(
-            'mt-1 block w-full rounded-lg border px-4 py-3',
-            'border-[#E5E7EB] bg-white focus:border-[#C9A227] focus:outline-none focus:ring-1 focus:ring-[#C9A227]',
-            'dark:border-[#374151] dark:bg-[#1F2937] dark:text-white'
-          )}
-          placeholder="+251 911 234 567"
-        />
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-[#0F2A44] dark:text-white">
-          Resume / CV
-        </label>
-        <input
-          type="file"
-          accept=".pdf,.doc,.docx"
-          required
-          className={cn(
-            'mt-1 block w-full rounded-lg border px-4 py-3',
-            'border-[#E5E7EB] bg-white focus:border-[#C9A227] focus:outline-none',
-            'dark:border-[#374151] dark:bg-[#1F2937] dark:text-white',
-            'file:mr-4 file:rounded-full file:border-0 file:bg-[#C9A227] file:px-4 file:py-2 file:text-sm file:font-semibold'
-          )}
-        />
-        <p className="mt-1 text-xs text-[#6B7280] dark:text-[#9CA3AF]">
-          Accepted formats: PDF, DOC, DOCX (max 5MB)
-        </p>
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-[#0F2A44] dark:text-white">
-          Cover Letter / Message
-        </label>
-        <textarea
-          rows={4}
-          className={cn(
-            'mt-1 block w-full rounded-lg border px-4 py-3',
-            'border-[#E5E7EB] bg-white focus:border-[#C9A227] focus:outline-none focus:ring-1 focus:ring-[#C9A227]',
-            'dark:border-[#374151] dark:bg-[#1F2937] dark:text-white'
-          )}
-          placeholder="Tell us why you're interested in this position..."
-        />
-      </div>
-
-      <button
-        type="submit"
-        className={cn(
-          'w-full rounded-lg px-8 py-4 font-semibold',
-          'bg-[#C9A227] text-[#121212] hover:bg-[#A18220]',
-          'transition-colors focus:outline-none focus:ring-2 focus:ring-[#C9A227]'
-        )}
-      >
-        Submit Application for {jobTitle}
-      </button>
-    </form>
   );
 }
 
