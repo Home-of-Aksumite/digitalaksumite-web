@@ -3,7 +3,6 @@
  * Call-to-action banner with navy background
  */
 
-import Link from 'next/link';
 import { Container } from '@/components/container';
 import { cn } from '@/lib/utils';
 
@@ -17,8 +16,8 @@ interface CTASectionProps {
 export function CTASection({
   title = 'Ready to Build Something Amazing?',
   subtitle = 'Let us bring your digital vision to life. From concept to deployment, we are with you every step of the way.',
-  primaryCta = { label: 'Start Your Project', href: '/contact' },
-  secondaryCta = { label: 'Schedule a Call', href: '/contact' },
+  primaryCta = { label: 'Start Your Project', href: '/#contact' },
+  secondaryCta = { label: 'Schedule a Call', href: '/#contact' },
 }: CTASectionProps) {
   return (
     <section className="relative overflow-hidden bg-[#0F2A44]">
@@ -50,7 +49,7 @@ export function CTASection({
 
           {/* CTA Buttons */}
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Link
+            <a
               href={primaryCta.href}
               className={cn(
                 'inline-flex items-center justify-center rounded-lg px-8 py-4',
@@ -61,9 +60,9 @@ export function CTASection({
             >
               {primaryCta.label}
               <ArrowIcon className="ml-2 h-5 w-5" />
-            </Link>
+            </a>
 
-            <Link
+            <a
               href={secondaryCta.href}
               className={cn(
                 'inline-flex items-center justify-center rounded-lg px-8 py-4',
@@ -74,7 +73,7 @@ export function CTASection({
               )}
             >
               {secondaryCta.label}
-            </Link>
+            </a>
           </div>
         </div>
       </Container>

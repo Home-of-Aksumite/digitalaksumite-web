@@ -3,7 +3,7 @@
  * Base HTTP client for all API communications with Strapi CMS
  */
 
-import { strapiApiToken } from '@/config/env';
+import { strapiApiUrl, strapiApiToken } from '@/config/env';
 import type { ApiError, ApiResponse, QueryParams } from '@/types/api';
 
 class ApiErrorClass extends Error {
@@ -74,7 +74,7 @@ async function fetchApi<T>(
   params?: QueryParams
 ): Promise<ApiResponse<T>> {
   const queryString = params ? buildQueryString(params) : '';
-  const url = `/api${endpoint}${queryString}`;
+  const url = `${strapiApiUrl}/api${endpoint}${queryString}`;
 
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',

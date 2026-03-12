@@ -66,7 +66,7 @@ export function Navbar() {
 
             {/* CTA Button */}
             <Link
-              href="/contact"
+              href="/#contact"
               className={cn(
                 'rounded-lg px-4 py-2 text-sm font-medium transition-colors',
                 'bg-[#C9A227] text-[#121212] hover:bg-[#A18220]',
@@ -126,7 +126,7 @@ export function Navbar() {
                 </Link>
               ))}
               <Link
-                href="/contact"
+                href="/#contact"
                 onClick={() => setMobileMenuOpen(false)}
                 className={cn(
                   'mt-2 rounded-lg px-4 py-2 text-center text-sm font-medium',

@@ -19,8 +19,10 @@ export function Hero({ homePage }: HeroProps) {
   const subtitle =
     homePage?.heroSubtitle ||
     'Digital Aksumite blends African heritage with cutting-edge engineering to build digital solutions that stand the test of time.';
-  const ctaButtonText = homePage?.heroPrimaryButtonText || 'Get in Touch';
-  const secondaryButtonText = homePage?.heroSecondaryButtonText || 'Our Services';
+  const ctaButtonText = homePage?.heroPrimaryButtonText || 'Our Services';
+  const ctaButtonUrl = homePage?.heroPrimaryButtonUrl || '/#services';
+  const secondaryButtonText = homePage?.heroSecondaryButtonText || 'View Projects';
+  const secondaryButtonUrl = homePage?.heroSecondaryButtonUrl || '/projects';
 
   return (
     <section className="relative overflow-hidden bg-[#0F2A44]">
@@ -58,7 +60,7 @@ export function Hero({ homePage }: HeroProps) {
           {/* CTA Buttons */}
           <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center">
             <Link
-              href="/contact"
+              href={ctaButtonUrl}
               className={cn(
                 'inline-flex items-center justify-center rounded-lg px-8 py-4',
                 'text-base font-semibold transition-all duration-200',
@@ -71,7 +73,7 @@ export function Hero({ homePage }: HeroProps) {
             </Link>
 
             <Link
-              href="#/contact"
+              href={secondaryButtonUrl}
               className={cn(
                 'inline-flex items-center justify-center rounded-lg px-8 py-4',
                 'text-base font-medium transition-all duration-200',

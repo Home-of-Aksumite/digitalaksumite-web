@@ -157,7 +157,9 @@ export interface HomePage {
   heroTitle: string;
   heroSubtitle: string;
   heroPrimaryButtonText: string;
+  heroPrimaryButtonUrl: string;
   heroSecondaryButtonText: string;
+  heroSecondaryButtonUrl: string;
   heroSlides: HeroSlide[];
   aboutTitle: string;
   aboutShortText: string;
