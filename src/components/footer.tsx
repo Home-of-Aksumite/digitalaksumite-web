@@ -5,7 +5,7 @@
 
 import Link from 'next/link';
 import { Container } from '@/components/container';
-import { SiteSettings } from '@/types/content';
+import { SiteSettings, Footer as FooterType } from '@/types/content';
 
 const footerLinks = {
   company: [
@@ -25,10 +25,18 @@ const footerLinks = {
 
 interface FooterProps {
   siteSettings?: SiteSettings;
+  footer?: FooterType | null;
 }
 
-export function Footer({ siteSettings }: FooterProps) {
+export function Footer({ siteSettings, footer }: FooterProps) {
   const currentYear = new Date().getFullYear();
+
+  const brandDescription =
+    footer?.description ||
+    'Ancient power meets modern technology. We build digital solutions that honor our heritage while embracing the future.';
+
+  const copyrightText =
+    footer?.copyrightText || `© ${currentYear} Digital Aksumite. All rights reserved.`;
 
   // Dynamic social links from SiteSettings
   const socialLinks = [
@@ -61,10 +69,7 @@ export function Footer({ siteSettings }: FooterProps) {
                 <span className="text-2xl">◈</span>
                 <span>Digital Aksumite</span>
               </Link>
-              <p className="mt-4 text-sm leading-relaxed text-[#E5E7EB]/80">
-                Ancient power meets modern technology. We build digital solutions that honor our
-                heritage while embracing the future.
-              </p>
+              <p className="mt-4 text-sm leading-relaxed text-[#E5E7EB]/80">{brandDescription}</p>
               {/* Social Links */}
               <div className="mt-6 flex gap-4">
                 {socialLinks.map((social) => (
@@ -146,9 +151,7 @@ export function Footer({ siteSettings }: FooterProps) {
 
           {/* Bottom Bar */}
           <div className="mt-8 flex flex-col items-center justify-between gap-4 md:flex-row">
-            <p className="text-sm text-[#E5E7EB]/60">
-              &copy; {currentYear} Digital Aksumite. All rights reserved.
-            </p>
+            <p className="text-sm text-[#E5E7EB]/60">{copyrightText}</p>
             <div className="flex gap-6">
               {footerLinks.legal.map((link) => (
                 <Link

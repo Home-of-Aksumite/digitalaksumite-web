@@ -105,7 +105,7 @@ export default async function Home() {
       <TestimonialsSection testimonials={testimonials} />
       <BlogSection posts={blogPosts} />
       <ContactSection contactPage={contactPage} siteSettings={siteSettings} />
-      <CTASection />
+      <CTASection homePage={homePage} />
     </>
   );
 }

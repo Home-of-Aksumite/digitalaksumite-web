@@ -40,6 +40,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const siteSettings = await pageService.siteSettings();
+  const footer = await pageService.footer();
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -48,7 +49,7 @@ export default async function RootLayout({
           <div className="flex min-h-screen flex-col">
             <Navbar />
             <main className="flex-1">{children}</main>
-            <Footer siteSettings={siteSettings} />
+            <Footer siteSettings={siteSettings} footer={footer} />
           </div>
         </ThemeProvider>
       </body>

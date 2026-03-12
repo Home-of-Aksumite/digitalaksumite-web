@@ -19,10 +19,16 @@ export function Hero({ homePage }: HeroProps) {
   const subtitle =
     homePage?.heroSubtitle ||
     'Digital Aksumite blends African heritage with cutting-edge engineering to build digital solutions that stand the test of time.';
-  const ctaButtonText = homePage?.heroPrimaryButtonText || 'Our Services';
-  const ctaButtonUrl = homePage?.heroPrimaryButtonUrl || '/#services';
-  const secondaryButtonText = homePage?.heroSecondaryButtonText || 'View Projects';
-  const secondaryButtonUrl = homePage?.heroSecondaryButtonUrl || '/projects';
+
+  const primaryText = homePage?.heroPrimaryButtonText?.trim();
+  const primaryUrl = homePage?.heroPrimaryButtonUrl?.trim();
+  const secondaryText = homePage?.heroSecondaryButtonText?.trim();
+  const secondaryUrl = homePage?.heroSecondaryButtonUrl?.trim();
+
+  const ctaButtonText = primaryText ?? 'Contact Us';
+  const ctaButtonUrl = primaryUrl ?? '/#contact';
+  const secondaryButtonText = secondaryText ?? 'Services';
+  const secondaryButtonUrl = secondaryUrl ?? '/#services';
 
   return (
     <section className="relative overflow-hidden bg-[#0F2A44]">

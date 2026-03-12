@@ -171,6 +171,10 @@ export interface HomePage {
   ctaTitle: string;
   ctaSubtitle: string;
   ctaButtonText: string;
+  ctaPrimaryButtonText?: string;
+  ctaPrimaryButtonUrl?: string;
+  ctaSecondaryButtonText?: string;
+  ctaSecondaryButtonUrl?: string;
   seoTitle?: string;
   seoDescription?: string;
   updatedAt: string;
@@ -242,13 +246,8 @@ export interface Navbar {
 }
 
 export interface Footer {
-  logo: StrapiMedia | null;
   description: string;
-  copyright: string;
-  legalLinks: Array<{
-    label: string;
-    url: string;
-  }>;
+  copyrightText?: string;
   updatedAt: string;
 }
 
