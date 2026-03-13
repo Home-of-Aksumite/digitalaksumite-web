@@ -1,6 +1,7 @@
 /**
  * Contact Section
- * Contact form on left, SiteSettings info on right
+ * Premium contact form with SiteSettings info
+ * Architectural, refined presentation
  */
 
 'use client';
@@ -11,6 +12,7 @@ import PhoneInput from 'react-phone-number-input';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Container } from '@/components/container';
+import { ScrollReveal } from '@/components/scroll-reveal';
 import { cn } from '@/lib/utils';
 import { contactService } from '@/services/contact.service';
 import type { ContactPage, SiteSettings } from '@/types/content';
@@ -23,7 +25,6 @@ interface ContactSectionProps {
 }
 
 export function ContactSection({ contactPage, siteSettings }: ContactSectionProps) {
-  // Use Strapi data if available, otherwise fallback to defaults
   const title = contactPage?.title || 'Get in Touch';
   const description =
     contactPage?.description ||
@@ -33,7 +34,6 @@ export function ContactSection({ contactPage, siteSettings }: ContactSectionProp
     contactPage?.formDescription ||
     'Fill out the form below and we will respond within 24 hours. Every message is read by our team.';
 
-  // SiteSettings contact info
   const email = siteSettings?.companyEmail || 'contact@digitalaksumite.com';
   const phone = siteSettings?.companyPhone || '+251 911 234 567';
   const address = siteSettings?.companyAddress || 'Addis Ababa, Ethiopia';
@@ -69,7 +69,6 @@ export function ContactSection({ contactPage, siteSettings }: ContactSectionProp
 
     try {
       await contactService.submit(data);
-
       setIsSuccess(true);
       reset();
     } catch (err) {
@@ -80,237 +79,231 @@ export function ContactSection({ contactPage, siteSettings }: ContactSectionProp
   };
 
   return (
-    <section id="contact" className={cn('py-20 md:py-28', 'bg-[#0F2A44]', 'dark:bg-[#0F2A44]')}>
+    <section id="contact" className={cn('py-28 md:py-32', 'bg-[#0F2A44]', 'dark:bg-[#0F2A44]')}>
       <Container>
         {/* Header */}
-        <div className="mb-12 text-center">
-          <span className="text-sm font-semibold tracking-wider text-[#C9A227] uppercase">
-            Contact Us
-          </span>
-          <h2 className={cn('mt-3 text-3xl font-bold tracking-tight md:text-4xl', 'text-white')}>
-            {title}
-          </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-[#E5E7EB]/80">{description}</p>
+        <div className="mb-16 text-center">
+          <ScrollReveal>
+            <span className="text-sm font-semibold tracking-widest text-[#C9A227] uppercase">
+              Contact Us
+            </span>
+          </ScrollReveal>
+
+          <ScrollReveal delay={0.1}>
+            <h2 className={cn('mt-4 text-4xl font-bold tracking-tight md:text-5xl', 'text-white')}>
+              {title}
+            </h2>
+          </ScrollReveal>
+
+          <ScrollReveal delay={0.2}>
+            <p className="mx-auto mt-6 max-w-2xl text-lg text-[#E5E7EB]/80 md:text-xl">
+              {description}
+            </p>
+          </ScrollReveal>
         </div>
 
         <div className="grid gap-12 lg:grid-cols-2">
           {/* Left Column - Form */}
-          <div className="rounded-xl bg-white/5 p-8 backdrop-blur-sm">
-            <h3 className="text-2xl font-bold text-white">{formTitle}</h3>
-            <p className="mt-2 text-[#E5E7EB]/70">{formDescription}</p>
+          <ScrollReveal>
+            <div className="rounded-xl border border-white/10 bg-white/5 p-8 backdrop-blur-sm">
+              <h3 className="text-2xl font-bold text-white">{formTitle}</h3>
+              <p className="mt-2 text-[#E5E7EB]/70">{formDescription}</p>
 
-            {isSuccess ? (
-              <div className="mt-6 rounded-lg bg-green-50 p-6 text-center dark:bg-green-900/20">
-                <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/40">
-                  <svg
-                    className="h-6 w-6 text-green-600 dark:text-green-400"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
+              {isSuccess ? (
+                <div className="mt-8 rounded-xl border border-green-500/20 bg-green-500/10 p-8 text-center">
+                  <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-500/20">
+                    <svg
+                      className="h-8 w-8 text-green-400"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
                       strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                </div>
-                <h4 className="text-lg font-semibold text-green-800 dark:text-green-300">
-                  Message Sent!
-                </h4>
-                <p className="mt-2 text-green-700 dark:text-green-400">
-                  Thank you for reaching out. We will get back to you within 24 hours.
-                </p>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-4">
-                {error && (
-                  <div className="rounded-lg bg-red-50 p-4 text-red-700 dark:bg-red-900/20 dark:text-red-400">
-                    {error}
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
                   </div>
-                )}
-
-                {/* Name */}
-                <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-[#E5E7EB]">
-                    Full Name
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    {...register('name')}
-                    className={cn(
-                      'mt-1 block w-full rounded-lg border px-4 py-3',
-                      'border-[#E5E7EB]/20 bg-white/10 text-white placeholder-[#E5E7EB]/50',
-                      'focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none'
-                    )}
-                    placeholder="Your full name"
-                  />
-                  {errors.name?.message && (
-                    <p className="mt-1 text-sm text-red-400">{errors.name.message}</p>
-                  )}
+                  <h4 className="text-xl font-semibold text-white">Message Sent!</h4>
+                  <p className="mt-2 text-[#E5E7EB]/70">
+                    Thank you for reaching out. We will get back to you within 24 hours.
+                  </p>
                 </div>
-
-                {/* Email */}
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-[#E5E7EB]">
-                    Email Address
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    {...register('email')}
-                    className={cn(
-                      'mt-1 block w-full rounded-lg border px-4 py-3',
-                      'border-[#E5E7EB]/20 bg-white/10 text-white placeholder-[#E5E7EB]/50',
-                      'focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none'
-                    )}
-                    placeholder="your@email.com"
-                  />
-                  {errors.email?.message && (
-                    <p className="mt-1 text-sm text-red-400">{errors.email.message}</p>
+              ) : (
+                <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-5">
+                  {error && (
+                    <div className="rounded-lg border border-red-500/20 bg-red-500/10 p-4 text-red-300">
+                      {error}
+                    </div>
                   )}
-                </div>
 
-                {/* Phone */}
-                <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-[#E5E7EB]">
-                    Phone Number
-                  </label>
-                  <Controller
-                    control={control}
-                    name="phone"
-                    render={({ field }) => (
-                      <PhoneInput
-                        {...field}
-                        id="phone"
-                        placeholder="Enter phone number"
-                        defaultCountry="ET"
-                        international
-                        className="mt-1"
-                      />
-                    )}
-                  />
-                  {errors.phone?.message && (
-                    <p className="mt-1 text-sm text-red-400">{errors.phone.message}</p>
-                  )}
-                </div>
+                  {/* Form Fields with refined styling */}
+                  <FormField label="Full Name" error={errors.name?.message}>
+                    <input
+                      type="text"
+                      {...register('name')}
+                      className={formInputStyles}
+                      placeholder="Your full name"
+                    />
+                  </FormField>
 
-                {/* Inquiry Type */}
-                <div>
-                  <label htmlFor="inquiryType" className="block text-sm font-medium text-[#E5E7EB]">
-                    What can we help you with?
-                  </label>
-                  <select
-                    id="inquiryType"
-                    {...register('inquiryType')}
+                  <FormField label="Email Address" error={errors.email?.message}>
+                    <input
+                      type="email"
+                      {...register('email')}
+                      className={formInputStyles}
+                      placeholder="your@email.com"
+                    />
+                  </FormField>
+
+                  <FormField label="Phone Number" error={errors.phone?.message}>
+                    <Controller
+                      control={control}
+                      name="phone"
+                      render={({ field }) => (
+                        <PhoneInput
+                          {...field}
+                          defaultCountry="ET"
+                          international
+                          className="PhoneInput--custom"
+                        />
+                      )}
+                    />
+                  </FormField>
+
+                  <FormField label="What can we help you with?" error={errors.inquiryType?.message}>
+                    <select {...register('inquiryType')} className={formSelectStyles}>
+                      <option value="general" className="bg-[#0F2A44]">
+                        General Inquiry
+                      </option>
+                      <option value="project" className="bg-[#0F2A44]">
+                        Start a Project
+                      </option>
+                      <option value="consultation" className="bg-[#0F2A44]">
+                        Request Consultation
+                      </option>
+                      <option value="partnership" className="bg-[#0F2A44]">
+                        Partnership Opportunity
+                      </option>
+                      <option value="career" className="bg-[#0F2A44]">
+                        Career / Job Inquiry
+                      </option>
+                      <option value="other" className="bg-[#0F2A44]">
+                        Other
+                      </option>
+                    </select>
+                  </FormField>
+
+                  <FormField label="Your Message" error={errors.message?.message}>
+                    <textarea
+                      {...register('message')}
+                      rows={4}
+                      className={formInputStyles}
+                      placeholder="Tell us about your project or inquiry..."
+                    />
+                  </FormField>
+
+                  {/* Premium Submit Button */}
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
                     className={cn(
-                      'mt-1 block w-full rounded-lg border px-4 py-3',
-                      'border-[#E5E7EB]/20 bg-white/10 text-white',
-                      'focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none'
+                      'w-full rounded-lg px-8 py-4 text-base font-semibold',
+                      'bg-[#C9A227] text-[#121212]',
+                      'transition-all duration-300',
+                      'hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(201,162,39,0.3)]',
+                      'disabled:cursor-not-allowed disabled:opacity-50',
+                      'focus:ring-2 focus:ring-[#C9A227]/50 focus:outline-none'
                     )}
                   >
-                    <option value="general" className="bg-[#0F2A44]">
-                      General Inquiry
-                    </option>
-                    <option value="project" className="bg-[#0F2A44]">
-                      Start a Project
-                    </option>
-                    <option value="consultation" className="bg-[#0F2A44]">
-                      Request Consultation
-                    </option>
-                    <option value="partnership" className="bg-[#0F2A44]">
-                      Partnership Opportunity
-                    </option>
-                    <option value="career" className="bg-[#0F2A44]">
-                      Career / Job Inquiry
-                    </option>
-                    <option value="other" className="bg-[#0F2A44]">
-                      Other
-                    </option>
-                  </select>
-                  {errors.inquiryType?.message && (
-                    <p className="mt-1 text-sm text-red-400">{errors.inquiryType.message}</p>
-                  )}
-                </div>
-
-                {/* Message */}
-                <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-[#E5E7EB]">
-                    Your Message
-                  </label>
-                  <textarea
-                    id="message"
-                    rows={4}
-                    {...register('message')}
-                    className={cn(
-                      'mt-1 block w-full rounded-lg border px-4 py-3',
-                      'border-[#E5E7EB]/20 bg-white/10 text-white placeholder-[#E5E7EB]/50',
-                      'focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none'
-                    )}
-                    placeholder="Tell us about your project or inquiry..."
-                  />
-                  {errors.message?.message && (
-                    <p className="mt-1 text-sm text-red-400">{errors.message.message}</p>
-                  )}
-                </div>
-
-                {/* Submit Button */}
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className={cn(
-                    'w-full rounded-lg px-8 py-4 text-base font-semibold',
-                    'bg-[#C9A227] text-[#121212] transition-all duration-200',
-                    'hover:bg-[#A18220] focus:ring-2 focus:ring-[#C9A227] focus:outline-none',
-                    'disabled:cursor-not-allowed disabled:opacity-50'
-                  )}
-                >
-                  {isSubmitting ? 'Sending...' : 'Send Message'}
-                </button>
-              </form>
-            )}
-          </div>
+                    {isSubmitting ? 'Sending...' : 'Send Message'}
+                  </button>
+                </form>
+              )}
+            </div>
+          </ScrollReveal>
 
           {/* Right Column - Contact Info */}
-          <div className="flex flex-col justify-center">
-            <h3 className="text-2xl font-bold text-white">Contact Information</h3>
-            <p className="mt-2 text-[#E5E7EB]/70">
-              Reach out to us directly through any of these channels.
-            </p>
-
-            <div className="mt-8 space-y-6">
-              <ContactItem icon={EmailIcon} label="Email" value={email} href={`mailto:${email}`} />
-              {phone && (
-                <ContactItem icon={PhoneIcon} label="Phone" value={phone} href={`tel:${phone}`} />
-              )}
-              {address && <ContactItem icon={LocationIcon} label="Address" value={address} />}
-              {officeHours && (
-                <ContactItem icon={ClockIcon} label="Office Hours" value={officeHours} />
-              )}
-            </div>
-
-            {/* Quick CTA */}
-            <div className="mt-10 rounded-lg bg-[#C9A227]/10 p-6">
-              <h4 className="text-lg font-semibold text-white">Prefer to call?</h4>
-              <p className="mt-2 text-sm text-[#E5E7EB]/70">
-                Our team is available during office hours to discuss your project needs.
+          <ScrollReveal delay={0.2}>
+            <div className="flex flex-col justify-center lg:pl-8">
+              <h3 className="text-2xl font-bold text-white">Contact Information</h3>
+              <p className="mt-2 text-[#E5E7EB]/70">
+                Reach out to us directly through any of these channels.
               </p>
-              <Link
-                href={`tel:${phone}`}
-                className="mt-4 inline-flex items-center text-[#C9A227] hover:underline"
-              >
-                <PhoneIcon className="mr-2 h-4 w-4" />
-                Call us now
-              </Link>
+
+              <div className="mt-10 space-y-8">
+                <ContactItem
+                  icon={EmailIcon}
+                  label="Email"
+                  value={email}
+                  href={`mailto:${email}`}
+                />
+                {phone && (
+                  <ContactItem icon={PhoneIcon} label="Phone" value={phone} href={`tel:${phone}`} />
+                )}
+                {address && <ContactItem icon={LocationIcon} label="Address" value={address} />}
+                {officeHours && (
+                  <ContactItem icon={ClockIcon} label="Office Hours" value={officeHours} />
+                )}
+              </div>
+
+              {/* Quick CTA Card */}
+              <div className="mt-10 rounded-xl border border-[#C9A227]/20 bg-gradient-to-br from-[#C9A227]/10 to-transparent p-6">
+                <h4 className="text-lg font-semibold text-white">Prefer to call?</h4>
+                <p className="mt-2 text-sm text-[#E5E7EB]/70">
+                  Our team is available during office hours to discuss your project needs.
+                </p>
+                <Link
+                  href={`tel:${phone}`}
+                  className="mt-4 inline-flex items-center text-[#C9A227] transition-colors hover:text-[#A18220]"
+                >
+                  <PhoneIcon className="mr-2 h-4 w-4" />
+                  Call us now
+                </Link>
+              </div>
             </div>
-          </div>
+          </ScrollReveal>
         </div>
       </Container>
     </section>
   );
 }
+
+// Form Field wrapper component
+function FormField({
+  label,
+  error,
+  children,
+}: {
+  label: string;
+  error?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div>
+      <label className="mb-1.5 block text-sm font-medium text-[#E5E7EB]/90">{label}</label>
+      {children}
+      {error && <p className="mt-1.5 text-sm text-red-400">{error}</p>}
+    </div>
+  );
+}
+
+// Input styles
+const formInputStyles = cn(
+  'block w-full rounded-lg px-4 py-3.5',
+  'bg-white/5 border border-white/10',
+  'text-white placeholder-white/40',
+  'transition-all duration-200',
+  'focus:border-[#C9A227]/50 focus:ring-1 focus:ring-[#C9A227]/30 focus:outline-none',
+  'hover:border-white/20'
+);
+
+const formSelectStyles = cn(
+  'block w-full rounded-lg px-4 py-3.5',
+  'bg-white/5 border border-white/10',
+  'text-white',
+  'transition-all duration-200',
+  'focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none',
+  'hover:border-white/20'
+);
 
 function ContactItem({
   icon: Icon,

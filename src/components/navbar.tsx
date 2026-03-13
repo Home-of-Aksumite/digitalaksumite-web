@@ -1,12 +1,12 @@
 /**
  * Navbar Component
- * Site navigation with theme-aware styling
+ * Transparent glass navbar that floats over hero
  */
 
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Container } from '@/components/container';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { cn } from '@/lib/utils';
@@ -24,13 +24,23 @@ const navLinks = [
 
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
     <header
       className={cn(
-        'sticky top-0 z-50 w-full border-b transition-colors',
-        'border-[#E5E7EB] bg-white',
-        'dark:border-[#1F2937] dark:bg-[#121212]'
+        'fixed top-0 z-50 w-full transition-all duration-300',
+        scrolled
+          ? 'border-b border-white/10 bg-[#0F2A44]/95 shadow-lg backdrop-blur-md'
+          : 'bg-transparent'
       )}
     >
       <Container>
@@ -40,8 +50,7 @@ export function Navbar() {
             href="/"
             className={cn(
               'flex items-center gap-2 text-xl font-bold transition-colors',
-              'text-[#0F2A44]',
-              'dark:text-white'
+              'text-white'
             )}
           >
             <span className="text-2xl">◈</span>
@@ -56,8 +65,7 @@ export function Navbar() {
                 href={link.href}
                 className={cn(
                   'text-sm font-medium transition-colors',
-                  'text-[#0F2A44] hover:text-[#C9A227]',
-                  'dark:text-[#E5E7EB] dark:hover:text-[#C9A227]'
+                  'text-white/80 hover:text-[#C9A227]'
                 )}
               >
                 {link.label}
@@ -77,37 +85,30 @@ export function Navbar() {
             </Link>
 
             {/* Theme Toggle */}
-            <ThemeToggle />
+            <div className="hidden md:block">
+              <ThemeToggle />
+            </div>
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="flex items-center gap-4 md:hidden">
-            <ThemeToggle />
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className={cn(
-                'rounded-lg p-2 transition-colors',
-                'text-[#0F2A44] hover:bg-[#0F2A44]/10',
-                'dark:text-[#E5E7EB] dark:hover:bg-white/10'
-              )}
-              aria-label="Toggle menu"
-            >
-              {mobileMenuOpen ? (
-                <CloseIcon className="h-6 w-6" />
-              ) : (
-                <MenuIcon className="h-6 w-6" />
-              )}
-            </button>
-          </div>
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className={cn(
+              'rounded-lg p-2 transition-colors md:hidden',
+              'text-white hover:bg-white/10'
+            )}
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? <CloseIcon className="h-6 w-6" /> : <MenuIcon className="h-6 w-6" />}
+          </button>
         </nav>
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
           <div
             className={cn(
-              'border-t py-4 md:hidden',
-              'border-[#E5E7EB] bg-white',
-              'dark:border-[#1F2937] dark:bg-[#121212]'
+              'border-t py-4 backdrop-blur-md md:hidden',
+              'border-white/10 bg-[#0F2A44]/95'
             )}
           >
             <div className="flex flex-col gap-4">
@@ -118,8 +119,7 @@ export function Navbar() {
                   onClick={() => setMobileMenuOpen(false)}
                   className={cn(
                     'text-base font-medium transition-colors',
-                    'text-[#0F2A44] hover:text-[#C9A227]',
-                    'dark:text-[#E5E7EB] dark:hover:text-[#C9A227]'
+                    'text-white/80 hover:text-[#C9A227]'
                   )}
                 >
                   {link.label}

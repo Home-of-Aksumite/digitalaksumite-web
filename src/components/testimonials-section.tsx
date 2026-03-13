@@ -1,10 +1,14 @@
 /**
  * Testimonials Section
- * Display client testimonials from Strapi CMS
+ * Display client testimonials with elegant styling and animations
  */
 
+'use client';
+
 import { Container } from '@/components/container';
+import { ScrollReveal, StaggerContainer, StaggerItem } from '@/components/scroll-reveal';
 import { cn } from '@/lib/utils';
+import { motion } from 'framer-motion';
 
 // API Testimonial interface (matches Strapi response)
 export interface ApiTestimonial {
@@ -26,44 +30,57 @@ export function TestimonialsSection({
   subtitle = 'Trusted by businesses across Africa and beyond to deliver exceptional digital experiences.',
   testimonials = [],
 }: TestimonialsSectionProps) {
-  // Don't render if no testimonials
   if (!testimonials || testimonials.length === 0) {
-    return;
+    return undefined;
   }
+
   return (
-    <section id="testimonials" className={cn('py-20 md:py-28', 'bg-white', 'dark:bg-[#121212]')}>
+    <section
+      id="testimonials"
+      className={cn('py-28 md:py-32', 'bg-[#18181B]', 'dark:bg-[#18181B]')}
+    >
       <Container>
         {/* Section Header */}
         <div className="mb-16 text-center">
-          <span className="text-sm font-semibold tracking-wider text-[#C9A227] uppercase">
-            Testimonials
-          </span>
-          <h2
-            className={cn(
-              'mt-3 text-3xl font-bold tracking-tight md:text-4xl',
-              'text-[#0F2A44]',
-              'dark:text-white'
-            )}
-          >
-            {title}
-          </h2>
-          <p
-            className={cn(
-              'mx-auto mt-4 max-w-2xl text-lg',
-              'text-[#6B7280]',
-              'dark:text-[#9CA3AF]'
-            )}
-          >
-            {subtitle}
-          </p>
+          <ScrollReveal>
+            <span className="text-sm font-semibold tracking-widest text-[#C9A227] uppercase">
+              Testimonials
+            </span>
+          </ScrollReveal>
+
+          <ScrollReveal delay={0.1}>
+            <h2
+              className={cn(
+                'mt-3 text-4xl font-bold tracking-tight md:text-5xl',
+                'text-[#0F2A44]',
+                'dark:text-white'
+              )}
+            >
+              {title}
+            </h2>
+          </ScrollReveal>
+
+          <ScrollReveal delay={0.2}>
+            <p
+              className={cn(
+                'mx-auto mt-4 max-w-2xl text-lg',
+                'text-[#6B7280]',
+                'dark:text-[#9CA3AF]'
+              )}
+            >
+              {subtitle}
+            </p>
+          </ScrollReveal>
         </div>
 
         {/* Testimonials Grid */}
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <StaggerContainer className="grid gap-8 md:grid-cols-2 lg:grid-cols-3" staggerDelay={0.1}>
           {testimonials.map((testimonial, index) => (
-            <TestimonialCard key={index} testimonial={testimonial} />
+            <StaggerItem key={index}>
+              <TestimonialCard testimonial={testimonial} />
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerContainer>
       </Container>
     </section>
   );
@@ -71,9 +88,20 @@ export function TestimonialsSection({
 
 function TestimonialCard({ testimonial }: { testimonial: ApiTestimonial }) {
   return (
-    <div className={cn('relative rounded-xl p-8', 'bg-[#F9FAFB]', 'dark:bg-[#1F2937]/50')}>
+    <motion.div
+      className={cn(
+        'relative rounded-xl p-8',
+        'bg-[#F9FAFB]',
+        'dark:bg-[#1F2937]/50',
+        'border border-transparent',
+        'transition-all duration-500',
+        'hover:border-[#C9A227]/20 hover:shadow-[0_8px_30px_rgba(15,42,68,0.08)]'
+      )}
+      whileHover={{ y: -4 }}
+      transition={{ duration: 0.3 }}
+    >
       {/* Quote Icon */}
-      <div className="mb-4 text-4xl text-[#C9A227]">&ldquo;</div>
+      <div className="mb-4 text-4xl text-[#C9A227]/30">&ldquo;</div>
 
       {/* Content */}
       <p className={cn('mb-6 text-base leading-relaxed', 'text-[#374151]', 'dark:text-[#E5E7EB]')}>
@@ -82,7 +110,7 @@ function TestimonialCard({ testimonial }: { testimonial: ApiTestimonial }) {
 
       {/* Author */}
       <div className="flex items-center gap-4">
-        <div className="relative h-12 w-12 overflow-hidden rounded-full bg-[#0F2A44]">
+        <div className="relative h-12 w-12 overflow-hidden rounded-full bg-gradient-to-br from-[#0F2A44] to-[#1a3a5c]">
           <div className="flex h-full w-full items-center justify-center font-semibold text-white">
             {(testimonial.clientName || 'A').charAt(0)}
           </div>
@@ -94,6 +122,9 @@ function TestimonialCard({ testimonial }: { testimonial: ApiTestimonial }) {
           <div className="text-sm text-[#6B7280] dark:text-[#9CA3AF]">{testimonial.company}</div>
         </div>
       </div>
-    </div>
+
+      {/* Subtle accent */}
+      <div className="absolute top-0 right-8 left-8 h-[2px] bg-gradient-to-r from-transparent via-[#C9A227]/30 to-transparent" />
+    </motion.div>
   );
 }

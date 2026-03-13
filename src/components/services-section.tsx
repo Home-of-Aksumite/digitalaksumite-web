@@ -1,10 +1,14 @@
 /**
  * Services Section
- * Display featured services from Strapi CMS
+ * Display featured services with premium hover effects and stagger animations
  */
 
+'use client';
+
 import { Container } from '@/components/container';
+import { ScrollReveal, StaggerContainer, StaggerItem } from '@/components/scroll-reveal';
 import { cn } from '@/lib/utils';
+import { motion } from 'framer-motion';
 
 // Icon mapping from service slugs to React components
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -36,80 +40,120 @@ export function ServicesSection({
   subtitle = 'We deliver end-to-end digital solutions tailored to your business needs, from concept to deployment.',
   services = [],
 }: ServicesSectionProps) {
-  // If no services provided, don't render
   if (!services || services.length === 0) {
-    return;
+    return undefined;
   }
+
   return (
-    <section id="services" className={cn('py-20 md:py-28', 'bg-white', 'dark:bg-[#121212]')}>
+    <section id="services" className={cn('py-28 md:py-32', 'bg-[#18181B]', 'dark:bg-[#18181B]')}>
       <Container>
         {/* Section Header */}
         <div className="mb-16 text-center">
-          <span className="text-sm font-semibold tracking-wider text-[#C9A227] uppercase">
-            What We Do
-          </span>
-          <h2
-            className={cn(
-              'mt-3 text-3xl font-bold tracking-tight md:text-4xl',
-              'text-[#0F2A44]',
-              'dark:text-white'
-            )}
-          >
-            {title}
-          </h2>
-          <p
-            className={cn(
-              'mx-auto mt-4 max-w-2xl text-lg',
-              'text-[#6B7280]',
-              'dark:text-[#9CA3AF]'
-            )}
-          >
-            {subtitle}
-          </p>
+          <ScrollReveal>
+            <span className="text-sm font-semibold tracking-widest text-[#C9A227] uppercase">
+              What We Do
+            </span>
+          </ScrollReveal>
+
+          <ScrollReveal delay={0.1}>
+            <h2
+              className={cn(
+                'mt-3 text-4xl font-bold tracking-tight md:text-5xl',
+                'text-[#0F2A44]',
+                'dark:text-white'
+              )}
+            >
+              {title}
+            </h2>
+          </ScrollReveal>
+
+          <ScrollReveal delay={0.2}>
+            <p
+              className={cn(
+                'mx-auto mt-4 max-w-2xl text-lg',
+                'text-[#6B7280]',
+                'dark:text-[#9CA3AF]'
+              )}
+            >
+              {subtitle}
+            </p>
+          </ScrollReveal>
         </div>
 
         {/* Services Grid */}
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+        <StaggerContainer className="grid gap-8 md:grid-cols-2 lg:grid-cols-4" staggerDelay={0.1}>
           {services.map((service) => {
             const IconComponent = iconMap[service.slug] || DefaultIcon;
 
             return (
-              <div
-                key={service.slug}
-                className={cn(
-                  'group rounded-xl border p-8 transition-all duration-200',
-                  'border-[#E5E7EB] bg-white hover:border-[#C9A227] hover:shadow-lg',
-                  'dark:border-[#1F2937] dark:bg-[#1F2937]/50 dark:hover:border-[#C9A227]'
-                )}
-              >
-                {/* Icon */}
-                <div
-                  className={cn(
-                    'mb-6 inline-flex rounded-lg p-3',
-                    'bg-[#0F2A44] text-white',
-                    'dark:bg-[#C9A227] dark:text-[#121212]'
-                  )}
-                >
-                  <IconComponent className="h-6 w-6" />
-                </div>
-
-                {/* Content */}
-                <h3
-                  className={cn('mb-3 text-xl font-semibold', 'text-[#0F2A44]', 'dark:text-white')}
-                >
-                  {service.title}
-                </h3>
-                <p
-                  className={cn('text-sm leading-relaxed', 'text-[#6B7280]', 'dark:text-[#9CA3AF]')}
-                >
-                  {service.description}
-                </p>
-              </div>
+              <StaggerItem key={service.slug}>
+                <ServiceCard service={service} IconComponent={IconComponent} />
+              </StaggerItem>
             );
           })}
-        </div>
+        </StaggerContainer>
       </Container>
     </section>
+  );
+}
+
+function ServiceCard({
+  service,
+  IconComponent,
+}: {
+  service: ApiService;
+  IconComponent: React.ComponentType<{ className?: string }>;
+}) {
+  return (
+    <motion.div
+      className={cn(
+        'group relative rounded-xl border p-8',
+        'border-[#2D3748] bg-[#1F2937]',
+        'dark:border-[#2D3748] dark:bg-[#1F2937]',
+        'transition-all duration-500',
+        'hover:border-[#C9A227]/50 hover:shadow-[0_8px_30px_rgba(201,162,39,0.12)]',
+        'hover:-translate-y-1'
+      )}
+      whileHover={{ y: -4 }}
+      transition={{ duration: 0.3 }}
+    >
+      {/* Subtle gradient overlay on hover */}
+      <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-[#C9A227]/5 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+
+      {/* Icon */}
+      <div
+        className={cn(
+          'relative mb-6 inline-flex rounded-lg p-3',
+          'bg-[#0F2A44] text-white',
+          'dark:bg-[#C9A227] dark:text-[#121212]',
+          'transition-all duration-300',
+          'group-hover:scale-110 group-hover:shadow-lg'
+        )}
+      >
+        <IconComponent className="h-6 w-6" />
+      </div>
+
+      {/* Content */}
+      <h3
+        className={cn(
+          'relative mb-3 text-xl font-semibold',
+          'text-[#0F2A44]',
+          'dark:text-white',
+          'transition-colors duration-300',
+          'group-hover:text-[#C9A227]'
+        )}
+      >
+        {service.title}
+      </h3>
+      <p
+        className={cn('relative text-sm leading-relaxed', 'text-[#6B7280]', 'dark:text-[#9CA3AF]')}
+      >
+        {service.description}
+      </p>
+
+      {/* Subtle bottom accent */}
+      <div className="absolute right-8 bottom-0 left-8 h-[2px] bg-gradient-to-r from-transparent via-[#C9A227] to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+    </motion.div>
   );
 }
 

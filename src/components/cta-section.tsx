@@ -1,10 +1,15 @@
 /**
  * CTA Section
- * Call-to-action banner with navy background
+ * Impactful call-to-action with animated gradient background
+ * Premium, architectural presentation
  */
 
+'use client';
+
 import { Container } from '@/components/container';
-import { cn } from '@/lib/utils';
+import { ScrollReveal } from '@/components/scroll-reveal';
+import { PremiumButton } from '@/components/premium-button';
+import { motion } from 'framer-motion';
 import type { HomePage } from '@/types/content';
 
 interface CTASectionProps {
@@ -35,10 +40,25 @@ export function CTASection({
 
   return (
     <section className="relative overflow-hidden bg-[#0F2A44]">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-5">
+      {/* Animated Gradient Background */}
+      <div className="absolute inset-0">
+        {/* Subtle animated glow */}
+        <motion.div
+          className="absolute top-1/2 left-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#C9A227]/10 blur-3xl"
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.3, 0.5, 0.3],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }}
+        />
+
+        {/* Grid pattern */}
         <div
-          className="absolute inset-0"
+          className="absolute inset-0 opacity-[0.03]"
           style={{
             backgroundImage: `linear-gradient(to right, #C9A227 1px, transparent 1px),
                               linear-gradient(to bottom, #C9A227 1px, transparent 1px)`,
@@ -48,63 +68,40 @@ export function CTASection({
       </div>
 
       {/* Gold Accent Lines */}
-      <div className="absolute top-0 left-0 h-full w-1 bg-gradient-to-b from-transparent via-[#C9A227] to-transparent opacity-50" />
-      <div className="absolute top-0 right-0 h-full w-1 bg-gradient-to-b from-transparent via-[#C9A227] to-transparent opacity-50" />
+      <div className="absolute top-0 left-0 h-full w-[2px] bg-gradient-to-b from-transparent via-[#C9A227]/50 to-transparent" />
+      <div className="absolute top-0 right-0 h-full w-[2px] bg-gradient-to-b from-transparent via-[#C9A227]/50 to-transparent" />
 
-      <Container className="relative">
-        <div className="py-20 text-center md:py-28">
-          {/* Title */}
-          <h2 className="text-3xl font-bold tracking-tight text-white md:text-4xl lg:text-5xl">
-            {resolvedTitle}
-          </h2>
+      <Container className="relative z-10">
+        <div className="py-28 text-center md:py-32">
+          <ScrollReveal>
+            <h2 className="text-4xl font-bold tracking-tight text-white md:text-5xl lg:text-6xl">
+              {resolvedTitle}
+            </h2>
+          </ScrollReveal>
 
-          {/* Subtitle */}
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-[#E5E7EB]/80">{resolvedSubtitle}</p>
+          <ScrollReveal delay={0.1}>
+            <p className="mx-auto mt-6 max-w-2xl text-lg text-[#E5E7EB]/80 md:text-xl">
+              {resolvedSubtitle}
+            </p>
+          </ScrollReveal>
 
           {/* CTA Buttons */}
-          <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <a
-              href={resolvedPrimaryCta.href}
-              className={cn(
-                'inline-flex items-center justify-center rounded-lg px-8 py-4',
-                'text-base font-semibold transition-all duration-200',
-                'bg-[#C9A227] text-[#121212] hover:bg-[#A18220]',
-                'focus:ring-2 focus:ring-[#C9A227] focus:ring-offset-2 focus:ring-offset-[#0F2A44] focus:outline-none'
-              )}
-            >
-              {resolvedPrimaryCta.label}
-              <ArrowIcon className="ml-2 h-5 w-5" />
-            </a>
+          <ScrollReveal delay={0.2}>
+            <div className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row">
+              <PremiumButton href={resolvedPrimaryCta.href} variant="primary">
+                {resolvedPrimaryCta.label}
+              </PremiumButton>
 
-            <a
-              href={resolvedSecondaryCta.href}
-              className={cn(
-                'inline-flex items-center justify-center rounded-lg px-8 py-4',
-                'text-base font-medium transition-all duration-200',
-                'border border-[#E5E7EB]/30 text-white',
-                'hover:border-[#C9A227] hover:text-[#C9A227]',
-                'focus:ring-2 focus:ring-[#C9A227] focus:ring-offset-2 focus:ring-offset-[#0F2A44] focus:outline-none'
-              )}
-            >
-              {resolvedSecondaryCta.label}
-            </a>
-          </div>
+              <PremiumButton href={resolvedSecondaryCta.href} variant="secondary">
+                {resolvedSecondaryCta.label}
+              </PremiumButton>
+            </div>
+          </ScrollReveal>
+
+          {/* Bottom decorative line */}
+          <div className="absolute bottom-0 left-1/2 h-[1px] w-32 -translate-x-1/2 bg-gradient-to-r from-transparent via-[#C9A227]/50 to-transparent" />
         </div>
       </Container>
     </section>
-  );
-}
-
-function ArrowIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-    </svg>
   );
 }

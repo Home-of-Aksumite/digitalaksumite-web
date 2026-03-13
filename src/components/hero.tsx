@@ -1,17 +1,56 @@
 /**
- * Hero Section
- * Main hero with navy background and gold CTA
- * Uses content from Strapi HomePage single type
+ * Premium Hero Section
+ * Immersive hero with animated gradient, staggered text reveal
+ * Architectural, precise, calm - inspired by Stripe and Apple
  */
 
-import Link from 'next/link';
+'use client';
+
+import { AnimatedGradientBackground } from '@/components/animated-gradient-background';
+import { PremiumButton } from '@/components/premium-button';
 import { Container } from '@/components/container';
-import { cn } from '@/lib/utils';
+import { motion, type Variants } from 'framer-motion';
 import type { HomePage } from '@/types/content';
 
 interface HeroProps {
   homePage?: HomePage | null;
 }
+
+// Animation variants
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.15,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.8,
+      ease: [0.25, 0.46, 0.45, 0.94],
+    },
+  },
+};
+
+const titleWordVariants: Variants = {
+  hidden: { opacity: 0, y: 40 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: [0.25, 0.46, 0.45, 0.94],
+    },
+  },
+};
 
 export function Hero({ homePage }: HeroProps) {
   // Use Strapi data if available, otherwise fallback to defaults
@@ -25,88 +64,85 @@ export function Hero({ homePage }: HeroProps) {
   const secondaryText = homePage?.heroSecondaryButtonText?.trim();
   const secondaryUrl = homePage?.heroSecondaryButtonUrl?.trim();
 
-  const ctaButtonText = primaryText ?? 'Contact Us';
+  const ctaButtonText = primaryText ?? 'Start a Project';
   const ctaButtonUrl = primaryUrl ?? '/#contact';
-  const secondaryButtonText = secondaryText ?? 'Services';
-  const secondaryButtonUrl = secondaryUrl ?? '/#services';
+  const secondaryButtonText = secondaryText ?? 'View Services';
+  const secondaryButtonUrl = secondaryUrl ?? '/services';
+
+  // Split title for staggered animation
+  const titleLines = title.split('\n');
 
   return (
-    <section className="relative overflow-hidden bg-[#0F2A44]">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-10">
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `radial-gradient(circle at 2px 2px, #C9A227 1px, transparent 0)`,
-            backgroundSize: '40px 40px',
-          }}
-        />
-      </div>
+    <section className="relative min-h-screen overflow-hidden bg-[#0F2A44]">
+      {/* Animated Gradient Background */}
+      <AnimatedGradientBackground />
 
-      {/* Gold Accent Line */}
-      <div className="absolute right-0 bottom-0 left-0 h-1 bg-gradient-to-r from-transparent via-[#C9A227] to-transparent" />
-
-      <Container className="relative">
-        <div className="flex min-h-[600px] flex-col items-center justify-center py-24 text-center md:min-h-[700px] md:py-32">
-          {/* Title */}
-          <h1 className="max-w-4xl text-4xl leading-tight font-bold tracking-tight text-white md:text-5xl lg:text-6xl">
-            {title.split('\n').map((line, i) => (
-              <span key={i}>
-                {line}
-                {i < title.split('\n').length - 1 && <br />}
+      {/* Content */}
+      <Container className="relative z-10">
+        <motion.div
+          className="flex min-h-screen flex-col items-center justify-center py-32 pt-40"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          {/* Title - Staggered word by word */}
+          <motion.h1 className="max-w-5xl text-center" variants={containerVariants}>
+            {titleLines.map((line, lineIndex) => (
+              <span key={lineIndex} className="block">
+                {line.split(' ').map((word, wordIndex) => (
+                  <motion.span
+                    key={`${lineIndex}-${wordIndex}`}
+                    className="mr-[0.3em] inline-block text-5xl font-bold tracking-tight text-white md:text-6xl lg:text-7xl xl:text-8xl"
+                    variants={titleWordVariants}
+                  >
+                    {word}
+                  </motion.span>
+                ))}
               </span>
             ))}
-          </h1>
+          </motion.h1>
 
           {/* Subtitle */}
-          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-[#E5E7EB]/80 md:text-xl">
+          <motion.p
+            className="mt-8 max-w-2xl text-center text-lg leading-relaxed text-[#E5E7EB]/80 md:text-xl"
+            variants={itemVariants}
+          >
             {subtitle}
-          </p>
+          </motion.p>
 
           {/* CTA Buttons */}
-          <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center">
-            <Link
-              href={ctaButtonUrl}
-              className={cn(
-                'inline-flex items-center justify-center rounded-lg px-8 py-4',
-                'text-base font-semibold transition-all duration-200',
-                'bg-[#C9A227] text-[#121212] hover:bg-[#A18220]',
-                'focus:ring-2 focus:ring-[#C9A227] focus:ring-offset-2 focus:ring-offset-[#0F2A44] focus:outline-none'
-              )}
-            >
+          <motion.div
+            className="mt-12 flex flex-col gap-4 sm:flex-row sm:items-center"
+            variants={itemVariants}
+          >
+            <PremiumButton href={ctaButtonUrl} variant="primary" className="min-w-[160px]">
               {ctaButtonText}
-              <ArrowIcon className="ml-2 h-5 w-5" />
-            </Link>
+            </PremiumButton>
 
-            <Link
-              href={secondaryButtonUrl}
-              className={cn(
-                'inline-flex items-center justify-center rounded-lg px-8 py-4',
-                'text-base font-medium transition-all duration-200',
-                'border border-[#E5E7EB]/30 text-white',
-                'hover:border-[#C9A227] hover:text-[#C9A227]',
-                'focus:ring-2 focus:ring-[#C9A227] focus:ring-offset-2 focus:ring-offset-[#0F2A44] focus:outline-none'
-              )}
-            >
+            <PremiumButton href={secondaryButtonUrl} variant="secondary" className="min-w-[160px]">
               {secondaryButtonText}
-            </Link>
-          </div>
-        </div>
-      </Container>
-    </section>
-  );
-}
+            </PremiumButton>
+          </motion.div>
 
-function ArrowIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-    </svg>
+          {/* Scroll indicator */}
+          <motion.div
+            className="absolute bottom-8 left-1/2 -translate-x-1/2"
+            variants={itemVariants}
+          >
+            <motion.div
+              className="flex flex-col items-center gap-2 text-[#E5E7EB]/40"
+              animate={{ y: [0, 8, 0] }}
+              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+            >
+              <span className="text-xs tracking-widest uppercase">Scroll</span>
+              <div className="h-12 w-[1px] bg-gradient-to-b from-[#C9A227]/50 to-transparent" />
+            </motion.div>
+          </motion.div>
+        </motion.div>
+      </Container>
+
+      {/* Bottom accent line */}
+      <div className="absolute right-0 bottom-0 left-0 h-[1px] bg-gradient-to-r from-transparent via-[#C9A227]/30 to-transparent" />
+    </section>
   );
 }
