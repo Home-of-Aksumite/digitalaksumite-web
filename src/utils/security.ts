@@ -5,6 +5,7 @@
 
 import DOMPurify from 'isomorphic-dompurify';
 import { z } from 'zod';
+import { isValidPhoneNumber } from 'libphonenumber-js';
 
 // ============================================================================
 // HTML Sanitization
@@ -71,34 +72,49 @@ export const emailSchema = z
   .string()
   .min(1, 'Email is required')
   .email('Invalid email address')
-  .max(254, 'Email too long')
+  .max(120, 'Email too long')
   .transform((email) => email.toLowerCase().trim());
 
 export const nameSchema = z
   .string()
   .min(2, 'Name must be at least 2 characters')
-  .max(100, 'Name too long')
+  .max(50, 'Name too long')
   .regex(/^[a-zA-Z\s\-'\.]+$/, 'Name contains invalid characters')
   .transform((name) => sanitizeHtml(name));
 
 export const phoneSchema = z
   .string()
-  .regex(
-    /^[\+]?[(]?[0-9]{1,4}[)]?[-\s\.]?[0-9]{1,4}[-\s\.]?[0-9]{1,9}$/,
-    'Invalid phone number format'
-  )
-  .optional();
+  .optional()
+  .transform((value) => (value ?? '').trim())
+  .transform((value) => (value.length === 0 ? undefined : value))
+  .refine((value) => value === undefined || value.length <= 20, 'Phone number too long')
+  .refine((value) => value === undefined || isValidPhoneNumber(value), 'Invalid phone number');
 
 export const messageSchema = z
   .string()
   .min(10, 'Message must be at least 10 characters')
-  .max(5000, 'Message too long')
+  .max(1000, 'Message too long')
   .transform((msg) => sanitizeHtml(msg));
+
+export const coverLetterSchema = z
+  .string()
+  .min(10, 'Cover letter must be at least 10 characters')
+  .max(2000, 'Cover letter too long')
+  .transform((msg) => sanitizeHtml(msg));
+
+export const resumeFileSchema = z
+  .instanceof(File, { message: 'Resume is required' })
+  .refine((file) => file.type === 'application/pdf', 'Resume must be a PDF')
+  .refine((file) => file.size <= 5 * 1024 * 1024, 'File size must be less than 5MB');
 
 export const slugSchema = z
   .string()
   .regex(/^[a-z0-9-]+$/, 'Slug must contain only lowercase letters, numbers, and hyphens')
   .max(200, 'Slug too long');
+
+export function formatZodError(error: z.ZodError): string {
+  return error.issues[0]?.message || 'Invalid form data';
+}
 
 // ============================================================================
 // Form Validation
@@ -115,14 +131,59 @@ export const contactFormSchema = z.object({
   timeline: z.string().max(50).optional(),
 });
 
+const inquiryTypeSchema = z.enum([
+  'general',
+  'project',
+  'consultation',
+  'partnership',
+  'career',
+  'other',
+]);
+
+export const contactUiSchema = z
+  .object({
+    name: nameSchema,
+    email: emailSchema,
+    phone: phoneSchema,
+    inquiryType: inquiryTypeSchema,
+    message: messageSchema,
+  })
+  .transform((data) => {
+    const subjectMap: Record<z.infer<typeof inquiryTypeSchema>, string> = {
+      general: 'General Inquiry',
+      project: 'Start a Project',
+      consultation: 'Request Consultation',
+      partnership: 'Partnership Opportunity',
+      career: 'Career / Job Inquiry',
+      other: 'Other',
+    };
+
+    return {
+      name: data.name,
+      email: data.email,
+      phone: data.phone,
+      subject: subjectMap[data.inquiryType],
+      message: data.message,
+    };
+  });
+
 export const jobApplicationSchema = z.object({
   firstName: nameSchema,
   lastName: nameSchema,
   email: emailSchema,
   phone: phoneSchema,
-  linkedIn: z.string().url().optional(),
-  portfolio: z.string().url().optional(),
-  coverLetter: messageSchema,
+  portfolioLink: z
+    .string()
+    .optional()
+    .transform((value) => (value ?? '').trim())
+    .transform((value) => (value.length === 0 ? undefined : value))
+    .pipe(z.string().url('Invalid URL').max(200, 'URL too long').optional()),
+  coverLetter: coverLetterSchema,
+  resume: resumeFileSchema,
+});
+
+export const internshipApplicationSchema = jobApplicationSchema.extend({
+  resume: resumeFileSchema.optional(),
 });
 
 // ============================================================================

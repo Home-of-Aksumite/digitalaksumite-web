@@ -7,6 +7,7 @@ import { apiClient } from '@/lib/api-client';
 import type { StrapiSingleResponse } from '@/types/api';
 import type { ContactSubmission } from '@/types/content';
 import { sanitizeHtml } from '@/utils/sanitize';
+import { contactFormSchema, formatZodError } from '@/utils/security';
 
 const ENDPOINT = '/contact-submissions';
 
@@ -23,6 +24,11 @@ export interface ContactFormData {
 
 export const contactService = {
   async submit(data: ContactFormData) {
+    const parsed = contactFormSchema.safeParse(data);
+    if (!parsed.success) {
+      throw new Error(formatZodError(parsed.error));
+    }
+
     // Map subject to inquiryType enum values that Strapi expects
     const inquiryTypeMap: Record<string, string> = {
       'General Inquiry': 'General Inquiry',
@@ -48,21 +54,9 @@ export const contactService = {
       submittedAt: new Date().toISOString(),
     };
 
-    console.log('Submitting contact form:', {
-      subject: data.subject,
-      inquiryType: sanitizedData.inquiryType,
+    const response = await apiClient.post<StrapiSingleResponse<ContactSubmission>>(ENDPOINT, {
       data: sanitizedData,
     });
-
-    try {
-      const response = await apiClient.post<StrapiSingleResponse<ContactSubmission>>(ENDPOINT, {
-        data: sanitizedData,
-      });
-      console.log('Contact submission success:', response.data);
-      return response.data;
-    } catch (error) {
-      console.error('Contact submission failed:', error);
-      throw error;
-    }
+    return response.data;
   },
 };

@@ -29,6 +29,56 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.PhoneInput {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.PhoneInputCountry {
+  display: flex;
+  align-items: center;
+}
+
+.PhoneInputInput {
+  width: 100%;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(229, 231, 235, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.75rem 1rem;
+  color: inherit;
+}
+
+.PhoneInputInput:focus {
+  outline: none;
+  border-color: #c9a227;
+  box-shadow: 0 0 0 1px #c9a227;
+}
+
+/* Country dropdown select - fix white text on white background */
+.PhoneInputCountrySelect,
+select.PhoneInputCountrySelect {
+  background: #1f2937 !important;
+  background-color: #1f2937 !important;
+  color: #ffffff !important;
+  border: 1px solid #374151 !important;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+}
+
+.PhoneInputCountrySelect option,
+select.PhoneInputCountrySelect option {
+  background: #1f2937 !important;
+  background-color: #1f2937 !important;
+  color: #ffffff !important;
+  padding: 0.5rem;
+}
+
+/* Target the dropdown menu/popup that appears */
+.PhoneInputCountrySelect::-ms-expand {
+  display: none;
+}
+
 /* Smooth scroll offset for sticky navbar */
 [id] {
   scroll-margin-top: 80px;

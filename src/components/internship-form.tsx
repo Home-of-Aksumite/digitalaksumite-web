@@ -1,8 +1,13 @@
 'use client';
 
 import { useState } from 'react';
+import PhoneInput from 'react-phone-number-input';
+import { Controller, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { jobService } from '@/services/job.service';
 import { cn } from '@/lib/utils';
+import { internshipApplicationSchema } from '@/utils/security';
+import type { z } from 'zod';
 
 interface InternshipApplicationFormProps {
   applicationType?: 'Internship' | 'General Application';
@@ -16,63 +21,54 @@ export function InternshipApplicationForm({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState<string | undefined>(undefined);
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    resume: undefined as File | undefined,
-    coverLetter: '',
-    portfolioLink: '',
+
+  type FormValues = z.input<typeof internshipApplicationSchema>;
+  type SubmitValues = z.output<typeof internshipApplicationSchema>;
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    control,
+    setValue,
+    formState: { errors },
+    watch,
+  } = useForm<FormValues, unknown, SubmitValues>({
+    resolver: zodResolver(internshipApplicationSchema),
+    defaultValues: {
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      portfolioLink: '',
+      coverLetter: '',
+      resume: undefined,
+    },
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  const selectedResume = watch('resume');
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      if (file.size > 5 * 1024 * 1024) {
-        setError('File size must be less than 5MB');
-        return;
-      }
-      setFormData((prev) => ({ ...prev, resume: file }));
-      setError(undefined);
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = async (data: SubmitValues) => {
     setIsSubmitting(true);
     setError(undefined);
 
     try {
       await jobService.applications.create(
         {
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          email: formData.email,
-          phone: formData.phone,
-          resume: formData.resume || undefined,
-          coverLetter: formData.coverLetter,
-          portfolioLink: formData.portfolioLink,
+          firstName: data.firstName,
+          lastName: data.lastName,
+          email: data.email,
+          phone: data.phone,
+          resume: data.resume,
+          coverLetter: data.coverLetter,
+          portfolioLink: data.portfolioLink,
         },
         {
           applicationType,
         }
       );
       setIsSuccess(true);
-      setFormData({
-        firstName: '',
-        lastName: '',
-        email: '',
-        phone: '',
-        resume: undefined,
-        coverLetter: '',
-        portfolioLink: '',
-      });
+      reset();
     } catch (err) {
       setError(
         err instanceof Error ? err.message : 'Failed to submit application. Please try again.'
@@ -107,7 +103,7 @@ export function InternshipApplicationForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       {error && (
         <div className="rounded-lg bg-red-50 p-4 text-red-700 dark:bg-red-900/20 dark:text-red-400">
           {error}
@@ -124,11 +120,8 @@ export function InternshipApplicationForm({
           </label>
           <input
             id="int-firstName"
-            name="firstName"
             type="text"
-            required
-            value={formData.firstName}
-            onChange={handleInputChange}
+            {...register('firstName')}
             className={cn(
               'mt-1 block w-full rounded-lg border px-4 py-3',
               'border-[#E5E7EB] bg-white focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none',
@@ -136,6 +129,11 @@ export function InternshipApplicationForm({
             )}
             placeholder="Your first name"
           />
+          {errors.firstName?.message && (
+            <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+              {errors.firstName.message}
+            </p>
+          )}
         </div>
         <div>
           <label
@@ -146,11 +144,8 @@ export function InternshipApplicationForm({
           </label>
           <input
             id="int-lastName"
-            name="lastName"
             type="text"
-            required
-            value={formData.lastName}
-            onChange={handleInputChange}
+            {...register('lastName')}
             className={cn(
               'mt-1 block w-full rounded-lg border px-4 py-3',
               'border-[#E5E7EB] bg-white focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none',
@@ -158,6 +153,9 @@ export function InternshipApplicationForm({
             )}
             placeholder="Your last name"
           />
+          {errors.lastName?.message && (
+            <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.lastName.message}</p>
+          )}
         </div>
       </div>
 
@@ -170,11 +168,8 @@ export function InternshipApplicationForm({
         </label>
         <input
           id="int-email"
-          name="email"
           type="email"
-          required
-          value={formData.email}
-          onChange={handleInputChange}
+          {...register('email')}
           className={cn(
             'mt-1 block w-full rounded-lg border px-4 py-3',
             'border-[#E5E7EB] bg-white focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none',
@@ -182,6 +177,9 @@ export function InternshipApplicationForm({
           )}
           placeholder="your@email.com"
         />
+        {errors.email?.message && (
+          <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.email.message}</p>
+        )}
       </div>
 
       <div>
@@ -191,19 +189,23 @@ export function InternshipApplicationForm({
         >
           Phone Number
         </label>
-        <input
-          id="int-phone"
+        <Controller
+          control={control}
           name="phone"
-          type="tel"
-          value={formData.phone}
-          onChange={handleInputChange}
-          className={cn(
-            'mt-1 block w-full rounded-lg border px-4 py-3',
-            'border-[#E5E7EB] bg-white focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none',
-            'dark:border-[#374151] dark:bg-[#1F2937] dark:text-white'
+          render={({ field }) => (
+            <PhoneInput
+              {...field}
+              id="int-phone"
+              placeholder="Enter phone number"
+              defaultCountry="ET"
+              international
+              className="mt-1"
+            />
           )}
-          placeholder="+251 911 234 567"
         />
+        {errors.phone?.message && (
+          <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.phone.message}</p>
+        )}
       </div>
 
       <div>
@@ -215,10 +217,8 @@ export function InternshipApplicationForm({
         </label>
         <input
           id="int-portfolioLink"
-          name="portfolioLink"
           type="url"
-          value={formData.portfolioLink}
-          onChange={handleInputChange}
+          {...register('portfolioLink')}
           className={cn(
             'mt-1 block w-full rounded-lg border px-4 py-3',
             'border-[#E5E7EB] bg-white focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none',
@@ -226,6 +226,11 @@ export function InternshipApplicationForm({
           )}
           placeholder="https://yourportfolio.com"
         />
+        {errors.portfolioLink?.message && (
+          <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+            {errors.portfolioLink.message}
+          </p>
+        )}
       </div>
 
       <div>
@@ -233,15 +238,18 @@ export function InternshipApplicationForm({
           htmlFor="int-resume"
           className="block text-sm font-medium text-[#0F2A44] dark:text-white"
         >
-          Resume / CV *
+          Resume / CV (Optional)
         </label>
         <input
           id="int-resume"
-          name="resume"
           type="file"
-          accept=".pdf,.doc,.docx"
-          required
-          onChange={handleFileChange}
+          accept=".pdf"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) {
+              setValue('resume', file, { shouldValidate: true });
+            }
+          }}
           className={cn(
             'mt-1 block w-full rounded-lg border px-4 py-3',
             'border-[#E5E7EB] bg-white focus:border-[#C9A227] focus:outline-none',
@@ -250,11 +258,14 @@ export function InternshipApplicationForm({
           )}
         />
         <p className="mt-1 text-xs text-[#6B7280] dark:text-[#9CA3AF]">
-          Accepted formats: PDF, DOC, DOCX (max 5MB)
+          Accepted format: PDF (max 5MB)
         </p>
-        {formData.resume && (
+        {errors.resume?.message && (
+          <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.resume.message}</p>
+        )}
+        {selectedResume && (
           <p className="mt-1 text-sm text-green-600 dark:text-green-400">
-            Selected: {formData.resume.name}
+            Selected: {selectedResume.name}
           </p>
         )}
       </div>
@@ -268,11 +279,8 @@ export function InternshipApplicationForm({
         </label>
         <textarea
           id="int-coverLetter"
-          name="coverLetter"
           rows={4}
-          required
-          value={formData.coverLetter}
-          onChange={handleInputChange}
+          {...register('coverLetter')}
           className={cn(
             'mt-1 block w-full rounded-lg border px-4 py-3',
             'border-[#E5E7EB] bg-white focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none',
@@ -280,6 +288,11 @@ export function InternshipApplicationForm({
           )}
           placeholder="Tell us about yourself, your interests, and what you hope to learn..."
         />
+        {errors.coverLetter?.message && (
+          <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+            {errors.coverLetter.message}
+          </p>
+        )}
       </div>
 
       <button

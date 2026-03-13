@@ -3,7 +3,6 @@
  * Display client testimonials from Strapi CMS
  */
 
-import Image from 'next/image';
 import { Container } from '@/components/container';
 import { cn } from '@/lib/utils';
 

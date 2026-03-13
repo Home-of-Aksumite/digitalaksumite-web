@@ -7,6 +7,12 @@ import { apiClient } from '@/lib/api-client';
 import type { QueryParams, StrapiListResponse, StrapiSingleResponse } from '@/types/api';
 import type { JobOpening, JobApplication } from '@/types/content';
 import { strapiApiUrl, strapiApiToken } from '@/config/env';
+import {
+  formatZodError,
+  internshipApplicationSchema,
+  jobApplicationSchema,
+  sanitizeHtml,
+} from '@/utils/security';
 
 const JOB_OPENINGS_ENDPOINT = '/job-openings';
 const JOB_APPLICATIONS_ENDPOINT = '/job-applications';
@@ -32,7 +38,7 @@ export interface ApplicationFormData {
   firstName: string;
   lastName: string;
   email: string;
-  phone: string;
+  phone?: string;
   resume?: File;
   coverLetter: string;
   portfolioLink?: string;
@@ -44,15 +50,9 @@ async function uploadFile(file: File): Promise<number> {
 
   const uploadUrl = `${strapiApiUrl}/api${UPLOAD_ENDPOINT}`;
 
-  console.log('Upload URL:', uploadUrl);
-  console.log('API Token exists:', !!strapiApiToken);
-
   const headers: Record<string, string> = {};
   if (strapiApiToken) {
     headers.Authorization = `Bearer ${strapiApiToken}`;
-    console.log('Adding Authorization header');
-  } else {
-    console.warn('No API token available!');
   }
 
   const response = await fetch(uploadUrl, {
@@ -61,12 +61,9 @@ async function uploadFile(file: File): Promise<number> {
     body: formData,
   });
 
-  console.log('Upload response status:', response.status);
-
   if (!response.ok) {
     const errorText = await response.text();
-    console.error('Upload error response:', errorText);
-    throw new Error(`File upload failed: ${response.statusText}`);
+    throw new Error(errorText || `File upload failed: ${response.statusText}`);
   }
 
   const data = (await response.json()) as Array<{ id: number }>;
@@ -104,7 +101,6 @@ export const jobService = {
       // Find job by slug (either from API or generated)
       const jobs = response.data.data.map(ensureJobSlug);
       const job = jobs.find((job) => job.slug === slug);
-      console.log('Found job:', job?.title, 'documentId:', job?.documentId);
       return job;
     },
   },
@@ -117,51 +113,60 @@ export const jobService = {
         applicationType?: 'Job Application' | 'Internship' | 'General Application';
       }
     ) {
-      console.log('Creating job application:', { formData, options });
+      const schemaToUse =
+        options?.applicationType === 'Job Application'
+          ? jobApplicationSchema
+          : internshipApplicationSchema;
+
+      const parsed = schemaToUse.safeParse({
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        phone: formData.phone,
+        portfolioLink: formData.portfolioLink,
+        coverLetter: formData.coverLetter,
+        resume: formData.resume,
+      });
+
+      if (!parsed.success) {
+        throw new Error(formatZodError(parsed.error));
+      }
 
       // Upload resume if provided
       let resumeId: number | undefined;
       if (formData.resume) {
         resumeId = await uploadFile(formData.resume);
-        console.log('Resume uploaded with ID:', resumeId);
       }
 
       // Build application data to match Strapi schema
+      // Note: Strapi controller expects string coverLetter and converts to blocks internally
       const applicationData: Record<string, unknown> = {
         name: `${formData.firstName} ${formData.lastName}`,
         email: formData.email,
-        phone: formData.phone,
+        phone: formData.phone || undefined,
         applicationType: options?.applicationType || 'Job Application',
-        coverLetter: formData.coverLetter,
-        portfolioLink: formData.portfolioLink,
+        coverLetter: sanitizeHtml(formData.coverLetter),
+        portfolioLink: formData.portfolioLink || undefined,
+        submittedAt: new Date().toISOString(),
       };
 
-      // Add job opening relation if provided
-      console.log(
-        'jobOpeningId value:',
-        options?.jobOpeningId,
-        'type:',
-        typeof options?.jobOpeningId
-      );
+      // Add job opening relation only if provided
       if (options?.jobOpeningId) {
         applicationData.job_opening = { documentId: options.jobOpeningId };
-        console.log('Added job_opening to data:', applicationData.job_opening);
-      } else {
-        console.warn('No jobOpeningId provided!');
       }
 
       // Add resume relation if file was uploaded
       if (resumeId) {
-        applicationData.resume = resumeId;
+        applicationData.resume = [resumeId];
       }
 
-      console.log('Sending application data:', applicationData);
+      console.log('Sending to Strapi:', { data: applicationData });
+      console.log('JSON payload:', JSON.stringify({ data: applicationData }));
 
       const response = await apiClient.post<StrapiSingleResponse<JobApplication>>(
         JOB_APPLICATIONS_ENDPOINT,
         { data: applicationData }
       );
-      console.log('Application created successfully:', response.data);
       return response.data.data;
     },
   },

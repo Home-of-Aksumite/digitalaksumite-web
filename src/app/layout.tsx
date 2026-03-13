@@ -4,6 +4,7 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { Navbar } from '@/components/navbar';
 import { Footer } from '@/components/footer';
 import { pageService } from '@/services/page.service';
+import 'react-phone-number-input/style.css';
 import './globals.css';
 
 const inter = Inter({

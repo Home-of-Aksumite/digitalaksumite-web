@@ -3,7 +3,6 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { Container } from '@/components/container';
 import { blogPostService } from '@/services/blog-post.service';
-import { cn } from '@/lib/utils';
 import { extractTextFromBlocks } from '@/lib/content-utils';
 
 interface BlogPostPageProps {
@@ -66,7 +65,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       {/* Content */}
       <Container className="py-12">
         <div className="mx-auto max-w-3xl">
-          <article className="prose max-w-none dark:prose-invert">
+          <article className="prose dark:prose-invert max-w-none">
             <p className="text-lg leading-relaxed text-[#6B7280] dark:text-[#9CA3AF]">
               {post.excerpt}
             </p>
@@ -77,10 +76,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
           {/* Back to Blog */}
           <div className="mt-12 border-t border-[#E5E7EB] pt-8 dark:border-[#374151]">
-            <Link
-              href="/#blog"
-              className="inline-flex items-center text-[#C9A227] hover:underline"
-            >
+            <Link href="/#blog" className="inline-flex items-center text-[#C9A227] hover:underline">
               <ArrowLeftIcon className="mr-2 h-4 w-4" />
               Read more articles
             </Link>

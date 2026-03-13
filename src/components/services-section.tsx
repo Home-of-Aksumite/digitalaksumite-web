@@ -72,7 +72,6 @@ export function ServicesSection({
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
           {services.map((service) => {
             const IconComponent = iconMap[service.slug] || DefaultIcon;
-            const href = `/services/${service.slug}`;
 
             return (
               <div
@@ -111,20 +110,6 @@ export function ServicesSection({
         </div>
       </Container>
     </section>
-  );
-}
-
-function ArrowIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-    </svg>
   );
 }
 

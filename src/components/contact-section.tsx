@@ -7,10 +7,15 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import PhoneInput from 'react-phone-number-input';
+import { Controller, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Container } from '@/components/container';
 import { cn } from '@/lib/utils';
 import { contactService } from '@/services/contact.service';
 import type { ContactPage, SiteSettings } from '@/types/content';
+import { contactUiSchema } from '@/utils/security';
+import type { z } from 'zod';
 
 interface ContactSectionProps {
   contactPage?: ContactPage | null;
@@ -34,54 +39,39 @@ export function ContactSection({ contactPage, siteSettings }: ContactSectionProp
   const address = siteSettings?.companyAddress || 'Addis Ababa, Ethiopia';
   const officeHours = siteSettings?.workingHours || 'Monday - Friday: 9:00 AM - 6:00 PM';
 
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    inquiryType: 'general',
-    message: '',
-  });
-
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState<string | undefined>(undefined);
 
-  // Map inquiry type to subject for the backend
-  const getSubjectFromInquiryType = (type: string): string => {
-    const subjectMap: Record<string, string> = {
-      general: 'General Inquiry',
-      project: 'Start a Project',
-      consultation: 'Request Consultation',
-      partnership: 'Partnership Opportunity',
-      career: 'Career / Job Inquiry',
-      other: 'Other',
-    };
-    // eslint-disable-next-line security/detect-object-injection
-    return subjectMap[type] || 'General Inquiry';
-  };
+  type ContactUiValues = z.input<typeof contactUiSchema>;
+  type ContactSubmitValues = z.output<typeof contactUiSchema>;
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    control,
+    formState: { errors },
+  } = useForm<ContactUiValues, unknown, ContactSubmitValues>({
+    resolver: zodResolver(contactUiSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+      phone: undefined,
+      inquiryType: 'general',
+      message: '',
+    },
+  });
+
+  const onSubmit = async (data: ContactSubmitValues) => {
     setIsSubmitting(true);
     setError(undefined);
 
     try {
-      await contactService.submit({
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone,
-        subject: getSubjectFromInquiryType(formData.inquiryType),
-        message: formData.message,
-      });
+      await contactService.submit(data);
 
       setIsSuccess(true);
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        inquiryType: 'general',
-        message: '',
-      });
+      reset();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to send message. Please try again.');
     } finally {
@@ -134,7 +124,7 @@ export function ContactSection({ contactPage, siteSettings }: ContactSectionProp
                 </p>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+              <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-4">
                 {error && (
                   <div className="rounded-lg bg-red-50 p-4 text-red-700 dark:bg-red-900/20 dark:text-red-400">
                     {error}
@@ -149,16 +139,17 @@ export function ContactSection({ contactPage, siteSettings }: ContactSectionProp
                   <input
                     type="text"
                     id="name"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    {...register('name')}
                     className={cn(
                       'mt-1 block w-full rounded-lg border px-4 py-3',
                       'border-[#E5E7EB]/20 bg-white/10 text-white placeholder-[#E5E7EB]/50',
                       'focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none'
                     )}
                     placeholder="Your full name"
-                    required
                   />
+                  {errors.name?.message && (
+                    <p className="mt-1 text-sm text-red-400">{errors.name.message}</p>
+                  )}
                 </div>
 
                 {/* Email */}
@@ -169,16 +160,17 @@ export function ContactSection({ contactPage, siteSettings }: ContactSectionProp
                   <input
                     type="email"
                     id="email"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    {...register('email')}
                     className={cn(
                       'mt-1 block w-full rounded-lg border px-4 py-3',
                       'border-[#E5E7EB]/20 bg-white/10 text-white placeholder-[#E5E7EB]/50',
                       'focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none'
                     )}
                     placeholder="your@email.com"
-                    required
                   />
+                  {errors.email?.message && (
+                    <p className="mt-1 text-sm text-red-400">{errors.email.message}</p>
+                  )}
                 </div>
 
                 {/* Phone */}
@@ -186,18 +178,23 @@ export function ContactSection({ contactPage, siteSettings }: ContactSectionProp
                   <label htmlFor="phone" className="block text-sm font-medium text-[#E5E7EB]">
                     Phone Number
                   </label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className={cn(
-                      'mt-1 block w-full rounded-lg border px-4 py-3',
-                      'border-[#E5E7EB]/20 bg-white/10 text-white placeholder-[#E5E7EB]/50',
-                      'focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none'
+                  <Controller
+                    control={control}
+                    name="phone"
+                    render={({ field }) => (
+                      <PhoneInput
+                        {...field}
+                        id="phone"
+                        placeholder="Enter phone number"
+                        defaultCountry="ET"
+                        international
+                        className="mt-1"
+                      />
                     )}
-                    placeholder="+251 911 234 567"
                   />
+                  {errors.phone?.message && (
+                    <p className="mt-1 text-sm text-red-400">{errors.phone.message}</p>
+                  )}
                 </div>
 
                 {/* Inquiry Type */}
@@ -207,8 +204,7 @@ export function ContactSection({ contactPage, siteSettings }: ContactSectionProp
                   </label>
                   <select
                     id="inquiryType"
-                    value={formData.inquiryType}
-                    onChange={(e) => setFormData({ ...formData, inquiryType: e.target.value })}
+                    {...register('inquiryType')}
                     className={cn(
                       'mt-1 block w-full rounded-lg border px-4 py-3',
                       'border-[#E5E7EB]/20 bg-white/10 text-white',
@@ -234,6 +230,9 @@ export function ContactSection({ contactPage, siteSettings }: ContactSectionProp
                       Other
                     </option>
                   </select>
+                  {errors.inquiryType?.message && (
+                    <p className="mt-1 text-sm text-red-400">{errors.inquiryType.message}</p>
+                  )}
                 </div>
 
                 {/* Message */}
@@ -244,16 +243,17 @@ export function ContactSection({ contactPage, siteSettings }: ContactSectionProp
                   <textarea
                     id="message"
                     rows={4}
-                    value={formData.message}
-                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                    {...register('message')}
                     className={cn(
                       'mt-1 block w-full rounded-lg border px-4 py-3',
                       'border-[#E5E7EB]/20 bg-white/10 text-white placeholder-[#E5E7EB]/50',
                       'focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none'
                     )}
                     placeholder="Tell us about your project or inquiry..."
-                    required
                   />
+                  {errors.message?.message && (
+                    <p className="mt-1 text-sm text-red-400">{errors.message.message}</p>
+                  )}
                 </div>
 
                 {/* Submit Button */}

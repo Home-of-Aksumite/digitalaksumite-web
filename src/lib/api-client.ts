@@ -97,17 +97,27 @@ async function fetchApi<T>(
     });
 
     if (!response.ok) {
-      const errorData = (await response.json().catch(() => ({}))) as ApiError;
-      console.error('API Error:', {
-        url: url,
-        status: response.status,
-        errorData: errorData,
-        fullError: JSON.stringify(errorData, undefined, 2),
-      });
+      // Attempt to read error body as JSON first, then as text
+      let errorMessage: string | undefined;
+      let errorDetails: Record<string, unknown> | undefined;
+
+      const bodyText = await response.text().catch(() => '');
+      if (bodyText) {
+        try {
+          const parsed = JSON.parse(bodyText) as ApiError;
+          errorMessage = parsed.error?.message;
+          errorDetails = parsed.error?.details as Record<string, unknown> | undefined;
+        } catch {
+          // If JSON parse fails, treat raw text as message (e.g., HTML error page)
+          const snippet = bodyText.slice(0, 200);
+          errorMessage = snippet || `HTTP ${response.status}: ${response.statusText}`;
+        }
+      }
+
       throw new ApiErrorClass(
         response.status,
-        errorData.error?.message || `HTTP ${response.status}: ${response.statusText}`,
-        errorData.error?.details
+        errorMessage || `HTTP ${response.status}: ${response.statusText}`,
+        errorDetails
       );
     }
 

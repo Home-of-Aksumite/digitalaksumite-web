@@ -3,7 +3,6 @@
  * Display featured projects from Strapi CMS
  */
 
-import Image from 'next/image';
 import { Container } from '@/components/container';
 import { cn } from '@/lib/utils';
 
@@ -13,15 +12,6 @@ export interface ApiProject {
   slug: string;
   description: string; // Plain text extracted from blocks
   featured?: boolean;
-}
-
-interface Project {
-  title: string;
-  client: string;
-  description: string;
-  image: string;
-  tags: string[];
-  href: string;
 }
 
 interface ProjectsSectionProps {
@@ -75,8 +65,8 @@ export function ProjectsSection({
 
         {/* Projects Grid */}
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {displayProjects.map((project, index) => (
-            <ProjectCard key={project.slug} project={project} priority={index === 0} />
+          {displayProjects.map((project) => (
+            <ProjectCard key={project.slug} project={project} />
           ))}
         </div>
       </Container>
@@ -84,9 +74,7 @@ export function ProjectsSection({
   );
 }
 
-function ProjectCard({ project, priority }: { project: ApiProject; priority: boolean }) {
-  const href = `/projects/${project.slug}`;
-
+function ProjectCard({ project }: { project: ApiProject }) {
   return (
     <div className="group block">
       <article
@@ -119,19 +107,5 @@ function ProjectCard({ project, priority }: { project: ApiProject; priority: boo
         </div>
       </article>
     </div>
-  );
-}
-
-function ArrowIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-    </svg>
   );
 }

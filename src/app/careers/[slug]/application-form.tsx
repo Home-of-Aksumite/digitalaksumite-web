@@ -1,9 +1,14 @@
 'use client';
 
 import { useState } from 'react';
+import PhoneInput from 'react-phone-number-input';
+import { Controller, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { jobService, type ApplicationFormData } from '@/services/job.service';
 import { cn } from '@/lib/utils';
 import type { JobOpening } from '@/types/content';
+import { jobApplicationSchema } from '@/utils/security';
+import type { z } from 'zod';
 
 interface ApplicationFormProps {
   job: JobOpening;
@@ -13,53 +18,54 @@ export function ApplicationForm({ job }: ApplicationFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState<string | undefined>(undefined);
-  const [formData, setFormData] = useState<ApplicationFormData>({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    resume: undefined,
-    coverLetter: '',
-    portfolioLink: '',
+
+  type FormValues = z.input<typeof jobApplicationSchema>;
+  type SubmitValues = z.output<typeof jobApplicationSchema>;
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    control,
+    setValue,
+    formState: { errors },
+    watch,
+  } = useForm<FormValues, unknown, SubmitValues>({
+    resolver: zodResolver(jobApplicationSchema),
+    defaultValues: {
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      portfolioLink: '',
+      coverLetter: '',
+      resume: undefined as unknown as File,
+    },
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  const selectedResume = watch('resume');
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      if (file.size > 5 * 1024 * 1024) {
-        setError('File size must be less than 5MB');
-        return;
-      }
-      setFormData((prev) => ({ ...prev, resume: file }));
-      setError(undefined);
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = async (data: SubmitValues) => {
     setIsSubmitting(true);
     setError(undefined);
 
     try {
-      await jobService.applications.create(formData, {
+      const payload: ApplicationFormData = {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        phone: data.phone,
+        portfolioLink: data.portfolioLink,
+        coverLetter: data.coverLetter,
+        resume: data.resume,
+      };
+
+      await jobService.applications.create(payload, {
         jobOpeningId: job.documentId,
         applicationType: job.isInternship ? 'Internship' : 'Job Application',
       });
       setIsSuccess(true);
-      setFormData({
-        firstName: '',
-        lastName: '',
-        email: '',
-        phone: '',
-        resume: undefined,
-        coverLetter: '',
-        portfolioLink: '',
-      });
+      reset();
     } catch (err) {
       setError(
         err instanceof Error ? err.message : 'Failed to submit application. Please try again.'
@@ -94,7 +100,7 @@ export function ApplicationForm({ job }: ApplicationFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-4">
       {error && (
         <div className="rounded-lg bg-red-50 p-4 text-red-700 dark:bg-red-900/20 dark:text-red-400">
           {error}
@@ -111,11 +117,8 @@ export function ApplicationForm({ job }: ApplicationFormProps) {
           </label>
           <input
             id="firstName"
-            name="firstName"
             type="text"
-            required
-            value={formData.firstName}
-            onChange={handleInputChange}
+            {...register('firstName')}
             className={cn(
               'mt-1 block w-full rounded-lg border px-4 py-3',
               'border-[#E5E7EB] bg-white focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none',
@@ -123,6 +126,11 @@ export function ApplicationForm({ job }: ApplicationFormProps) {
             )}
             placeholder="Your first name"
           />
+          {errors.firstName?.message && (
+            <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+              {errors.firstName.message}
+            </p>
+          )}
         </div>
         <div>
           <label
@@ -133,11 +141,8 @@ export function ApplicationForm({ job }: ApplicationFormProps) {
           </label>
           <input
             id="lastName"
-            name="lastName"
             type="text"
-            required
-            value={formData.lastName}
-            onChange={handleInputChange}
+            {...register('lastName')}
             className={cn(
               'mt-1 block w-full rounded-lg border px-4 py-3',
               'border-[#E5E7EB] bg-white focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none',
@@ -145,6 +150,9 @@ export function ApplicationForm({ job }: ApplicationFormProps) {
             )}
             placeholder="Your last name"
           />
+          {errors.lastName?.message && (
+            <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.lastName.message}</p>
+          )}
         </div>
       </div>
 
@@ -154,11 +162,8 @@ export function ApplicationForm({ job }: ApplicationFormProps) {
         </label>
         <input
           id="email"
-          name="email"
           type="email"
-          required
-          value={formData.email}
-          onChange={handleInputChange}
+          {...register('email')}
           className={cn(
             'mt-1 block w-full rounded-lg border px-4 py-3',
             'border-[#E5E7EB] bg-white focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none',
@@ -166,25 +171,32 @@ export function ApplicationForm({ job }: ApplicationFormProps) {
           )}
           placeholder="your@email.com"
         />
+        {errors.email?.message && (
+          <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.email.message}</p>
+        )}
       </div>
 
       <div>
         <label htmlFor="phone" className="block text-sm font-medium text-[#0F2A44] dark:text-white">
           Phone Number
         </label>
-        <input
-          id="phone"
+        <Controller
+          control={control}
           name="phone"
-          type="tel"
-          value={formData.phone}
-          onChange={handleInputChange}
-          className={cn(
-            'mt-1 block w-full rounded-lg border px-4 py-3',
-            'border-[#E5E7EB] bg-white focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none',
-            'dark:border-[#374151] dark:bg-[#1F2937] dark:text-white'
+          render={({ field }) => (
+            <PhoneInput
+              {...field}
+              id="phone"
+              placeholder="Enter phone number"
+              defaultCountry="ET"
+              international
+              className="mt-1"
+            />
           )}
-          placeholder="+251 911 234 567"
         />
+        {errors.phone?.message && (
+          <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.phone.message}</p>
+        )}
       </div>
 
       <div>
@@ -196,10 +208,8 @@ export function ApplicationForm({ job }: ApplicationFormProps) {
         </label>
         <input
           id="portfolioLink"
-          name="portfolioLink"
           type="url"
-          value={formData.portfolioLink}
-          onChange={handleInputChange}
+          {...register('portfolioLink')}
           className={cn(
             'mt-1 block w-full rounded-lg border px-4 py-3',
             'border-[#E5E7EB] bg-white focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none',
@@ -207,6 +217,11 @@ export function ApplicationForm({ job }: ApplicationFormProps) {
           )}
           placeholder="https://yourportfolio.com"
         />
+        {errors.portfolioLink?.message && (
+          <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+            {errors.portfolioLink.message}
+          </p>
+        )}
       </div>
 
       <div>
@@ -218,11 +233,14 @@ export function ApplicationForm({ job }: ApplicationFormProps) {
         </label>
         <input
           id="resume"
-          name="resume"
           type="file"
-          accept=".pdf,.doc,.docx"
-          required
-          onChange={handleFileChange}
+          accept=".pdf"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) {
+              setValue('resume', file, { shouldValidate: true });
+            }
+          }}
           className={cn(
             'mt-1 block w-full rounded-lg border px-4 py-3',
             'border-[#E5E7EB] bg-white focus:border-[#C9A227] focus:outline-none',
@@ -231,11 +249,14 @@ export function ApplicationForm({ job }: ApplicationFormProps) {
           )}
         />
         <p className="mt-1 text-xs text-[#6B7280] dark:text-[#9CA3AF]">
-          Accepted formats: PDF, DOC, DOCX (max 5MB)
+          Accepted format: PDF (max 5MB)
         </p>
-        {formData.resume && (
+        {errors.resume?.message && (
+          <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.resume.message}</p>
+        )}
+        {selectedResume && (
           <p className="mt-1 text-sm text-green-600 dark:text-green-400">
-            Selected: {formData.resume.name}
+            Selected: {selectedResume.name}
           </p>
         )}
       </div>
@@ -249,11 +270,8 @@ export function ApplicationForm({ job }: ApplicationFormProps) {
         </label>
         <textarea
           id="coverLetter"
-          name="coverLetter"
           rows={4}
-          required
-          value={formData.coverLetter}
-          onChange={handleInputChange}
+          {...register('coverLetter')}
           className={cn(
             'mt-1 block w-full rounded-lg border px-4 py-3',
             'border-[#E5E7EB] bg-white focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none',
@@ -261,6 +279,11 @@ export function ApplicationForm({ job }: ApplicationFormProps) {
           )}
           placeholder="Tell us why you're interested in this position and what makes you a great fit..."
         />
+        {errors.coverLetter?.message && (
+          <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+            {errors.coverLetter.message}
+          </p>
+        )}
       </div>
 
       <button

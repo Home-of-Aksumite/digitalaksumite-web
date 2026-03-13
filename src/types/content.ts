@@ -35,6 +35,7 @@ export interface Service {
   slug: string;
   shortDescription: string;
   fullDescription: string;
+  description?: string;
   icon: StrapiMedia | null;
   features: string[];
   order: number;

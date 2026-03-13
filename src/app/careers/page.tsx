@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { Container } from '@/components/container';
-import { InternshipApplicationForm } from '@/components/internship-form';
+import { CareersInternshipApply } from './ui/careers-internship-apply';
 import { jobService } from '@/services/job.service';
 import { cn } from '@/lib/utils';
 import type { JobOpening } from '@/types/content';
@@ -152,7 +152,7 @@ export default async function CareersPage() {
           </div>
 
           <div className="mt-12 rounded-xl bg-white p-8 dark:bg-[#1F2937]">
-            <InternshipApplicationForm />
+            <CareersInternshipApply />
           </div>
         </Container>
       </section>

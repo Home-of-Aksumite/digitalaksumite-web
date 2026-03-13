@@ -11,8 +11,8 @@ export const metadata: Metadata = {
 };
 
 export default async function PrivacyPolicyPage() {
-  let privacyPolicy: PrivacyPolicyType | null = null;
-  
+  let privacyPolicy: PrivacyPolicyType | undefined = undefined;
+
   try {
     privacyPolicy = await pageService.privacyPolicy();
   } catch (error) {
@@ -21,7 +21,7 @@ export default async function PrivacyPolicyPage() {
 
   const title = privacyPolicy?.title || 'Privacy Policy';
   const lastUpdated = privacyPolicy?.lastUpdated || new Date().toISOString().split('T')[0];
-  
+
   // Default content if not in Strapi
   const defaultContent = `
     <h2>1. Introduction</h2>
@@ -61,10 +61,10 @@ export default async function PrivacyPolicyPage() {
           <p className="mt-2 text-sm text-[#6B7280] dark:text-[#9CA3AF]">
             Last updated: {lastUpdated}
           </p>
-          
-          <div 
+
+          <div
             className={cn(
-              'mt-8 prose prose-lg max-w-none',
+              'prose prose-lg mt-8 max-w-none',
               'prose-headings:text-[#0F2A44] prose-headings:dark:text-white',
               'prose-p:text-[#374151] prose-p:dark:text-[#E5E7EB]',
               'prose-a:text-[#C9A227] prose-a:no-underline hover:prose-a:underline'
