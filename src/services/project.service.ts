@@ -19,6 +19,7 @@ export const projectService = {
         slug: item.slug,
         description: item.description || item.summary || '',
         featured: item.featured,
+        link: item.link,
       }))
       .filter((item) => item.title && item.slug);
   },
@@ -35,6 +36,7 @@ export const projectService = {
       slug: item.slug,
       description: item.description || item.summary || '',
       featured: item.featured || false,
+      link: item.link,
     };
   },
 
@@ -51,6 +53,7 @@ export const projectService = {
         slug: item.slug,
         description: item.description || item.summary || '',
         featured: item.featured,
+        link: item.link,
       }))
       .filter((item) => item.title && item.slug);
   },

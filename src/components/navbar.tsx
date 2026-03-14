@@ -5,6 +5,7 @@
 
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { Container } from '@/components/container';
@@ -50,10 +51,18 @@ export function Navbar() {
             href="/"
             className={cn(
               'flex items-center gap-2 text-xl font-bold transition-colors',
-              'text-white'
+              'text-white hover:text-[#C9A227]'
             )}
           >
-            <span className="text-2xl">◈</span>
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#C9A227]/60 bg-white/10">
+              <Image
+                src="/logo.png"
+                alt="Digital Aksumite"
+                width={24}
+                height={24}
+                className="h-6 w-auto object-contain"
+              />
+            </div>
             <span>Digital Aksumite</span>
           </Link>
 

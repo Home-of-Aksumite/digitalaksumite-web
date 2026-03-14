@@ -61,6 +61,7 @@ export interface Project {
   technologies: string[];
   websiteUrl?: string;
   githubUrl?: string;
+  link?: string;
   completedDate: string;
   featured: boolean;
   order: number;
@@ -143,6 +144,37 @@ export interface ContactSubmission {
   submittedAt: string;
   createdAt: string;
   updatedAt: string;
+}
+
+// ============================================================================
+// ClientLogo
+// ============================================================================
+
+export interface ClientLogo {
+  id: number;
+  documentId: string;
+  name: string;
+  logo: StrapiMedia | null;
+  link?: string;
+  order: number;
+  featured: boolean;
+  category: 'client' | 'technology' | 'partner';
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+}
+
+// Alias for renamed collection type
+export type TrustedPartner = ClientLogo;
+
+// ============================================================================
+// Section Component for Privacy Policy / Terms of Service
+// ============================================================================
+
+export interface TitleContentSection {
+  id: number;
+  title: string;
+  content: string;
 }
 
 // ============================================================================
@@ -253,15 +285,17 @@ export interface Footer {
 }
 
 export interface PrivacyPolicy {
-  title: string;
-  content: string;
+  pageTitle: string;
+  pageDescription: string;
+  sections: TitleContentSection[];
   lastUpdated: string;
   updatedAt: string;
 }
 
 export interface TermsOfService {
-  title: string;
-  content: string;
+  pageTitle: string;
+  pageDescription: string;
+  sections: TitleContentSection[];
   lastUpdated: string;
   updatedAt: string;
 }

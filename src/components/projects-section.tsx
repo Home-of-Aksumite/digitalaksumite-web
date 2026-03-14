@@ -16,6 +16,7 @@ export interface ApiProject {
   slug: string;
   description: string;
   featured?: boolean;
+  link?: string;
 }
 
 interface ProjectsSectionProps {
@@ -92,25 +93,49 @@ function ProjectCard({ project }: { project: ApiProject }) {
         'dark:bg-[#1F2937]',
         'transition-all duration-500',
         'hover:shadow-[0_20px_40px_rgba(15,42,68,0.15)]',
-        'dark:hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)]'
+        'dark:hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)]',
+        project.link && 'cursor-pointer'
       )}
       whileHover={{ y: -8 }}
       transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
     >
-      {/* Image Container */}
-      <div className="relative aspect-[16/10] overflow-hidden bg-[#1F2937]">
-        <div className="flex h-full items-center justify-center text-white">
-          <span className="text-lg font-semibold">{project.title}</span>
-        </div>
+      {/* Image Container - clickable if link exists */}
+      {project.link ? (
+        <a
+          href={project.link}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="relative block aspect-[16/10] cursor-pointer overflow-hidden bg-[#1F2937]"
+        >
+          <div className="flex h-full items-center justify-center text-white">
+            <span className="text-lg font-semibold">{project.title}</span>
+          </div>
 
-        {/* Hover Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0F2A44] via-[#0F2A44]/50 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+          {/* Hover Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0F2A44] via-[#0F2A44]/50 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
 
-        {/* View Project text on hover */}
-        <div className="absolute right-4 bottom-4 left-4 translate-y-4 opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
-          <span className="text-sm font-medium text-[#C9A227]">View Project →</span>
+          {/* View Project link on hover */}
+          <div className="absolute right-4 bottom-4 left-4 translate-y-4 opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
+            <span className="inline-flex cursor-pointer items-center text-sm font-medium text-[#C9A227] hover:underline">
+              View Project →
+            </span>
+          </div>
+        </a>
+      ) : (
+        <div className="relative aspect-[16/10] overflow-hidden bg-[#1F2937]">
+          <div className="flex h-full items-center justify-center text-white">
+            <span className="text-lg font-semibold">{project.title}</span>
+          </div>
+
+          {/* Hover Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0F2A44] via-[#0F2A44]/50 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+
+          {/* View Project text on hover */}
+          <div className="absolute right-4 bottom-4 left-4 translate-y-4 opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
+            <span className="text-sm font-medium text-[#C9A227]">View Project →</span>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Content */}
       <div className="p-6">

@@ -11,12 +11,19 @@ import { projectService } from '@/services/project.service';
 import { testimonialService } from '@/services/testimonial.service';
 import { blogPostService } from '@/services/blog-post.service';
 import { pageService } from '@/services/page.service';
+import { trustedPartnerService } from '@/services/client-logo.service';
 import { extractTextFromBlocks, truncateText } from '@/lib/content-utils';
 import type { ApiService } from '@/components/services-section';
 import type { ApiProject } from '@/components/projects-section';
 import type { ApiTestimonial } from '@/components/testimonials-section';
 import type { ApiBlogPost } from '@/components/blog-section';
-import type { HomePage, ContactPage, AboutPage, SiteSettings } from '@/types/content';
+import type {
+  HomePage,
+  ContactPage,
+  AboutPage,
+  SiteSettings,
+  TrustedPartner,
+} from '@/types/content';
 
 export default async function Home() {
   // Fetch data from Strapi
@@ -28,6 +35,7 @@ export default async function Home() {
   let aboutPage: AboutPage | undefined = undefined;
   let contactPage: ContactPage | undefined = undefined;
   let siteSettings: SiteSettings | undefined = undefined;
+  let trustedPartners: TrustedPartner[] = [];
 
   try {
     const servicesData = await serviceService.getAll();
@@ -96,9 +104,15 @@ export default async function Home() {
     console.error('Failed to fetch site settings:', error);
   }
 
+  try {
+    trustedPartners = await trustedPartnerService.getAll();
+  } catch (error) {
+    console.error('Failed to fetch trusted partners:', error);
+  }
+
   return (
     <>
-      <Hero homePage={homePage} />
+      <Hero homePage={homePage} trustedPartners={trustedPartners} />
       <AboutSection aboutPage={aboutPage} />
       <ServicesSection services={services} />
       <ProjectsSection projects={projects} />

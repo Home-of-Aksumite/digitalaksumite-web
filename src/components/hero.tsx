@@ -8,12 +8,15 @@
 
 import { AnimatedGradientBackground } from '@/components/animated-gradient-background';
 import { PremiumButton } from '@/components/premium-button';
+import { HeroObeliskVisualization } from '@/components/hero-obelisk-visualization';
+import { ClientLogosMarquee } from '@/components/client-logos-marquee';
 import { Container } from '@/components/container';
-import { motion, type Variants } from 'framer-motion';
-import type { HomePage } from '@/types/content';
+import { motion, useScroll, useTransform, type Variants } from 'framer-motion';
+import type { HomePage, TrustedPartner } from '@/types/content';
 
 interface HeroProps {
   homePage?: HomePage | null;
+  trustedPartners?: TrustedPartner[];
 }
 
 // Animation variants
@@ -52,9 +55,14 @@ const titleWordVariants: Variants = {
   },
 };
 
-export function Hero({ homePage }: HeroProps) {
+export function Hero({ homePage, trustedPartners }: HeroProps) {
+  // Scroll-based parallax for obelisk - more dramatic effect
+  const { scrollY } = useScroll();
+  const obeliskY = useTransform(scrollY, [0, 300, 600], [0, -60, -120]);
+  const obeliskOpacity = useTransform(scrollY, [0, 400], [1, 0]);
+  const obeliskScale = useTransform(scrollY, [0, 400], [1, 0.9]);
+
   // Use Strapi data if available, otherwise fallback to defaults
-  const title = homePage?.heroTitle || 'Ancient Power.\nModern Technology.';
   const subtitle =
     homePage?.heroSubtitle ||
     'Digital Aksumite blends African heritage with cutting-edge engineering to build digital solutions that stand the test of time.';
@@ -69,76 +77,101 @@ export function Hero({ homePage }: HeroProps) {
   const secondaryButtonText = secondaryText ?? 'View Services';
   const secondaryButtonUrl = secondaryUrl ?? '/services';
 
-  // Split title for staggered animation
-  const titleLines = title.split('\n');
-
   return (
-    <section className="relative min-h-screen overflow-hidden bg-[#0F2A44]">
+    <section className="relative min-h-screen bg-[#0F2A44]">
       {/* Animated Gradient Background */}
       <AnimatedGradientBackground />
 
       {/* Content */}
       <Container className="relative z-10">
-        <motion.div
-          className="flex min-h-screen flex-col items-center justify-center py-32 pt-40"
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          {/* Title - Staggered word by word */}
-          <motion.h1 className="max-w-5xl text-center" variants={containerVariants}>
-            {titleLines.map((line, lineIndex) => (
-              <span key={lineIndex} className="block">
-                {line.split(' ').map((word, wordIndex) => (
-                  <motion.span
-                    key={`${lineIndex}-${wordIndex}`}
-                    className="mr-[0.3em] inline-block text-5xl font-bold tracking-tight text-white md:text-6xl lg:text-7xl xl:text-8xl"
-                    variants={titleWordVariants}
-                  >
-                    {word}
-                  </motion.span>
-                ))}
-              </span>
-            ))}
-          </motion.h1>
-
-          {/* Subtitle */}
-          <motion.p
-            className="mt-8 max-w-2xl text-center text-lg leading-relaxed text-[#E5E7EB]/80 md:text-xl"
-            variants={itemVariants}
-          >
-            {subtitle}
-          </motion.p>
-
-          {/* CTA Buttons */}
-          <motion.div
-            className="mt-12 flex flex-col gap-4 sm:flex-row sm:items-center"
-            variants={itemVariants}
-          >
-            <PremiumButton href={ctaButtonUrl} variant="primary" className="min-w-[160px]">
-              {ctaButtonText}
-            </PremiumButton>
-
-            <PremiumButton href={secondaryButtonUrl} variant="secondary" className="min-w-[160px]">
-              {secondaryButtonText}
-            </PremiumButton>
-          </motion.div>
-
-          {/* Scroll indicator */}
-          <motion.div
-            className="absolute bottom-8 left-1/2 -translate-x-1/2"
-            variants={itemVariants}
-          >
+        <div className="flex min-h-[130vh] items-start pt-16 lg:pt-20">
+          <div className="grid w-full grid-cols-1 items-start gap-6 lg:grid-cols-2 lg:gap-8">
+            {/* Left side - Text content */}
             <motion.div
-              className="flex flex-col items-center gap-2 text-[#E5E7EB]/40"
-              animate={{ y: [0, 8, 0] }}
-              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+              className="flex flex-col items-center pt-4 text-center lg:items-start lg:pt-8 lg:text-left"
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
             >
-              <span className="text-xs tracking-widest uppercase">Scroll</span>
-              <div className="h-12 w-[1px] bg-gradient-to-b from-[#C9A227]/50 to-transparent" />
+              {/* Title - 3 lines: We Build / Systems / That Last - MUCH BIGGER */}
+              <motion.h1 className="max-w-5xl" variants={containerVariants}>
+                <motion.span
+                  className="block text-5xl leading-[1.08] font-bold tracking-tight text-white md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl"
+                  variants={titleWordVariants}
+                >
+                  We Build
+                </motion.span>
+                <motion.span
+                  className="mt-2 block text-5xl leading-[1.08] font-bold tracking-tight text-white md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl"
+                  variants={titleWordVariants}
+                >
+                  Systems
+                </motion.span>
+                <motion.span
+                  className="mt-2 block text-5xl leading-[1.08] font-bold tracking-tight text-white md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl"
+                  variants={titleWordVariants}
+                >
+                  That Last
+                </motion.span>
+              </motion.h1>
+
+              {/* Subtitle - stepped back to let title dominate */}
+              <motion.p
+                className="mt-3 max-w-xl text-base leading-relaxed text-[#E5E7EB]/60 md:text-lg lg:text-xl"
+                variants={itemVariants}
+              >
+                {subtitle}
+              </motion.p>
+
+              {/* CTA Buttons */}
+              <motion.div
+                className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center"
+                variants={itemVariants}
+              >
+                <PremiumButton
+                  href={ctaButtonUrl}
+                  variant="primary"
+                  className="min-w-[160px] text-base"
+                >
+                  {ctaButtonText}
+                </PremiumButton>
+
+                <PremiumButton
+                  href={secondaryButtonUrl}
+                  variant="secondary"
+                  className="min-w-[160px] text-base"
+                >
+                  {secondaryButtonText}
+                </PremiumButton>
+              </motion.div>
             </motion.div>
-          </motion.div>
-        </motion.div>
+
+            {/* Right side - Obelisk visualization with scroll effects */}
+            <motion.div
+              className="hidden items-start justify-center lg:flex"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1 }}
+              style={{ y: obeliskY, opacity: obeliskOpacity, scale: obeliskScale }}
+            >
+              <HeroObeliskVisualization />
+            </motion.div>
+          </div>
+        </div>
+
+        {/* Client Logos Marquee - Trust Banner - positioned lower */}
+        <div className="absolute right-0 bottom-4 left-0 z-20">
+          <Container>
+            <p className="mb-4 text-center text-lg font-bold text-white/60">
+              Trusted by industry leaders
+            </p>
+            <ClientLogosMarquee logos={trustedPartners} />
+          </Container>
+        </div>
+
+        {/* Logo marquee placeholder area */}
+        <div className="absolute right-0 bottom-0 left-0 h-24" />
       </Container>
 
       {/* Bottom accent line */}
