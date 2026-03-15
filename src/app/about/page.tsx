@@ -1,7 +1,21 @@
 import { Metadata } from 'next';
+import Link from 'next/link';
 import { Container } from '@/components/container';
 import { pageService } from '@/services/page.service';
+import { strapiApiUrl } from '@/config/env';
 import type { AboutPage as AboutPageType } from '@/types/content';
+import {
+  Target,
+  Eye,
+  Star,
+  Lightbulb,
+  Shield,
+  Users,
+  Award,
+  Clock,
+  ChevronRight,
+  Home,
+} from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'About Us | Digital Aksumite',
@@ -24,25 +38,55 @@ export default async function AboutPage() {
   const vision = aboutPage?.vision;
   const teamIntro = aboutPage?.teamIntro;
   const history = aboutPage?.history;
+  const companyImages = aboutPage?.companyImages ?? [];
 
   // Only use Strapi data, no fallbacks
   const values = aboutPage?.values ?? [];
   const stats = aboutPage?.stats ?? [];
 
   return (
-    <main className="min-h-screen bg-white dark:bg-[#121212]">
+    <main className="min-h-screen bg-[#0F1419]">
       {/* Hero Section */}
-      <section className="bg-[#0F2A44] py-20 md:py-28">
-        <Container>
-          <div className="text-center">
-            <span className="text-sm font-semibold tracking-wider text-[#C9A227] uppercase">
-              Who We Are
+      <section className="relative overflow-hidden bg-[#0F2A44] py-20 md:py-28">
+        {/* Breadcrumb */}
+        <Container className="relative z-10">
+          <nav className="flex items-center gap-3 py-4">
+            <Link
+              href="/"
+              className="group flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 transition-all duration-300 hover:border-[#C9A227]/30 hover:bg-[#C9A227]/20"
+            >
+              <Home className="h-4 w-4 text-[#C9A227] transition-transform group-hover:scale-110" />
+              <span className="text-sm font-medium text-white/90 transition-colors group-hover:text-[#C9A227]">
+                Home
+              </span>
+            </Link>
+            <ChevronRight className="h-4 w-4 text-[#C9A227]/50" />
+            <span className="rounded-full border border-[#C9A227]/20 bg-[#C9A227]/10 px-3 py-1.5 text-sm font-semibold text-[#C9A227]">
+              About
             </span>
-            <h1 className="mt-4 text-4xl font-bold text-white md:text-5xl">
-              {title || 'About Us'}
+          </nav>
+        </Container>
+        {/* Decorative background elements */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 left-0 h-64 w-64 rounded-full bg-[#C9A227] blur-3xl" />
+          <div className="absolute right-0 bottom-0 h-96 w-96 rounded-full bg-[#C9A227] blur-3xl" />
+        </div>
+        <Container className="relative">
+          <div className="mx-auto max-w-3xl text-center">
+            <div className="mb-6 inline-flex items-center gap-2">
+              <div className="h-px w-8 bg-[#C9A227]" />
+              <span className="text-sm font-semibold tracking-widest text-[#C9A227] uppercase">
+                Who We Are
+              </span>
+              <div className="h-px w-8 bg-[#C9A227]" />
+            </div>
+            <h1 className="text-4xl font-bold text-white md:text-5xl lg:text-6xl">
+              {title?.replace('Aksumitess', 'Aksumite') || 'About Digital Aksumite'}
             </h1>
             {mission && (
-              <p className="mx-auto mt-6 max-w-2xl text-lg text-[#E5E7EB]/80">{mission}</p>
+              <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-white/80">
+                {mission}
+              </p>
             )}
           </div>
         </Container>
@@ -50,19 +94,27 @@ export default async function AboutPage() {
 
       {/* Mission & Vision */}
       {(mission || vision) && (
-        <section className="py-20">
+        <section className="relative py-24">
           <Container>
-            <div className="grid gap-12 md:grid-cols-2">
+            <div className="grid gap-8 lg:grid-cols-2">
               {mission && (
-                <div className="rounded-xl bg-[#F9FAFB] p-8 dark:bg-[#1F2937]/50">
-                  <h2 className="text-2xl font-bold text-[#0F2A44] dark:text-white">Our Mission</h2>
-                  <p className="mt-4 text-[#6B7280] dark:text-[#9CA3AF]">{mission}</p>
+                <div className="group relative overflow-hidden rounded-2xl border border-[#C9A227]/10 bg-gradient-to-br from-[#1a2332] to-[#141b26] p-10 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+                  <div className="absolute top-0 left-0 h-full w-1 bg-gradient-to-b from-[#C9A227] to-[#C9A227]/50" />
+                  <div className="mb-6 inline-flex rounded-xl bg-[#C9A227]/10 p-4">
+                    <Target className="h-8 w-8 text-[#C9A227]" />
+                  </div>
+                  <h2 className="text-2xl font-bold text-white">Our Mission</h2>
+                  <p className="mt-4 leading-relaxed text-[#94a3b8]">{mission}</p>
                 </div>
               )}
               {vision && (
-                <div className="rounded-xl bg-[#F9FAFB] p-8 dark:bg-[#1F2937]/50">
-                  <h2 className="text-2xl font-bold text-[#0F2A44] dark:text-white">Our Vision</h2>
-                  <p className="mt-4 text-[#6B7280] dark:text-[#9CA3AF]">{vision}</p>
+                <div className="group relative overflow-hidden rounded-2xl border border-[#C9A227]/10 bg-gradient-to-br from-[#1a2332] to-[#141b26] p-10 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+                  <div className="absolute top-0 left-0 h-full w-1 bg-gradient-to-b from-[#C9A227] to-[#C9A227]/50" />
+                  <div className="mb-6 inline-flex rounded-xl bg-[#C9A227]/10 p-4">
+                    <Eye className="h-8 w-8 text-[#C9A227]" />
+                  </div>
+                  <h2 className="text-2xl font-bold text-white">Our Vision</h2>
+                  <p className="mt-4 leading-relaxed text-[#94a3b8]">{vision}</p>
                 </div>
               )}
             </div>
@@ -72,24 +124,82 @@ export default async function AboutPage() {
 
       {/* Values */}
       {values.length > 0 && (
-        <section className="bg-[#F9FAFB] py-20 dark:bg-[#1F2937]/30">
-          <Container>
-            <div className="text-center">
-              <h2 className="text-3xl font-bold text-[#0F2A44] dark:text-white">Our Values</h2>
-              <p className="mx-auto mt-4 max-w-2xl text-[#6B7280] dark:text-[#9CA3AF]">
+        <section className="relative overflow-hidden bg-[#0F2A44] py-24">
+          <div className="absolute inset-0 opacity-5">
+            <div className="absolute inset-0 bg-[url('/pattern.svg')] bg-repeat" />
+          </div>
+          <Container className="relative">
+            <div className="mx-auto max-w-3xl text-center">
+              <div className="mb-6 inline-flex items-center gap-2">
+                <div className="h-px w-8 bg-[#C9A227]" />
+                <span className="text-sm font-semibold tracking-widest text-[#C9A227] uppercase">
+                  Principles
+                </span>
+                <div className="h-px w-8 bg-[#C9A227]" />
+              </div>
+              <h2 className="text-3xl font-bold text-white md:text-4xl">Our Values</h2>
+              <p className="mx-auto mt-4 max-w-2xl text-lg text-[#94a3b8]">
                 The principles that guide everything we do
               </p>
             </div>
-            <div className="mt-12 grid gap-8 md:grid-cols-3">
-              {values.map((value) => (
+            <div className="mt-16 grid gap-8 md:grid-cols-3">
+              {values.map((value, index) => {
+                const icons = [Star, Lightbulb, Shield];
+                const IconComponent = icons[index % icons.length];
+                return (
+                  <div
+                    key={value.title}
+                    className="group relative rounded-2xl border border-[#C9A227]/20 bg-[#0F1419]/80 p-8 backdrop-blur-sm transition-all duration-300 hover:-translate-y-2 hover:border-[#C9A227]/50 hover:bg-[#0F1419]"
+                  >
+                    <div className="mb-6 inline-flex rounded-xl bg-[#C9A227]/20 p-4 transition-colors group-hover:bg-[#C9A227]/30">
+                      <IconComponent className="h-8 w-8 text-[#C9A227]" />
+                    </div>
+                    <h3 className="text-xl font-bold text-white">{value.title}</h3>
+                    <p className="mt-3 leading-relaxed text-[#94a3b8]">{value.description}</p>
+                  </div>
+                );
+              })}
+            </div>
+          </Container>
+        </section>
+      )}
+
+      {/* Company Images Gallery */}
+      {companyImages.length > 0 && (
+        <section className="bg-[#0F1419] py-24">
+          <Container>
+            <div className="mx-auto max-w-3xl text-center">
+              <div className="mb-6 inline-flex items-center gap-2">
+                <div className="h-px w-8 bg-[#C9A227]" />
+                <span className="text-sm font-semibold tracking-widest text-[#C9A227] uppercase">
+                  Environment
+                </span>
+                <div className="h-px w-8 bg-[#C9A227]" />
+              </div>
+              <h2 className="text-3xl font-bold text-white md:text-4xl">Our Workspace</h2>
+              <p className="mx-auto mt-4 max-w-2xl text-lg text-[#94a3b8]">
+                A glimpse into where we build the future
+              </p>
+            </div>
+            <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {companyImages.map((image, index) => (
                 <div
-                  key={value.title}
-                  className="rounded-xl bg-white p-6 shadow-sm dark:bg-[#1F2937]"
+                  key={image.id || index}
+                  className="group relative aspect-[4/3] overflow-hidden rounded-2xl border border-[#C9A227]/20 bg-[#1a2332] shadow-lg transition-all duration-500 hover:border-[#C9A227]/50 hover:shadow-2xl"
                 >
-                  <h3 className="text-xl font-semibold text-[#0F2A44] dark:text-white">
-                    {value.title}
-                  </h3>
-                  <p className="mt-2 text-[#6B7280] dark:text-[#9CA3AF]">{value.description}</p>
+                  {image.url && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={image.url.startsWith('http') ? image.url : `${strapiApiUrl}${image.url}`}
+                      alt={image.alternativeText || 'Company image'}
+                      className="h-full w-full object-cover transition-all duration-700 group-hover:scale-110"
+                      loading="lazy"
+                    />
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0F1419]/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                  <div className="absolute right-0 bottom-0 left-0 translate-y-full p-4 transition-transform duration-300 group-hover:translate-y-0">
+                    <p className="text-sm text-white/90">{image.alternativeText || 'Workspace'}</p>
+                  </div>
                 </div>
               ))}
             </div>
@@ -99,26 +209,50 @@ export default async function AboutPage() {
 
       {/* Team */}
       {(teamIntro || history || stats.length > 0) && (
-        <section className="py-20">
-          <Container>
-            <div className="grid gap-12 lg:grid-cols-2">
+        <section className="relative overflow-hidden bg-[#0F2A44] py-24">
+          <div className="absolute inset-0 opacity-5">
+            <div className="absolute inset-0 bg-[url('/pattern.svg')] bg-repeat" />
+          </div>
+          <Container className="relative">
+            <div className="grid gap-16 lg:grid-cols-2">
               <div>
-                <h2 className="text-3xl font-bold text-[#0F2A44] dark:text-white">Our Team</h2>
+                <div className="mb-6 inline-flex items-center gap-2">
+                  <div className="h-px w-8 bg-[#C9A227]" />
+                  <span className="text-sm font-semibold tracking-widest text-[#C9A227] uppercase">
+                    The People
+                  </span>
+                </div>
+                <h2 className="text-3xl font-bold text-white md:text-4xl">Our Team</h2>
                 {teamIntro && (
-                  <p className="mt-4 text-lg text-[#6B7280] dark:text-[#9CA3AF]">{teamIntro}</p>
+                  <p className="mt-6 text-lg leading-relaxed text-[#94a3b8]">{teamIntro}</p>
                 )}
-                {history && <p className="mt-4 text-[#6B7280] dark:text-[#9CA3AF]">{history}</p>}
+                {history && <p className="mt-4 leading-relaxed text-[#64748b]">{history}</p>}
               </div>
               {stats.length > 0 && (
                 <div className="grid grid-cols-2 gap-6">
-                  {stats.map((stat) => (
-                    <div key={stat.label} className="rounded-xl bg-[#0F2A44] p-6 text-center">
-                      <p className="text-3xl font-bold text-[#C9A227]">{stat.value}</p>
-                      <p className="mt-1 text-sm text-[#E5E7EB]/80">{stat.label}</p>
-                    </div>
-                  ))}
+                  {stats.map((stat, index) => {
+                    const icons = [Award, Clock, Users, Star];
+                    const IconComponent = icons[index % icons.length];
+                    return (
+                      <div
+                        key={stat.label}
+                        className="group rounded-2xl border border-[#C9A227]/30 bg-[#C9A227]/10 p-6 text-center backdrop-blur-sm transition-all duration-300 hover:border-[#C9A227] hover:bg-[#C9A227]/20"
+                      >
+                        <div className="mb-3 flex justify-center">
+                          <IconComponent className="h-6 w-6 text-[#C9A227]" />
+                        </div>
+                        <p className="text-4xl font-bold text-[#C9A227]">{stat.value}</p>
+                        <p className="mt-2 text-sm font-medium text-white/80">{stat.label}</p>
+                      </div>
+                    );
+                  })}
                 </div>
               )}
+            </div>
+
+            {/* Decorative separator */}
+            <div className="mt-16 flex justify-center">
+              <div className="h-[1px] w-32 bg-gradient-to-r from-transparent via-[#C9A227]/60 to-transparent" />
             </div>
           </Container>
         </section>

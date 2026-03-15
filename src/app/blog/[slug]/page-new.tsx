@@ -5,7 +5,7 @@ import { Container } from '@/components/container';
 import { blogPostService } from '@/services/blog-post.service';
 import { strapiApiUrl } from '@/config/env';
 import { BlogContent } from '@/components/blog-content';
-import { ArrowLeft, Calendar, Clock, User, Share2, ChevronRight, Home } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, User, Share2, ChevronRight } from 'lucide-react';
 
 interface BlogPostPageProps {
   params: Promise<{
@@ -63,81 +63,48 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       : `${strapiApiUrl}${post.featuredImage.url}`
     : undefined;
 
-  // Get gallery images
-  const galleryImages =
-    post.gallery?.map((img) => ({
-      url: img.url.startsWith('http') ? img.url : `${strapiApiUrl}${img.url}`,
-      alt: img.alternativeText || post.title,
-    })) || [];
-
-  // Combine featured image with gallery for display
-  const allImages = featuredImageUrl
-    ? [
-        { url: featuredImageUrl, alt: post.featuredImage?.alternativeText || post.title },
-        ...galleryImages,
-      ]
-    : galleryImages;
-
-  // Determine grid layout based on image count
-  const getGridClasses = (count: number) => {
-    if (count === 1) return 'grid-cols-1 max-w-2xl mx-auto';
-    if (count === 2) return 'grid-cols-1 md:grid-cols-2';
-    if (count === 3) return 'grid-cols-1 md:grid-cols-3';
-    if (count === 4) return 'grid-cols-1 md:grid-cols-2';
-    return 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'; // 5+
-  };
-
-  // Determine aspect ratio based on image count
-  const getAspectClass = (count: number) => {
-    if (count === 1) return 'aspect-[16/9]';
-    if (count === 2) return 'aspect-[4/3]';
-    return 'aspect-[4/3]';
-  };
-
   return (
-    <main className="min-h-screen bg-[#0F1419]">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden bg-[#0F2A44] py-20 md:py-28">
-        {/* Breadcrumb */}
-        <Container className="relative z-10">
-          <nav className="flex items-center gap-3 py-4">
-            <Link
-              href="/"
-              className="group flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 transition-all duration-300 hover:border-[#C9A227]/30 hover:bg-[#C9A227]/20"
-            >
-              <Home className="h-4 w-4 text-[#C9A227] transition-transform group-hover:scale-110" />
-              <span className="text-sm font-medium text-white/90 transition-colors group-hover:text-[#C9A227]">
-                Home
-              </span>
+    <main className="min-h-screen bg-white dark:bg-[#0a0a0a]">
+      {/* Navigation Breadcrumb */}
+      <div className="border-b border-gray-100 bg-white dark:border-gray-800 dark:bg-[#0a0a0a]">
+        <Container>
+          <nav className="flex items-center gap-2 py-4 text-sm">
+            <Link href="/" className="text-gray-500 transition-colors hover:text-[#C9A227]">
+              Home
             </Link>
-            <ChevronRight className="h-4 w-4 text-[#C9A227]/50" />
-            <Link
-              href="/#blog"
-              className="group flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 transition-all duration-300 hover:border-[#C9A227]/30 hover:bg-[#C9A227]/20"
-            >
-              <span className="text-sm font-medium text-white/90 transition-colors group-hover:text-[#C9A227]">
-                Blog
-              </span>
+            <ChevronRight className="h-4 w-4 text-gray-400" />
+            <Link href="/#blog" className="text-gray-500 transition-colors hover:text-[#C9A227]">
+              Blog
             </Link>
-            <ChevronRight className="h-4 w-4 text-[#C9A227]/50" />
-            <span className="max-w-[200px] truncate rounded-full border border-[#C9A227]/20 bg-[#C9A227]/10 px-3 py-1.5 text-sm font-semibold text-[#C9A227] sm:max-w-[300px]">
+            <ChevronRight className="h-4 w-4 text-gray-400" />
+            <span className="max-w-[200px] truncate font-medium text-gray-900 sm:max-w-[300px] dark:text-gray-100">
               {post.title}
             </span>
           </nav>
         </Container>
+      </div>
 
+      {/* Hero Section with Featured Image */}
+      <section className="relative">
         {/* Background with gradient */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#0F2A44] to-[#0a1929]" />
 
-        {/* Decorative glow elements - matching About page */}
+        {/* Decorative elements */}
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-0 left-0 h-64 w-64 rounded-full bg-[#C9A227] opacity-10 blur-3xl" />
-          <div className="absolute right-0 bottom-0 h-96 w-96 rounded-full bg-[#C9A227] opacity-10 blur-3xl" />
           <div className="absolute top-20 left-10 h-72 w-72 rounded-full bg-[#C9A227]/5 blur-3xl" />
           <div className="absolute right-10 bottom-20 h-96 w-96 rounded-full bg-[#C9A227]/3 blur-3xl" />
         </div>
 
-        <Container className="relative z-10 pt-8 pb-24 md:pt-12 md:pb-16">
+        <Container className="relative z-10 pt-16 pb-24 md:pt-24 md:pb-32">
+          {/* Back Link */}
+          <Link
+            href="/#blog"
+            className="group mb-8 inline-flex items-center gap-2 text-[#E5E7EB]/70 transition-colors hover:text-[#C9A227]"
+          >
+            <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
+            <span className="text-sm font-medium">Back to articles</span>
+          </Link>
+
           {/* Title */}
           <h1 className="max-w-4xl text-3xl leading-tight font-bold text-white md:text-4xl lg:text-5xl xl:text-6xl">
             {post.title}
@@ -187,15 +154,33 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             </div>
           )}
         </Container>
+
+        {/* Featured Image */}
+        {featuredImageUrl && (
+          <div className="relative z-10 -mb-16 md:-mb-24">
+            <Container>
+              <div className="relative aspect-[21/9] overflow-hidden rounded-2xl shadow-2xl ring-4 ring-white md:aspect-[3/1] dark:ring-gray-900">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={featuredImageUrl}
+                  alt={post.featuredImage?.alternativeText || post.title}
+                  className="h-full w-full object-cover"
+                />
+                {/* Subtle overlay gradient */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+              </div>
+            </Container>
+          </div>
+        )}
       </section>
 
       {/* Content Section */}
-      <section className="pt-12 pb-16 md:pt-16">
+      <section className="pt-24 pb-16 md:pt-32">
         <Container>
           <div className="mx-auto max-w-3xl">
             {/* Excerpt Card */}
-            <div className="mb-12 rounded-2xl border-l-4 border-[#C9A227] bg-gradient-to-br from-[#1a2332] to-[#141b26] p-6 md:p-8">
-              <p className="text-lg leading-relaxed text-[#94a3b8] italic md:text-xl">
+            <div className="mb-12 rounded-2xl border-l-4 border-[#C9A227] bg-gradient-to-br from-[#F9FAFB] to-[#F3F4F6] p-6 md:p-8 dark:from-[#1F2937] dark:to-[#111827]">
+              <p className="text-lg leading-relaxed text-[#6B7280] italic md:text-xl dark:text-[#9CA3AF]">
                 &ldquo;{post.excerpt}&rdquo;
               </p>
             </div>
@@ -203,45 +188,15 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             {/* Main Content */}
             <BlogContent content={post.content} />
 
-            {/* Dynamic Gallery - Between content and share */}
-            {allImages.length > 0 && (
-              <div className="my-12">
-                <h3 className="mb-6 text-center text-sm font-semibold tracking-widest text-[#64748b] uppercase">
-                  Gallery
-                </h3>
-                <div className={`grid ${getGridClasses(allImages.length)} gap-6`}>
-                  {allImages.map((image, index) => (
-                    <figure
-                      key={index}
-                      className={`relative ${getAspectClass(allImages.length)} group cursor-pointer overflow-hidden rounded-xl shadow-lg ring-1 ring-[#C9A227]/20 ${
-                        allImages.length === 1 ? 'max-h-[500px]' : ''
-                      }`}
-                    >
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={image.url}
-                        alt={image.alt}
-                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#0F1419]/60 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                      <div className="absolute right-3 bottom-3 left-3 translate-y-full transition-transform duration-300 group-hover:translate-y-0">
-                        <p className="truncate text-sm text-white/90">{image.alt}</p>
-                      </div>
-                    </figure>
-                  ))}
-                </div>
-              </div>
-            )}
-
             {/* Share Section */}
-            <div className="mt-16 border-t border-[#1e293b] pt-8">
+            <div className="mt-16 border-t border-gray-200 pt-8 dark:border-gray-800">
               <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
                 <div>
-                  <h3 className="flex items-center gap-2 text-lg font-semibold text-white">
+                  <h3 className="flex items-center gap-2 text-lg font-semibold text-gray-900 dark:text-white">
                     <Share2 className="h-5 w-5 text-[#C9A227]" />
                     Share this article
                   </h3>
-                  <p className="mt-1 text-sm text-[#64748b]">
+                  <p className="mt-1 text-sm text-gray-500">
                     Found this helpful? Share it with your network.
                   </p>
                 </div>
@@ -285,6 +240,25 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           </div>
         </Container>
       </section>
+
+      {/* Decorative bottom section */}
+      <div className="bg-[#0F2A44] py-16">
+        <Container>
+          <div className="text-center">
+            <div className="mb-4 inline-flex items-center gap-2">
+              <div className="h-px w-8 bg-[#C9A227]/50" />
+              <span className="text-sm font-medium tracking-wider text-[#C9A227] uppercase">
+                Digital Aksumite
+              </span>
+              <div className="h-px w-8 bg-[#C9A227]/50" />
+            </div>
+            <p className="mx-auto max-w-md text-gray-400">
+              Building digital infrastructure that endures. Software systems with a hundred-year
+              perspective.
+            </p>
+          </div>
+        </Container>
+      </div>
     </main>
   );
 }

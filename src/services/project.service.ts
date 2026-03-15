@@ -11,7 +11,14 @@ const ENDPOINT = '/projects';
 
 export const projectService = {
   async getAll(params?: QueryParams) {
-    const response = await apiClient.get<StrapiListResponse<Project>>(ENDPOINT, params);
+    const response = await apiClient.get<StrapiListResponse<Project>>(ENDPOINT, {
+      ...params,
+      populate: {
+        featuredImage: {
+          fields: ['url', 'alternativeText', 'width', 'height', 'formats'],
+        },
+      },
+    });
     // Strapi v5 returns flat data
     return response.data.data
       .map((item) => ({
@@ -20,6 +27,7 @@ export const projectService = {
         description: item.description || item.summary || '',
         featured: item.featured,
         link: item.link,
+        featuredImage: item.featuredImage,
       }))
       .filter((item) => item.title && item.slug);
   },
@@ -45,6 +53,11 @@ export const projectService = {
       filters: { featured: { $eq: true } },
       pagination: { limit },
       sort: ['order:asc'],
+      populate: {
+        featuredImage: {
+          fields: ['url', 'alternativeText', 'width', 'height', 'formats'],
+        },
+      },
     });
     // Strapi v5 returns flat data
     return response.data.data
@@ -54,6 +67,7 @@ export const projectService = {
         description: item.description || item.summary || '',
         featured: item.featured,
         link: item.link,
+        featuredImage: item.featuredImage,
       }))
       .filter((item) => item.title && item.slug);
   },

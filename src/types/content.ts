@@ -15,6 +15,7 @@ export interface BlogPost {
   excerpt: string;
   content: string;
   featuredImage: StrapiMedia | null;
+  gallery: StrapiMedia[];
   author: string;
   publishedAt: string;
   updatedAt: string;
@@ -56,8 +57,7 @@ export interface Project {
   client: string;
   summary: string;
   description: string;
-  thumbnail: StrapiMedia | null;
-  gallery: StrapiMedia[];
+  featuredImage: StrapiMedia | null;
   technologies: string[];
   websiteUrl?: string;
   githubUrl?: string;
@@ -228,6 +228,7 @@ export interface AboutPage {
     value: string;
     label: string;
   }>;
+  companyImages: StrapiMedia[];
   seoTitle?: string;
   seoDescription?: string;
   updatedAt: string;

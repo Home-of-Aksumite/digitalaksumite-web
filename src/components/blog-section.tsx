@@ -8,6 +8,7 @@
 import Link from 'next/link';
 import { Container } from '@/components/container';
 import { ScrollReveal, StaggerContainer, StaggerItem } from '@/components/scroll-reveal';
+import { strapiApiUrl } from '@/config/env';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 
@@ -19,6 +20,18 @@ export interface ApiBlogPost {
   featured?: boolean;
   publishedAt?: string;
   author?: string;
+  featuredImage?: {
+    url: string;
+    alternativeText?: string | null;
+    width?: number;
+    height?: number;
+    formats?: {
+      thumbnail?: { url: string };
+      small?: { url: string };
+      medium?: { url: string };
+      large?: { url: string };
+    } | null;
+  } | null;
 }
 
 interface BlogSectionProps {
@@ -90,6 +103,13 @@ export function BlogSection({
 function BlogCard({ post }: { post: ApiBlogPost }) {
   const href = `/blog/${post.slug}`;
 
+  // Get image URL from featuredImage
+  const imageUrl = post.featuredImage
+    ? post.featuredImage.url.startsWith('http')
+      ? post.featuredImage.url
+      : `${strapiApiUrl}${post.featuredImage.url}`
+    : undefined;
+
   return (
     <Link href={href} className="group block">
       <motion.article
@@ -106,9 +126,19 @@ function BlogCard({ post }: { post: ApiBlogPost }) {
       >
         {/* Image Container */}
         <div className="relative aspect-[16/9] overflow-hidden bg-[#0F2A44]">
-          <div className="flex h-full items-center justify-center text-white">
-            <span className="text-lg font-semibold">Blog</span>
-          </div>
+          {imageUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={imageUrl}
+              alt={post.featuredImage?.alternativeText || post.title}
+              className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+              loading="lazy"
+            />
+          ) : (
+            <div className="flex h-full items-center justify-center text-white">
+              <span className="text-lg font-semibold">Blog</span>
+            </div>
+          )}
 
           {/* Hover overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-[#0F2A44] to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-60" />

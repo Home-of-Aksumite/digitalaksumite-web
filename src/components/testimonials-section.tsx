@@ -9,6 +9,7 @@ import { Container } from '@/components/container';
 import { ScrollReveal, StaggerContainer, StaggerItem } from '@/components/scroll-reveal';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
+import { strapiApiUrl } from '@/config/env';
 
 // API Testimonial interface (matches Strapi response)
 export interface ApiTestimonial {
@@ -17,6 +18,10 @@ export interface ApiTestimonial {
   company: string;
   rating: number;
   featured?: boolean;
+  clientPhoto?: {
+    url: string;
+    alternativeText?: string;
+  } | null;
 }
 
 interface TestimonialsSectionProps {
@@ -87,6 +92,13 @@ export function TestimonialsSection({
 }
 
 function TestimonialCard({ testimonial }: { testimonial: ApiTestimonial }) {
+  const hasPhoto = testimonial.clientPhoto?.url;
+  const photoUrl = hasPhoto
+    ? testimonial.clientPhoto!.url.startsWith('http')
+      ? testimonial.clientPhoto!.url
+      : `${strapiApiUrl}${testimonial.clientPhoto!.url}`
+    : undefined;
+
   return (
     <motion.div
       className={cn(
@@ -111,9 +123,18 @@ function TestimonialCard({ testimonial }: { testimonial: ApiTestimonial }) {
       {/* Author */}
       <div className="flex items-center gap-4">
         <div className="relative h-12 w-12 overflow-hidden rounded-full bg-gradient-to-br from-[#0F2A44] to-[#1a3a5c]">
-          <div className="flex h-full w-full items-center justify-center font-semibold text-white">
-            {(testimonial.clientName || 'A').charAt(0)}
-          </div>
+          {photoUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={photoUrl}
+              alt={testimonial.clientPhoto?.alternativeText || testimonial.clientName}
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center font-semibold text-white">
+              {(testimonial.clientName || 'A').charAt(0)}
+            </div>
+          )}
         </div>
         <div>
           <div className={cn('font-semibold', 'text-[#0F2A44]', 'dark:text-white')}>

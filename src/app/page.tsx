@@ -55,6 +55,13 @@ export default async function Home() {
       slug: project.slug,
       description: truncateText(extractTextFromBlocks(project.description)),
       featured: project.featured,
+      link: project.link,
+      featuredImage: project.featuredImage
+        ? {
+            url: project.featuredImage.url,
+            alternativeText: project.featuredImage.alternativeText,
+          }
+        : undefined,
     }));
   } catch (error) {
     console.error('Failed to fetch projects:', error);
@@ -75,6 +82,7 @@ export default async function Home() {
       featured: post.featured,
       publishedAt: post.publishedAt,
       author: post.author,
+      featuredImage: post.featuredImage,
     }));
   } catch (error) {
     console.error('Failed to fetch blog posts:', error);
