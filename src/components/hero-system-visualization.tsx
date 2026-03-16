@@ -24,77 +24,39 @@ interface Connection {
   to: number;
 }
 
-// Distributed network starting positions (scattered)
+// Simplified obelisk nodes - 7 key points instead of 16
 const nodes: Node[] = [
-  // Apex - narrow top
-  { id: 1, initialX: 20, initialY: 20, targetX: 50, targetY: 5, delay: 0 },
+  // Apex
+  { id: 1, initialX: 35, initialY: 15, targetX: 50, targetY: 8, delay: 0 },
 
-  // Upper crown - first false window tier
-  { id: 2, initialX: 85, initialY: 15, targetX: 42, targetY: 15, delay: 0.08 },
-  { id: 3, initialX: 15, initialY: 85, targetX: 58, targetY: 15, delay: 0.16 },
+  // Upper crown
+  { id: 2, initialX: 70, initialY: 25, targetX: 40, targetY: 20, delay: 0.3 },
+  { id: 3, initialX: 20, initialY: 30, targetX: 60, targetY: 20, delay: 0.6 },
 
-  // Second tier
-  { id: 4, initialX: 75, initialY: 75, targetX: 40, targetY: 25, delay: 0.24 },
-  { id: 5, initialX: 40, initialY: 10, targetX: 60, targetY: 25, delay: 0.32 },
+  // Mid body
+  { id: 4, initialX: 75, initialY: 45, targetX: 38, targetY: 40, delay: 0.9 },
+  { id: 5, initialX: 15, initialY: 50, targetX: 62, targetY: 40, delay: 1.2 },
 
-  // Third tier
-  { id: 6, initialX: 60, initialY: 90, targetX: 38, targetY: 35, delay: 0.4 },
-  { id: 7, initialX: 90, initialY: 35, targetX: 62, targetY: 35, delay: 0.48 },
-
-  // Fourth tier
-  { id: 8, initialX: 50, initialY: 50, targetX: 36, targetY: 45, delay: 0.56 },
-  { id: 9, initialX: 25, initialY: 60, targetX: 64, targetY: 45, delay: 0.64 },
-
-  // Fifth tier - wider body
-  { id: 10, initialX: 80, initialY: 80, targetX: 34, targetY: 55, delay: 0.72 },
-  { id: 11, initialX: 10, initialY: 40, targetX: 66, targetY: 55, delay: 0.8 },
-
-  // Lower section - connects directly to base
-  { id: 12, initialX: 55, initialY: 95, targetX: 30, targetY: 70, delay: 0.88 },
-  { id: 13, initialX: 45, initialY: 5, targetX: 70, targetY: 70, delay: 0.96 },
-
-  // Wide base - left and right corners
-  { id: 14, initialX: 25, initialY: 92, targetX: 18, targetY: 88, delay: 1.04 },
-  { id: 15, initialX: 75, initialY: 88, targetX: 82, targetY: 88, delay: 1.12 },
-
-  // Base center
-  { id: 16, initialX: 50, initialY: 95, targetX: 50, targetY: 92, delay: 1.2 },
+  // Lower section
+  { id: 6, initialX: 65, initialY: 70, targetX: 35, targetY: 65, delay: 1.5 },
+  { id: 7, initialX: 25, initialY: 75, targetX: 65, targetY: 65, delay: 1.8 },
 ];
 
-// Connections tracing the authentic obelisk with horizontal tiers
+// Minimal connections - just the frame
 const connections: Connection[] = [
-  // Main frame - left side
+  // Left side
   { from: 1, to: 2 },
   { from: 2, to: 4 },
   { from: 4, to: 6 },
-  { from: 6, to: 8 },
-  { from: 8, to: 10 },
-  { from: 10, to: 12 },
-  { from: 12, to: 14 },
-  { from: 14, to: 16 },
 
-  // Main frame - right side
+  // Right side
   { from: 1, to: 3 },
   { from: 3, to: 5 },
   { from: 5, to: 7 },
-  { from: 7, to: 9 },
-  { from: 9, to: 11 },
-  { from: 11, to: 13 },
-  { from: 13, to: 15 },
-  { from: 15, to: 16 },
 
-  // Horizontal tier connections
+  // Cross connections (minimal)
   { from: 2, to: 3 },
   { from: 4, to: 5 },
-  { from: 6, to: 7 },
-  { from: 8, to: 9 },
-  { from: 10, to: 11 },
-  { from: 12, to: 13 },
-
-  // Base connections
-  { from: 14, to: 15 },
-  { from: 14, to: 16 },
-  { from: 15, to: 16 },
 ];
 
 export function HeroSystemVisualization() {
@@ -122,7 +84,7 @@ export function HeroSystemVisualization() {
     distributed: (node: Node) => ({
       cx: `${node.initialX}%`,
       cy: `${node.initialY}%`,
-      opacity: 0.8,
+      opacity: 0.6,
       scale: 1,
     }),
     text: (node: Node) => ({
@@ -131,7 +93,7 @@ export function HeroSystemVisualization() {
       opacity: 1,
       scale: 1.1,
       transition: {
-        duration: 2.5,
+        duration: 4.5,
         ease: 'easeInOut',
         delay: node.delay,
       },
@@ -143,13 +105,13 @@ export function HeroSystemVisualization() {
       ref={containerRef}
       className="relative hidden h-[400px] w-full max-w-[420px] items-center justify-center lg:flex"
     >
-      {/* Enhanced radial gradient background */}
+      {/* Enhanced radial gradient background - more subtle */}
       <div
         className="absolute inset-0 -z-10"
         style={{
           background: `
-            radial-gradient(ellipse 80% 100% at 50% 40%, rgba(201,162,39,0.1), transparent 50%),
-            radial-gradient(circle at 50% 80%, rgba(201,162,39,0.05), transparent 40%)
+            radial-gradient(ellipse 80% 100% at 50% 40%, rgba(201,162,39,0.06), transparent 50%),
+            radial-gradient(circle at 50% 80%, rgba(201,162,39,0.03), transparent 40%)
           `,
         }}
       />
@@ -181,98 +143,80 @@ export function HeroSystemVisualization() {
         {/* Nodes with enhanced glow */}
         {nodes.map((node) => (
           <g key={`node-${node.id}`}>
-            {/* Outer aura - soft glow */}
+            {/* Outer aura - soft glow - more subtle */}
             <motion.circle
               custom={node}
               variants={nodeVariants}
               initial="distributed"
               animate={controls}
-              r="5"
+              r="4"
+              fill="none"
+              stroke="#C9A227"
+              strokeWidth="0.2"
+              style={{
+                opacity: phase === 'formed' ? 0.08 : 0.04,
+              }}
+            />
+
+            {/* Middle ring - pulse - more subtle */}
+            <motion.circle
+              custom={node}
+              variants={nodeVariants}
+              initial="distributed"
+              animate={controls}
+              r="2.5"
               fill="none"
               stroke="#C9A227"
               strokeWidth="0.3"
               style={{
-                opacity: phase === 'formed' ? 0.1 : 0.06,
+                opacity: phase === 'formed' ? 0.15 : 0.08,
               }}
             />
 
-            {/* Middle ring - pulse */}
+            {/* Core node - solid - smaller */}
             <motion.circle
               custom={node}
               variants={nodeVariants}
               initial="distributed"
               animate={controls}
-              r="3"
-              fill="none"
-              stroke="#C9A227"
-              strokeWidth="0.4"
-              style={{
-                opacity: phase === 'formed' ? 0.2 : 0.12,
-              }}
-            />
-
-            {/* Core node - solid */}
-            <motion.circle
-              custom={node}
-              variants={nodeVariants}
-              initial="distributed"
-              animate={controls}
-              r="2"
+              r="1.5"
               fill="#C9A227"
               style={{
-                filter: 'drop-shadow(0 0 5px rgba(201,162,39,0.6))',
+                filter: 'drop-shadow(0 0 3px rgba(201,162,39,0.4))',
               }}
             />
           </g>
         ))}
 
-        {/* False window detail lines - subtle decorative elements */}
-        {phase === 'formed' && (
-          <>
-            {/* Single subtle horizontal accent at mid body */}
-            <motion.line
-              x1="36%"
-              y1="45%"
-              x2="64%"
-              y2="45%"
-              stroke="rgba(201,162,39,0.06)"
-              strokeWidth="0.3"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: [0.06, 0.1, 0.06] }}
-              transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-            />
-          </>
-        )}
-
-        {/* Text label that appears after formation */}
+        {/* Text label - smaller, more subtle */}
         <motion.text
           x="50"
-          y="98"
+          y="85"
           textAnchor="middle"
           fill="#C9A227"
-          fontSize="5"
+          fontSize="3.5"
           fontFamily="system-ui, sans-serif"
-          fontWeight="500"
-          letterSpacing="2"
+          fontWeight="400"
+          letterSpacing="1.5"
           initial={{ opacity: 0 }}
-          animate={{ opacity: phase === 'formed' ? 0.7 : 0 }}
-          transition={{ duration: 1.5, delay: 0.5 }}
+          animate={{ opacity: phase === 'formed' ? 0.5 : 0 }}
+          transition={{ duration: 2, delay: 0.5 }}
           style={{
-            filter: 'drop-shadow(0 0 3px rgba(201,162,39,0.4))',
+            filter: 'drop-shadow(0 0 2px rgba(201,162,39,0.3))',
           }}
         >
           DIGITAL AKSUMITE
         </motion.text>
       </motion.svg>
 
-      {/* Slow floating motion */}
+      {/* Slow floating motion - reduced */}
       <motion.div
         className="pointer-events-none absolute inset-0"
         animate={{
-          y: [0, -4, 0],
+          y: [0, -2, 0],
         }}
         transition={{
-          duration: 18,
+          duration: 20,
           repeat: Infinity,
           ease: 'easeInOut',
         }}
@@ -297,7 +241,7 @@ function ConnectionLine({
 
   useEffect(() => {
     if (phase === 'forming' || phase === 'formed') {
-      const duration = 2500;
+      const duration = 4500;
       const delay = Math.max(fromNode.delay, toNode.delay) * 1000;
 
       const startTime = Date.now() + delay;
@@ -339,15 +283,15 @@ function ConnectionLine({
       y1={`${currentFrom.y}%`}
       x2={`${currentTo.x}%`}
       y2={`${currentTo.y}%`}
-      stroke="rgba(201,162,39,0.25)"
-      strokeWidth="0.8"
+      stroke="rgba(201,162,39,0.15)"
+      strokeWidth="0.5"
       strokeLinecap="round"
       initial={{ opacity: 0 }}
       animate={{
-        opacity: phase === 'formed' ? [0.25, 0.4, 0.25] : 0.3,
+        opacity: phase === 'formed' ? [0.15, 0.25, 0.15] : 0.2,
       }}
       transition={{
-        opacity: { duration: 6, repeat: Infinity, ease: 'easeInOut', delay: index * 0.2 },
+        opacity: { duration: 8, repeat: Infinity, ease: 'easeInOut', delay: index * 0.3 },
       }}
     />
   );

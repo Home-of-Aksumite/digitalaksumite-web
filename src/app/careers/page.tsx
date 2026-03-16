@@ -1,9 +1,21 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+import {
+  Rocket,
+  TrendingUp,
+  HeartPulse,
+  Handshake,
+  Globe,
+  Scale,
+  Home,
+  ChevronRight,
+  type LucideIcon,
+} from 'lucide-react';
 import { Container } from '@/components/container';
 import { CareersInternshipApply } from './ui/careers-internship-apply';
+import { JobCardClient } from './ui/job-card-client';
 import { jobService } from '@/services/job.service';
-import { cn } from '@/lib/utils';
+import { pageService } from '@/services/page.service';
 import type { JobOpening } from '@/types/content';
 
 export const metadata: Metadata = {
@@ -14,12 +26,18 @@ export const metadata: Metadata = {
 
 export default async function CareersPage() {
   let jobOpenings: JobOpening[] = [];
+  let siteSettings = undefined;
 
   try {
-    jobOpenings = await jobService.openings.getAll();
+    [jobOpenings, siteSettings] = await Promise.all([
+      jobService.openings.getAll(),
+      pageService.siteSettings().catch(() => undefined),
+    ]);
   } catch (error) {
-    console.error('Failed to fetch job openings:', error);
+    console.error('Failed to fetch data:', error);
   }
+
+  const companyEmail = siteSettings?.companyEmail || 'careers@digitalaksumite.com';
 
   // Separate internships from regular positions
   const regularJobs = jobOpenings.filter((job) => !job.isInternship);
@@ -30,6 +48,23 @@ export default async function CareersPage() {
       {/* Hero Section */}
       <section className="bg-[#0F2A44] py-20 md:py-28">
         <Container>
+          {/* Breadcrumb */}
+          <nav className="flex items-center gap-3 py-4">
+            <Link
+              href="/"
+              className="group flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 transition-all duration-300 hover:border-[#C9A227]/30 hover:bg-[#C9A227]/20"
+            >
+              <Home className="h-4 w-4 text-[#C9A227] transition-transform group-hover:scale-110" />
+              <span className="text-sm font-medium text-white/90 transition-colors group-hover:text-[#C9A227]">
+                Home
+              </span>
+            </Link>
+            <ChevronRight className="h-4 w-4 text-[#C9A227]/50" />
+            <span className="rounded-full border border-[#C9A227]/20 bg-[#C9A227]/10 px-3 py-1.5 text-sm font-semibold text-[#C9A227]">
+              Careers
+            </span>
+          </nav>
+
           <div className="text-center">
             <span className="text-sm font-semibold tracking-wider text-[#C9A227] uppercase">
               Join Our Team
@@ -47,21 +82,27 @@ export default async function CareersPage() {
       </section>
 
       {/* Why Join Us */}
-      <section className="py-20">
+      <section className="bg-[#0C0C0C] py-20 dark:bg-[#0C0C0C]">
         <Container>
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-[#0F2A44] dark:text-white">
-              Why Work at Digital Aksumite?
-            </h2>
+            <span className="text-sm font-semibold tracking-wider text-[#C9A227] uppercase">
+              Our Culture
+            </span>
+            <h2 className="mt-3 text-3xl font-bold text-white">Why Work at Digital Aksumite?</h2>
           </div>
           <div className="mt-12 grid gap-8 md:grid-cols-3">
             {benefits.map((benefit) => (
-              <div key={benefit.title} className="rounded-xl bg-[#F9FAFB] p-8 dark:bg-[#1F2937]/50">
-                <div className="mb-4 text-3xl">{benefit.icon}</div>
-                <h3 className="text-xl font-bold text-[#0F2A44] dark:text-white">
-                  {benefit.title}
-                </h3>
-                <p className="mt-2 text-[#6B7280] dark:text-[#9CA3AF]">{benefit.description}</p>
+              <div
+                key={benefit.title}
+                className="rounded-2xl border border-white/10 bg-[#1F2937]/50 p-8 shadow-sm transition hover:border-[#C9A227]/20 hover:bg-[#1F2937]/70"
+              >
+                <div className="mb-5">
+                  <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl border border-[#C9A227]/20 bg-[#C9A227]/10">
+                    <benefit.icon className="h-6 w-6 text-[#C9A227]" />
+                  </span>
+                </div>
+                <h3 className="text-xl font-bold text-white">{benefit.title}</h3>
+                <p className="mt-2 text-[#9CA3AF]">{benefit.description}</p>
               </div>
             ))}
           </div>
@@ -70,19 +111,17 @@ export default async function CareersPage() {
 
       {/* Open Positions */}
       {regularJobs.length > 0 && (
-        <section className="bg-[#F9FAFB] py-20 dark:bg-[#0C0C0C]">
+        <section className="bg-[#121212] py-20 dark:bg-[#121212]">
           <Container>
             <div className="text-center">
               <span className="text-sm font-semibold tracking-wider text-[#C9A227] uppercase">
                 Open Positions
               </span>
-              <h2 className="mt-3 text-3xl font-bold text-[#0F2A44] dark:text-white">
-                Current Opportunities
-              </h2>
+              <h2 className="mt-3 text-3xl font-bold text-white">Current Opportunities</h2>
             </div>
             <div className="mt-12 space-y-4">
               {regularJobs.map((job) => (
-                <JobCard key={job.id} job={job} />
+                <JobCardClient key={job.id} job={job} />
               ))}
             </div>
           </Container>
@@ -91,22 +130,20 @@ export default async function CareersPage() {
 
       {/* Internships */}
       {internships.length > 0 && (
-        <section className="py-20">
+        <section className="bg-[#0C0C0C] py-20 dark:bg-[#0C0C0C]">
           <Container>
             <div className="text-center">
               <span className="text-sm font-semibold tracking-wider text-[#C9A227] uppercase">
                 For Students & Graduates
               </span>
-              <h2 className="mt-3 text-3xl font-bold text-[#0F2A44] dark:text-white">
-                Internship Programs
-              </h2>
-              <p className="mx-auto mt-4 max-w-2xl text-[#6B7280] dark:text-[#9CA3AF]">
+              <h2 className="mt-3 text-3xl font-bold text-white">Internship Programs</h2>
+              <p className="mx-auto mt-4 max-w-2xl text-[#9CA3AF]">
                 Start your career with hands-on experience and mentorship from industry experts.
               </p>
             </div>
             <div className="mt-12 space-y-4">
               {internships.map((job) => (
-                <JobCard key={job.id} job={job} />
+                <JobCardClient key={job.id} job={job} />
               ))}
             </div>
           </Container>
@@ -115,20 +152,15 @@ export default async function CareersPage() {
 
       {/* No Jobs State */}
       {jobOpenings.length === 0 && (
-        <section className="bg-[#F9FAFB] py-20 dark:bg-[#0C0C0C]">
+        <section className="bg-[#121212] py-20 dark:bg-[#121212]">
           <Container>
             <div className="text-center">
-              <h2 className="text-3xl font-bold text-[#0F2A44] dark:text-white">
-                No Open Positions Currently
-              </h2>
-              <p className="mx-auto mt-4 max-w-2xl text-[#6B7280] dark:text-[#9CA3AF]">
+              <h2 className="text-3xl font-bold text-white">No Open Positions Currently</h2>
+              <p className="mx-auto mt-4 max-w-2xl text-[#9CA3AF]">
                 We are not actively hiring right now, but we are always interested in meeting
                 talented people. Feel free to send your resume to{' '}
-                <a
-                  href="mailto:careers@digitalaksumite.com"
-                  className="text-[#C9A227] hover:underline"
-                >
-                  careers@digitalaksumite.com
+                <a href={`mailto:${companyEmail}`} className="text-[#C9A227] hover:underline">
+                  {companyEmail}
                 </a>{' '}
                 and we will keep it on file for future opportunities.
               </p>
@@ -151,7 +183,7 @@ export default async function CareersPage() {
             </p>
           </div>
 
-          <div className="mt-12 rounded-xl bg-white p-8 dark:bg-[#1F2937]">
+          <div className="mt-12 rounded-2xl border border-white/10 bg-[#1F2937] p-8 shadow-2xl">
             <CareersInternshipApply />
           </div>
         </Container>
@@ -160,91 +192,39 @@ export default async function CareersPage() {
   );
 }
 
-function JobCard({ job }: { job: JobOpening }) {
-  return (
-    <div className="rounded-xl bg-white p-6 shadow-sm dark:bg-[#1F2937]">
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div>
-          <h3 className="text-xl font-semibold text-[#0F2A44] dark:text-white">{job.title}</h3>
-          <div className="mt-2 flex flex-wrap gap-2 text-sm text-[#6B7280] dark:text-[#9CA3AF]">
-            {job.department && (
-              <span className="inline-flex items-center rounded-full bg-[#F9FAFB] px-3 py-1 dark:bg-[#0C0C0C]">
-                {job.department}
-              </span>
-            )}
-            {job.location && (
-              <span className="inline-flex items-center rounded-full bg-[#F9FAFB] px-3 py-1 dark:bg-[#0C0C0C]">
-                {job.location}
-              </span>
-            )}
-            {job.employmentType && (
-              <span className="inline-flex items-center rounded-full bg-[#C9A227]/10 px-3 py-1 text-[#C9A227]">
-                {job.employmentType.replace('- ', '')}
-              </span>
-            )}
-          </div>
-        </div>
-        <div className="flex gap-3">
-          <Link
-            href={`/careers/${job.slug}`}
-            className={cn(
-              'inline-flex items-center justify-center rounded-lg px-6 py-3',
-              'border-2 border-[#0F2A44] font-medium text-[#0F2A44]',
-              'transition-colors hover:bg-[#0F2A44] hover:text-white',
-              'dark:border-[#C9A227] dark:text-[#C9A227] dark:hover:bg-[#C9A227] dark:hover:text-[#121212]'
-            )}
-          >
-            View Details
-          </Link>
-          <Link
-            href={`/careers/${job.slug}`}
-            className={cn(
-              'inline-flex items-center justify-center rounded-lg px-6 py-3',
-              'bg-[#C9A227] font-medium text-[#121212]',
-              'transition-colors hover:bg-[#A18220]'
-            )}
-          >
-            Apply
-          </Link>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-const benefits = [
+const benefits: { icon: LucideIcon; title: string; description: string }[] = [
   {
-    icon: '🚀',
+    icon: Rocket,
     title: 'Impactful Work',
     description:
       'Build products that matter. Your work directly contributes to solving real problems for businesses across Africa.',
   },
   {
-    icon: '📈',
+    icon: TrendingUp,
     title: 'Growth & Development',
     description:
       'Continuous learning with mentorship, training budgets, and clear career progression paths.',
   },
   {
-    icon: '🏥',
+    icon: HeartPulse,
     title: 'Comprehensive Benefits',
     description:
       'Health insurance, flexible working hours, remote options, and competitive compensation.',
   },
   {
-    icon: '🤝',
+    icon: Handshake,
     title: 'Collaborative Culture',
     description:
       'Work alongside talented professionals in an environment that values teamwork and innovation.',
   },
   {
-    icon: '🌍',
+    icon: Globe,
     title: 'Diverse & Inclusive',
     description:
       'We celebrate diversity and create an inclusive environment where everyone can thrive.',
   },
   {
-    icon: '⚖️',
+    icon: Scale,
     title: 'Work-Life Balance',
     description: 'Flexible schedules, generous PTO, and respect for your personal time.',
   },

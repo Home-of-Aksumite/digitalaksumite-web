@@ -1,13 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-import PhoneInput from 'react-phone-number-input';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { jobService, type ApplicationFormData } from '@/services/job.service';
 import { cn } from '@/lib/utils';
 import type { JobOpening } from '@/types/content';
 import { jobApplicationSchema } from '@/utils/security';
+import { StyledPhoneInput } from '@/components/styled-phone-input';
+import { FileUpload } from '@/components/file-upload';
+import { CheckCircle } from 'lucide-react';
 import type { z } from 'zod';
 
 interface ApplicationFormProps {
@@ -27,9 +29,7 @@ export function ApplicationForm({ job }: ApplicationFormProps) {
     handleSubmit,
     reset,
     control,
-    setValue,
     formState: { errors },
-    watch,
   } = useForm<FormValues, unknown, SubmitValues>({
     resolver: zodResolver(jobApplicationSchema),
     defaultValues: {
@@ -42,8 +42,6 @@ export function ApplicationForm({ job }: ApplicationFormProps) {
       resume: undefined as unknown as File,
     },
   });
-
-  const selectedResume = watch('resume');
 
   const onSubmit = async (data: SubmitValues) => {
     setIsSubmitting(true);
@@ -77,21 +75,14 @@ export function ApplicationForm({ job }: ApplicationFormProps) {
 
   if (isSuccess) {
     return (
-      <div className="mt-6 rounded-lg bg-green-50 p-6 text-center dark:bg-green-900/20">
-        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/40">
-          <svg
-            className="h-6 w-6 text-green-600 dark:text-green-400"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-          </svg>
+      <div className="rounded-2xl border border-green-200/30 bg-green-50/80 p-8 text-center dark:border-green-500/20 dark:bg-green-900/20">
+        <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl border border-green-200 bg-green-100 dark:border-green-500/30 dark:bg-green-900/40">
+          <CheckCircle className="h-8 w-8 text-green-600 dark:text-green-400" />
         </div>
-        <h3 className="text-lg font-semibold text-green-800 dark:text-green-300">
+        <h3 className="text-xl font-semibold text-green-800 dark:text-green-300">
           Application Submitted!
         </h3>
-        <p className="mt-2 text-green-700 dark:text-green-400">
+        <p className="mx-auto mt-3 max-w-md text-green-700 dark:text-green-400">
           Thank you for applying. We will review your application and get back to you within 5
           business days.
         </p>
@@ -100,18 +91,18 @@ export function ApplicationForm({ job }: ApplicationFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-6">
       {error && (
-        <div className="rounded-lg bg-red-50 p-4 text-red-700 dark:bg-red-900/20 dark:text-red-400">
+        <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-red-700 dark:border-red-500/30 dark:bg-red-900/20 dark:text-red-400">
           {error}
         </div>
       )}
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-6 md:grid-cols-2">
         <div>
           <label
             htmlFor="firstName"
-            className="block text-sm font-medium text-[#0F2A44] dark:text-white"
+            className="mb-2 block text-sm font-medium text-[#0F2A44] dark:text-white"
           >
             First Name *
           </label>
@@ -120,14 +111,15 @@ export function ApplicationForm({ job }: ApplicationFormProps) {
             type="text"
             {...register('firstName')}
             className={cn(
-              'mt-1 block w-full rounded-lg border px-4 py-3',
+              'block w-full rounded-xl border px-4 py-3.5',
               'border-[#E5E7EB] bg-white focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none',
-              'dark:border-[#374151] dark:bg-[#1F2937] dark:text-white'
+              'dark:border-[#374151] dark:bg-[#1F2937] dark:text-white',
+              errors.firstName && 'border-red-500 focus:border-red-500 focus:ring-red-500'
             )}
             placeholder="Your first name"
           />
           {errors.firstName?.message && (
-            <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+            <p className="mt-2 text-sm text-red-600 dark:text-red-400">
               {errors.firstName.message}
             </p>
           )}
@@ -135,7 +127,7 @@ export function ApplicationForm({ job }: ApplicationFormProps) {
         <div>
           <label
             htmlFor="lastName"
-            className="block text-sm font-medium text-[#0F2A44] dark:text-white"
+            className="mb-2 block text-sm font-medium text-[#0F2A44] dark:text-white"
           >
             Last Name *
           </label>
@@ -144,20 +136,24 @@ export function ApplicationForm({ job }: ApplicationFormProps) {
             type="text"
             {...register('lastName')}
             className={cn(
-              'mt-1 block w-full rounded-lg border px-4 py-3',
+              'block w-full rounded-xl border px-4 py-3.5',
               'border-[#E5E7EB] bg-white focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none',
-              'dark:border-[#374151] dark:bg-[#1F2937] dark:text-white'
+              'dark:border-[#374151] dark:bg-[#1F2937] dark:text-white',
+              errors.lastName && 'border-red-500 focus:border-red-500 focus:ring-red-500'
             )}
             placeholder="Your last name"
           />
           {errors.lastName?.message && (
-            <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.lastName.message}</p>
+            <p className="mt-2 text-sm text-red-600 dark:text-red-400">{errors.lastName.message}</p>
           )}
         </div>
       </div>
 
       <div>
-        <label htmlFor="email" className="block text-sm font-medium text-[#0F2A44] dark:text-white">
+        <label
+          htmlFor="email"
+          className="mb-2 block text-sm font-medium text-[#0F2A44] dark:text-white"
+        >
           Email Address *
         </label>
         <input
@@ -165,44 +161,49 @@ export function ApplicationForm({ job }: ApplicationFormProps) {
           type="email"
           {...register('email')}
           className={cn(
-            'mt-1 block w-full rounded-lg border px-4 py-3',
+            'block w-full rounded-xl border px-4 py-3.5',
             'border-[#E5E7EB] bg-white focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none',
-            'dark:border-[#374151] dark:bg-[#1F2937] dark:text-white'
+            'dark:border-[#374151] dark:bg-[#1F2937] dark:text-white',
+            errors.email && 'border-red-500 focus:border-red-500 focus:ring-red-500'
           )}
           placeholder="your@email.com"
         />
         {errors.email?.message && (
-          <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.email.message}</p>
+          <p className="mt-2 text-sm text-red-600 dark:text-red-400">{errors.email.message}</p>
         )}
       </div>
 
       <div>
-        <label htmlFor="phone" className="block text-sm font-medium text-[#0F2A44] dark:text-white">
+        <label
+          htmlFor="phone"
+          className="mb-2 block text-sm font-medium text-[#0F2A44] dark:text-white"
+        >
           Phone Number
         </label>
         <Controller
           control={control}
           name="phone"
           render={({ field }) => (
-            <PhoneInput
-              {...field}
+            <StyledPhoneInput
               id="phone"
+              value={field.value}
+              onChange={field.onChange}
               placeholder="Enter phone number"
               defaultCountry="ET"
               international
-              className="mt-1"
+              error={!!errors.phone}
             />
           )}
         />
         {errors.phone?.message && (
-          <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.phone.message}</p>
+          <p className="mt-2 text-sm text-red-600 dark:text-red-400">{errors.phone.message}</p>
         )}
       </div>
 
       <div>
         <label
           htmlFor="portfolioLink"
-          className="block text-sm font-medium text-[#0F2A44] dark:text-white"
+          className="mb-2 block text-sm font-medium text-[#0F2A44] dark:text-white"
         >
           Portfolio / LinkedIn (Optional)
         </label>
@@ -211,76 +212,59 @@ export function ApplicationForm({ job }: ApplicationFormProps) {
           type="url"
           {...register('portfolioLink')}
           className={cn(
-            'mt-1 block w-full rounded-lg border px-4 py-3',
+            'block w-full rounded-xl border px-4 py-3.5',
             'border-[#E5E7EB] bg-white focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none',
-            'dark:border-[#374151] dark:bg-[#1F2937] dark:text-white'
+            'dark:border-[#374151] dark:bg-[#1F2937] dark:text-white',
+            errors.portfolioLink && 'border-red-500 focus:border-red-500 focus:ring-red-500'
           )}
           placeholder="https://yourportfolio.com"
         />
         {errors.portfolioLink?.message && (
-          <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+          <p className="mt-2 text-sm text-red-600 dark:text-red-400">
             {errors.portfolioLink.message}
           </p>
         )}
       </div>
 
-      <div>
-        <label
-          htmlFor="resume"
-          className="block text-sm font-medium text-[#0F2A44] dark:text-white"
-        >
-          Resume / CV *
-        </label>
-        <input
-          id="resume"
-          type="file"
-          accept=".pdf"
-          onChange={(e) => {
-            const file = e.target.files?.[0];
-            if (file) {
-              setValue('resume', file, { shouldValidate: true });
-            }
-          }}
-          className={cn(
-            'mt-1 block w-full rounded-lg border px-4 py-3',
-            'border-[#E5E7EB] bg-white focus:border-[#C9A227] focus:outline-none',
-            'dark:border-[#374151] dark:bg-[#1F2937] dark:text-white',
-            'file:mr-4 file:rounded-full file:border-0 file:bg-[#C9A227] file:px-4 file:py-2 file:text-sm file:font-semibold'
-          )}
-        />
-        <p className="mt-1 text-xs text-[#6B7280] dark:text-[#9CA3AF]">
-          Accepted format: PDF (max 5MB)
-        </p>
-        {errors.resume?.message && (
-          <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.resume.message}</p>
+      <Controller
+        control={control}
+        name="resume"
+        render={({ field }) => (
+          <FileUpload
+            id="resume"
+            accept=".pdf"
+            maxSize={5}
+            onFileSelect={(file) => field.onChange(file)}
+            selectedFile={field.value}
+            label="Resume / CV"
+            required
+            error={errors.resume?.message}
+          />
         )}
-        {selectedResume && (
-          <p className="mt-1 text-sm text-green-600 dark:text-green-400">
-            Selected: {selectedResume.name}
-          </p>
-        )}
-      </div>
+      />
 
       <div>
         <label
           htmlFor="coverLetter"
-          className="block text-sm font-medium text-[#0F2A44] dark:text-white"
+          className="mb-2 block text-sm font-medium text-[#0F2A44] dark:text-white"
         >
           Cover Letter / Message *
         </label>
         <textarea
           id="coverLetter"
-          rows={4}
+          rows={5}
           {...register('coverLetter')}
           className={cn(
-            'mt-1 block w-full rounded-lg border px-4 py-3',
+            'block w-full rounded-xl border px-4 py-3.5',
             'border-[#E5E7EB] bg-white focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none',
-            'dark:border-[#374151] dark:bg-[#1F2937] dark:text-white'
+            'dark:border-[#374151] dark:bg-[#1F2937] dark:text-white',
+            'resize-y',
+            errors.coverLetter && 'border-red-500 focus:border-red-500 focus:ring-red-500'
           )}
           placeholder="Tell us why you're interested in this position and what makes you a great fit..."
         />
         {errors.coverLetter?.message && (
-          <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+          <p className="mt-2 text-sm text-red-600 dark:text-red-400">
             {errors.coverLetter.message}
           </p>
         )}
@@ -290,9 +274,9 @@ export function ApplicationForm({ job }: ApplicationFormProps) {
         type="submit"
         disabled={isSubmitting}
         className={cn(
-          'w-full rounded-lg px-8 py-4 font-semibold',
+          'w-full rounded-xl px-8 py-4 font-semibold',
           'bg-[#C9A227] text-[#121212] hover:bg-[#A18220]',
-          'transition-colors focus:ring-2 focus:ring-[#C9A227] focus:outline-none',
+          'transition-all focus:ring-2 focus:ring-[#C9A227] focus:outline-none',
           'disabled:cursor-not-allowed disabled:opacity-50'
         )}
       >

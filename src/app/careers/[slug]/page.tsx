@@ -1,10 +1,12 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import { ChevronRight, Home } from 'lucide-react';
 import { Container } from '@/components/container';
 import { jobService } from '@/services/job.service';
+import { pageService } from '@/services/page.service';
 import { extractTextFromBlocks } from '@/lib/content-utils';
-import { ApplicationForm } from './application-form';
+import { JobApplySection } from './job-apply-section';
 
 interface JobDetailPageProps {
   params: Promise<{
@@ -26,26 +28,49 @@ export async function generateMetadata({ params }: JobDetailPageProps): Promise<
 
 export default async function JobDetailPage({ params }: JobDetailPageProps) {
   const { slug } = await params;
-  const job = await jobService.openings.getBySlug(slug);
+  const [job, siteSettings] = await Promise.all([
+    jobService.openings.getBySlug(slug),
+    pageService.siteSettings().catch(() => undefined),
+  ]);
 
   if (!job) {
     notFound();
   }
 
   const descriptionText = job.description ? extractTextFromBlocks(job.description) : '';
+  const companyEmail = siteSettings?.companyEmail || 'careers@digitalaksumite.com';
 
   return (
     <main className="min-h-screen bg-white dark:bg-[#121212]">
       {/* Hero */}
-      <section className="bg-[#0F2A44] py-16">
+      <section className="bg-[#0F2A44] py-24 md:py-32">
         <Container>
-          <Link
-            href="/careers"
-            className="inline-flex items-center text-sm text-[#E5E7EB]/80 hover:text-[#C9A227]"
-          >
-            <ArrowLeftIcon className="mr-2 h-4 w-4" />
-            Back to Careers
-          </Link>
+          {/* Breadcrumb */}
+          <nav className="flex items-center gap-3 py-4">
+            <Link
+              href="/"
+              className="group flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 transition-all duration-300 hover:border-[#C9A227]/30 hover:bg-[#C9A227]/20"
+            >
+              <Home className="h-4 w-4 text-[#C9A227] transition-transform group-hover:scale-110" />
+              <span className="text-sm font-medium text-white/90 transition-colors group-hover:text-[#C9A227]">
+                Home
+              </span>
+            </Link>
+            <ChevronRight className="h-4 w-4 text-[#C9A227]/50" />
+            <Link
+              href="/careers"
+              className="group flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 transition-all duration-300 hover:border-[#C9A227]/30 hover:bg-[#C9A227]/20"
+            >
+              <span className="text-sm font-medium text-white/90 transition-colors group-hover:text-[#C9A227]">
+                Careers
+              </span>
+            </Link>
+            <ChevronRight className="h-4 w-4 text-[#C9A227]/50" />
+            <span className="max-w-[240px] truncate rounded-full border border-[#C9A227]/20 bg-[#C9A227]/10 px-3 py-1.5 text-sm font-semibold text-[#C9A227] sm:max-w-[360px]">
+              {job.title}
+            </span>
+          </nav>
+
           <h1 className="mt-6 text-3xl font-bold text-white md:text-4xl">{job.title}</h1>
           <div className="mt-4 flex flex-wrap gap-3">
             {job.department && (
@@ -82,10 +107,12 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
             <div className="mt-12 rounded-xl bg-[#F9FAFB] p-8 dark:bg-[#1F2937]/50">
               <h2 className="text-2xl font-bold text-[#0F2A44] dark:text-white">Apply Now</h2>
               <p className="mt-2 text-[#6B7280] dark:text-[#9CA3AF]">
-                Fill out the form below to apply for this position. We will get back to you within 5
-                business days.
+                Apply in seconds. Your application will be reviewed and we will get back to you
+                within 5 business days.
               </p>
-              <ApplicationForm job={job} />
+              <div className="mt-6">
+                <JobApplySection job={job} />
+              </div>
             </div>
           </div>
 
@@ -129,29 +156,15 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
                 Reach out to our HR team for more information about this position.
               </p>
               <a
-                href="mailto:careers@digitalaksumite.com"
+                href={`mailto:${companyEmail}`}
                 className="mt-4 inline-flex items-center text-[#C9A227] hover:underline"
               >
-                careers@digitalaksumite.com
+                {companyEmail}
               </a>
             </div>
           </div>
         </div>
       </Container>
     </main>
-  );
-}
-
-function ArrowLeftIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-    </svg>
   );
 }
