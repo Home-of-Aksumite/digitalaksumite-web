@@ -38,9 +38,8 @@ export function PremiumButton({
       'hover:scale-[1.02]',
     ],
     variant === 'secondary' && [
-      'border border-[#0F2A44]/30 text-[#0F2A44]',
-      'hover:border-[#C9A227]/50 hover:text-[#C9A227]',
-      'hover:bg-[#C9A227]/5',
+      'border border-white/30 bg-white/5 text-white',
+      'hover:border-[#C9A227]/70 hover:text-[#C9A227] hover:bg-[#C9A227]/10',
     ],
     className
   );

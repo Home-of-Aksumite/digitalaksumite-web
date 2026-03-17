@@ -32,12 +32,28 @@ export const metadata: Metadata = {
     'Africa',
   ],
   authors: [{ name: 'Digital Aksumite' }],
+  icons: {
+    icon: [
+      { url: '/favicon.png', type: 'image/png', sizes: '32x32' },
+      { url: '/favicon.png', type: 'image/png', sizes: '16x16' },
+    ],
+    apple: { url: '/favicon.png', sizes: '180x180', type: 'image/png' },
+    shortcut: '/favicon.png',
+  },
   openGraph: {
     title: 'Digital Aksumite | Ancient Power. Modern Technology.',
     description:
       'Premium technology company blending African heritage with cutting-edge digital solutions.',
     type: 'website',
     locale: 'en_US',
+    images: [
+      {
+        url: '/logo.png',
+        width: 1200,
+        height: 630,
+        alt: 'Digital Aksumite Logo',
+      },
+    ],
   },
 };
 
