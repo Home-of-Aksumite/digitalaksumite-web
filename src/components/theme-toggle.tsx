@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils';
 
 interface ThemeToggleProps {
   className?: string;
-  variant?: 'icon' | 'button';
+  variant?: 'icon' | 'button' | 'navbar';
 }
 
 export function ThemeToggle({ className, variant = 'icon' }: ThemeToggleProps) {
@@ -18,12 +18,7 @@ export function ThemeToggle({ className, variant = 'icon' }: ThemeToggleProps) {
 
   // Prevent hydration mismatch - render placeholder during SSR
   if (!mounted) {
-    return (
-      <div
-        className={cn('h-5 w-5 rounded-lg', className)}
-        aria-hidden="true"
-      />
-    );
+    return <div className={cn('h-5 w-5 rounded-lg', className)} aria-hidden="true" />;
   }
 
   if (variant === 'button') {
@@ -49,6 +44,22 @@ export function ThemeToggle({ className, variant = 'icon' }: ThemeToggleProps) {
             <span>Light</span>
           </>
         )}
+      </button>
+    );
+  }
+
+  if (variant === 'navbar') {
+    return (
+      <button
+        onClick={toggleTheme}
+        className={cn(
+          'rounded-lg p-2 transition-colors',
+          'text-white hover:bg-white/10',
+          className
+        )}
+        aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+      >
+        {theme === 'light' ? <MoonIcon className="h-5 w-5" /> : <SunIcon className="h-5 w-5" />}
       </button>
     );
   }

@@ -95,21 +95,25 @@ export function Navbar() {
 
             {/* Theme Toggle */}
             <div className="hidden md:block">
-              <ThemeToggle />
+              <ThemeToggle variant="navbar" />
             </div>
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className={cn(
-              'rounded-lg p-2 transition-colors md:hidden',
-              'text-white hover:bg-white/10'
-            )}
-            aria-label="Toggle menu"
-          >
-            {mobileMenuOpen ? <CloseIcon className="h-6 w-6" /> : <MenuIcon className="h-6 w-6" />}
-          </button>
+          {/* Mobile: Theme Toggle + Menu Button */}
+          <div className="flex items-center gap-2 md:hidden">
+            <ThemeToggle variant="navbar" />
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className={cn('rounded-lg p-2 transition-colors', 'text-white hover:bg-white/10')}
+              aria-label="Toggle menu"
+            >
+              {mobileMenuOpen ? (
+                <CloseIcon className="h-6 w-6" />
+              ) : (
+                <MenuIcon className="h-6 w-6" />
+              )}
+            </button>
+          </div>
         </nav>
 
         {/* Mobile Menu */}
@@ -145,6 +149,12 @@ export function Navbar() {
               >
                 Get Started
               </Link>
+
+              {/* Mobile Theme Toggle */}
+              <div className="mt-4 flex items-center justify-between border-t border-white/10 pt-4">
+                <span className="text-sm text-white/60">Theme</span>
+                <ThemeToggle variant="navbar" />
+              </div>
             </div>
           </div>
         )}

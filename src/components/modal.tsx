@@ -116,19 +116,31 @@ export function Modal({ open, onOpenChange, title, description, children, classN
           aria-labelledby={titleId}
           aria-describedby={description ? descriptionId : undefined}
           className={cn(
-            'w-full max-w-3xl rounded-2xl border border-white/10 bg-[#0B1220] shadow-2xl',
-            'text-white',
+            'w-full max-w-3xl rounded-2xl border shadow-2xl',
             'focus:outline-none',
+            // Light mode
+            'border-gray-200 bg-white text-[#0F2A44]',
+            // Dark mode
+            'dark:border-white/10 dark:bg-[#0B1220] dark:text-white',
             className
           )}
         >
-          <div className="flex items-start justify-between gap-6 border-b border-white/10 px-6 py-5">
+          <div
+            className={cn(
+              'flex items-start justify-between gap-6 border-b px-6 py-5',
+              'border-gray-100',
+              'dark:border-white/10'
+            )}
+          >
             <div>
               <h2 id={titleId} className="text-lg font-semibold tracking-tight">
                 {title}
               </h2>
               {description && (
-                <p id={descriptionId} className="mt-1 text-sm text-white/70">
+                <p
+                  id={descriptionId}
+                  className={cn('mt-1 text-sm', 'text-gray-500', 'dark:text-white/70')}
+                >
                   {description}
                 </p>
               )}
@@ -138,9 +150,11 @@ export function Modal({ open, onOpenChange, title, description, children, classN
               onClick={() => onOpenChange(false)}
               className={cn(
                 'inline-flex h-9 w-9 items-center justify-center rounded-lg',
-                'border border-white/10 bg-white/5 text-white/80',
-                'transition hover:bg-white/10 hover:text-white',
-                'focus:ring-2 focus:ring-[#C9A227] focus:ring-offset-0 focus:outline-none'
+                'transition focus:ring-2 focus:ring-[#C9A227] focus:ring-offset-0 focus:outline-none',
+                // Light mode
+                'border border-gray-200 bg-gray-50 text-gray-600 hover:bg-gray-100 hover:text-gray-900',
+                // Dark mode
+                'dark:border-white/10 dark:bg-white/5 dark:text-white/80 dark:hover:bg-white/10 dark:hover:text-white'
               )}
             >
               <span className="sr-only">Close</span>

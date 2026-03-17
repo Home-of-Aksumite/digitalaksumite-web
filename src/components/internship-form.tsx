@@ -116,7 +116,8 @@ export function InternshipApplicationForm({
             className={cn(
               'block w-full rounded-xl border px-4 py-3.5',
               'border-[#E5E7EB] bg-white focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none',
-              'dark:border-[#374151] dark:bg-[#1F2937] dark:text-white',
+              'placeholder:text-gray-400',
+              'dark:border-[#374151] dark:bg-[#1F2937] dark:text-white dark:placeholder:text-gray-500',
               errors.firstName && 'border-red-500 focus:border-red-500 focus:ring-red-500'
             )}
             placeholder="Your first name"
@@ -141,7 +142,8 @@ export function InternshipApplicationForm({
             className={cn(
               'block w-full rounded-xl border px-4 py-3.5',
               'border-[#E5E7EB] bg-white focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none',
-              'dark:border-[#374151] dark:bg-[#1F2937] dark:text-white',
+              'placeholder:text-gray-400',
+              'dark:border-[#374151] dark:bg-[#1F2937] dark:text-white dark:placeholder:text-gray-500',
               errors.lastName && 'border-red-500 focus:border-red-500 focus:ring-red-500'
             )}
             placeholder="Your last name"
@@ -166,7 +168,8 @@ export function InternshipApplicationForm({
           className={cn(
             'block w-full rounded-xl border px-4 py-3.5',
             'border-[#E5E7EB] bg-white focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none',
-            'dark:border-[#374151] dark:bg-[#1F2937] dark:text-white',
+            'placeholder:text-gray-400',
+            'dark:border-[#374151] dark:bg-[#1F2937] dark:text-white dark:placeholder:text-gray-500',
             errors.email && 'border-red-500 focus:border-red-500 focus:ring-red-500'
           )}
           placeholder="your@email.com"
@@ -217,7 +220,8 @@ export function InternshipApplicationForm({
           className={cn(
             'block w-full rounded-xl border px-4 py-3.5',
             'border-[#E5E7EB] bg-white focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none',
-            'dark:border-[#374151] dark:bg-[#1F2937] dark:text-white',
+            'placeholder:text-gray-400',
+            'dark:border-[#374151] dark:bg-[#1F2937] dark:text-white dark:placeholder:text-gray-500',
             errors.portfolioLink && 'border-red-500 focus:border-red-500 focus:ring-red-500'
           )}
           placeholder="https://yourportfolio.com"
@@ -259,7 +263,8 @@ export function InternshipApplicationForm({
           className={cn(
             'block w-full rounded-xl border px-4 py-3.5',
             'border-[#E5E7EB] bg-white focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none',
-            'dark:border-[#374151] dark:bg-[#1F2937] dark:text-white',
+            'placeholder:text-gray-400',
+            'dark:border-[#374151] dark:bg-[#1F2937] dark:text-white dark:placeholder:text-gray-500',
             'resize-y',
             errors.coverLetter && 'border-red-500 focus:border-red-500 focus:ring-red-500'
           )}

@@ -25,7 +25,11 @@ export function AboutSection({ aboutPage }: AboutSectionProps) {
   return (
     <section
       id="about"
-      className="relative overflow-hidden bg-[#121212] py-28 md:py-32 dark:bg-[#121212]"
+      className={cn(
+        'relative overflow-hidden border-t border-[#E8E4DC] py-28 md:py-32',
+        'bg-[#FAFAF5]',
+        'dark:border-[#2D3748] dark:bg-[#18181B]'
+      )}
     >
       {/* Background glow effect matching hero visualization style */}
       <div
@@ -51,7 +55,8 @@ export function AboutSection({ aboutPage }: AboutSectionProps) {
               <h2
                 className={cn(
                   'mt-4 text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl',
-                  'text-white'
+                  'text-[#0F2A44]',
+                  'dark:text-white'
                 )}
               >
                 {title}
@@ -61,7 +66,11 @@ export function AboutSection({ aboutPage }: AboutSectionProps) {
             {/* Description */}
             <ScrollReveal delay={0.2}>
               <p
-                className={cn('mt-8 max-w-xl text-lg leading-relaxed md:text-xl', 'text-[#9CA3AF]')}
+                className={cn(
+                  'mt-8 max-w-xl text-lg leading-relaxed md:text-xl',
+                  'text-[#475569]',
+                  'dark:text-[#9CA3AF]'
+                )}
               >
                 {shortText}
               </p>
@@ -70,7 +79,7 @@ export function AboutSection({ aboutPage }: AboutSectionProps) {
             {/* CTA Button */}
             <ScrollReveal delay={0.3}>
               <div className="mt-12">
-                <PremiumButton href="/about" variant="secondary">
+                <PremiumButton href="/about" variant="primary">
                   Discover Our Story
                 </PremiumButton>
               </div>

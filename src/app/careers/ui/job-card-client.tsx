@@ -9,22 +9,27 @@ export function JobCardClient({ job }: { job: JobOpening }) {
   return (
     <div
       className={cn(
-        'rounded-2xl border border-black/5 bg-white p-6 shadow-sm',
+        'relative overflow-hidden rounded-2xl border p-6 shadow-sm',
         'transition duration-300 hover:-translate-y-0.5 hover:shadow-md',
-        'dark:border-white/10 dark:bg-[#1F2937]/50 dark:hover:bg-[#1F2937]/70'
+        // Light mode: white card
+        'border-gray-200 bg-white',
+        // Dark mode: #1F2937 card
+        'dark:border-[#C9A227]/10 dark:bg-[#1F2937]'
       )}
     >
+      {/* Left golden accent line */}
+      <div className="absolute top-0 left-0 h-full w-1 bg-gradient-to-b from-[#C9A227] to-[#C9A227]/50" />
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h3 className="text-xl font-semibold text-[#0F2A44] dark:text-white">{job.title}</h3>
-          <div className="mt-2 flex flex-wrap gap-2 text-sm text-[#6B7280] dark:text-[#9CA3AF]">
+          <div className="mt-2 flex flex-wrap gap-2 text-sm text-[#475569] dark:text-[#9CA3AF]">
             {job.department && (
-              <span className="inline-flex items-center rounded-full border border-black/5 bg-[#F9FAFB] px-3 py-1 dark:border-white/10 dark:bg-black/20">
+              <span className="inline-flex items-center rounded-full border border-gray-200 bg-[#FAFAF5] px-3 py-1 dark:border-[#2D3748] dark:bg-[#1F2937]/50">
                 {job.department}
               </span>
             )}
             {job.location && (
-              <span className="inline-flex items-center rounded-full border border-black/5 bg-[#F9FAFB] px-3 py-1 dark:border-white/10 dark:bg-black/20">
+              <span className="inline-flex items-center rounded-full border border-gray-200 bg-[#FAFAF5] px-3 py-1 dark:border-[#2D3748] dark:bg-[#1F2937]/50">
                 {job.location}
               </span>
             )}

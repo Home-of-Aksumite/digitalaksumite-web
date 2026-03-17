@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { Container } from '@/components/container';
+import { cn } from '@/lib/utils';
 import { pageService } from '@/services/page.service';
 import { strapiApiUrl } from '@/config/env';
 import type { AboutPage as AboutPageType } from '@/types/content';
@@ -45,7 +46,7 @@ export default async function AboutPage() {
   const stats = aboutPage?.stats ?? [];
 
   return (
-    <main className="min-h-screen bg-[#0F1419]">
+    <main className={cn('min-h-screen', 'bg-[#FAFAF5]', 'dark:bg-[#18181B]')}>
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-[#0F2A44] py-20 md:py-28">
         {/* Breadcrumb */}
@@ -98,23 +99,47 @@ export default async function AboutPage() {
           <Container>
             <div className="grid gap-8 lg:grid-cols-2">
               {mission && (
-                <div className="group relative overflow-hidden rounded-2xl border border-[#C9A227]/10 bg-gradient-to-br from-[#1a2332] to-[#141b26] p-10 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+                <div
+                  className={cn(
+                    'group relative overflow-hidden rounded-2xl border p-10 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl',
+                    'border-gray-200 bg-white',
+                    'dark:border-[#C9A227]/10 dark:bg-[#1F2937]'
+                  )}
+                >
                   <div className="absolute top-0 left-0 h-full w-1 bg-gradient-to-b from-[#C9A227] to-[#C9A227]/50" />
                   <div className="mb-6 inline-flex rounded-xl bg-[#C9A227]/10 p-4">
                     <Target className="h-8 w-8 text-[#C9A227]" />
                   </div>
-                  <h2 className="text-2xl font-bold text-white">Our Mission</h2>
-                  <p className="mt-4 leading-relaxed text-[#94a3b8]">{mission}</p>
+                  <h2 className={cn('text-2xl font-bold', 'text-[#0F2A44]', 'dark:text-white')}>
+                    Our Mission
+                  </h2>
+                  <p
+                    className={cn('mt-4 leading-relaxed', 'text-[#475569]', 'dark:text-[#94a3b8]')}
+                  >
+                    {mission}
+                  </p>
                 </div>
               )}
               {vision && (
-                <div className="group relative overflow-hidden rounded-2xl border border-[#C9A227]/10 bg-gradient-to-br from-[#1a2332] to-[#141b26] p-10 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+                <div
+                  className={cn(
+                    'group relative overflow-hidden rounded-2xl border p-10 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl',
+                    'border-gray-100 bg-white',
+                    'dark:border-[#C9A227]/10 dark:bg-[#1F2937]'
+                  )}
+                >
                   <div className="absolute top-0 left-0 h-full w-1 bg-gradient-to-b from-[#C9A227] to-[#C9A227]/50" />
                   <div className="mb-6 inline-flex rounded-xl bg-[#C9A227]/10 p-4">
                     <Eye className="h-8 w-8 text-[#C9A227]" />
                   </div>
-                  <h2 className="text-2xl font-bold text-white">Our Vision</h2>
-                  <p className="mt-4 leading-relaxed text-[#94a3b8]">{vision}</p>
+                  <h2 className={cn('text-2xl font-bold', 'text-[#0F2A44]', 'dark:text-white')}>
+                    Our Vision
+                  </h2>
+                  <p
+                    className={cn('mt-4 leading-relaxed', 'text-[#475569]', 'dark:text-[#94a3b8]')}
+                  >
+                    {vision}
+                  </p>
                 </div>
               )}
             </div>
@@ -124,10 +149,9 @@ export default async function AboutPage() {
 
       {/* Values */}
       {values.length > 0 && (
-        <section className="relative overflow-hidden bg-[#0F2A44] py-24">
-          <div className="absolute inset-0 opacity-5">
-            <div className="absolute inset-0 bg-[url('/pattern.svg')] bg-repeat" />
-          </div>
+        <section
+          className={cn('relative overflow-hidden py-24', 'bg-[#FAFAF5]', 'dark:bg-[#18181B]')}
+        >
           <Container className="relative">
             <div className="mx-auto max-w-3xl text-center">
               <div className="mb-6 inline-flex items-center gap-2">
@@ -137,8 +161,22 @@ export default async function AboutPage() {
                 </span>
                 <div className="h-px w-8 bg-[#C9A227]" />
               </div>
-              <h2 className="text-3xl font-bold text-white md:text-4xl">Our Values</h2>
-              <p className="mx-auto mt-4 max-w-2xl text-lg text-[#94a3b8]">
+              <h2
+                className={cn(
+                  'text-3xl font-bold md:text-4xl',
+                  'text-[#0F2A44]',
+                  'dark:text-white'
+                )}
+              >
+                Our Values
+              </h2>
+              <p
+                className={cn(
+                  'mx-auto mt-4 max-w-2xl text-lg',
+                  'text-[#475569]',
+                  'dark:text-[#94a3b8]'
+                )}
+              >
                 The principles that guide everything we do
               </p>
             </div>
@@ -149,13 +187,31 @@ export default async function AboutPage() {
                 return (
                   <div
                     key={value.title}
-                    className="group relative rounded-2xl border border-[#C9A227]/20 bg-[#0F1419]/80 p-8 backdrop-blur-sm transition-all duration-300 hover:-translate-y-2 hover:border-[#C9A227]/50 hover:bg-[#0F1419]"
+                    className={cn(
+                      'group relative overflow-hidden rounded-2xl border p-8',
+                      'transition-all duration-300 hover:-translate-y-2 hover:shadow-xl',
+                      // Light mode: white cards
+                      'border-gray-200 bg-white',
+                      'dark:border-[#C9A227]/10 dark:bg-[#1F2937]'
+                    )}
                   >
-                    <div className="mb-6 inline-flex rounded-xl bg-[#C9A227]/20 p-4 transition-colors group-hover:bg-[#C9A227]/30">
+                    {/* Left accent line - same as Mission/Vision */}
+                    <div className="absolute top-0 left-0 h-full w-1 bg-gradient-to-b from-[#C9A227] to-[#C9A227]/50" />
+                    <div className="mb-6 inline-flex rounded-xl bg-[#C9A227]/10 p-4">
                       <IconComponent className="h-8 w-8 text-[#C9A227]" />
                     </div>
-                    <h3 className="text-xl font-bold text-white">{value.title}</h3>
-                    <p className="mt-3 leading-relaxed text-[#94a3b8]">{value.description}</p>
+                    <h3 className={cn('text-xl font-bold', 'text-[#0F2A44]', 'dark:text-white')}>
+                      {value.title}
+                    </h3>
+                    <p
+                      className={cn(
+                        'mt-3 leading-relaxed',
+                        'text-[#475569]',
+                        'dark:text-[#94a3b8]'
+                      )}
+                    >
+                      {value.description}
+                    </p>
                   </div>
                 );
               })}
@@ -166,7 +222,7 @@ export default async function AboutPage() {
 
       {/* Company Images Gallery */}
       {companyImages.length > 0 && (
-        <section className="bg-[#0F1419] py-24">
+        <section className={cn('py-24', 'bg-[#FAFAF5]', 'dark:bg-[#18181B]')}>
           <Container>
             <div className="mx-auto max-w-3xl text-center">
               <div className="mb-6 inline-flex items-center gap-2">
@@ -176,8 +232,22 @@ export default async function AboutPage() {
                 </span>
                 <div className="h-px w-8 bg-[#C9A227]" />
               </div>
-              <h2 className="text-3xl font-bold text-white md:text-4xl">Our Workspace</h2>
-              <p className="mx-auto mt-4 max-w-2xl text-lg text-[#94a3b8]">
+              <h2
+                className={cn(
+                  'text-3xl font-bold md:text-4xl',
+                  'text-[#0F2A44]',
+                  'dark:text-white'
+                )}
+              >
+                Our Workspace
+              </h2>
+              <p
+                className={cn(
+                  'mx-auto mt-4 max-w-2xl text-lg',
+                  'text-[#475569]',
+                  'dark:text-[#94a3b8]'
+                )}
+              >
                 A glimpse into where we build the future
               </p>
             </div>
@@ -185,7 +255,11 @@ export default async function AboutPage() {
               {companyImages.map((image, index) => (
                 <div
                   key={image.id || index}
-                  className="group relative aspect-[4/3] overflow-hidden rounded-2xl border border-[#C9A227]/20 bg-[#1a2332] shadow-lg transition-all duration-500 hover:border-[#C9A227]/50 hover:shadow-2xl"
+                  className={cn(
+                    'group relative aspect-[4/3] overflow-hidden rounded-2xl border shadow-lg transition-all duration-500 hover:shadow-2xl',
+                    'border-gray-100 bg-white',
+                    'dark:border-[#C9A227]/20 dark:bg-[#1a2332]'
+                  )}
                 >
                   {image.url && (
                     // eslint-disable-next-line @next/next/no-img-element
@@ -196,7 +270,7 @@ export default async function AboutPage() {
                       loading="lazy"
                     />
                   )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0F1419]/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                   <div className="absolute right-0 bottom-0 left-0 translate-y-full p-4 transition-transform duration-300 group-hover:translate-y-0">
                     <p className="text-sm text-white/90">{image.alternativeText || 'Workspace'}</p>
                   </div>
@@ -209,10 +283,9 @@ export default async function AboutPage() {
 
       {/* Team */}
       {(teamIntro || history || stats.length > 0) && (
-        <section className="relative overflow-hidden bg-[#0F2A44] py-24">
-          <div className="absolute inset-0 opacity-5">
-            <div className="absolute inset-0 bg-[url('/pattern.svg')] bg-repeat" />
-          </div>
+        <section
+          className={cn('relative overflow-hidden py-24', 'bg-[#FAFAF5]', 'dark:bg-[#18181B]')}
+        >
           <Container className="relative">
             <div className="grid gap-16 lg:grid-cols-2">
               <div>
@@ -222,11 +295,37 @@ export default async function AboutPage() {
                     The People
                   </span>
                 </div>
-                <h2 className="text-3xl font-bold text-white md:text-4xl">Our Team</h2>
+                <h2
+                  className={cn(
+                    'text-3xl font-bold md:text-4xl',
+                    'text-[#0F2A44]', // Navy for light mode
+                    'dark:text-white' // White for dark mode
+                  )}
+                >
+                  Our Team
+                </h2>
                 {teamIntro && (
-                  <p className="mt-6 text-lg leading-relaxed text-[#94a3b8]">{teamIntro}</p>
+                  <p
+                    className={cn(
+                      'mt-6 text-lg leading-relaxed',
+                      'text-[#475569]', // Slate for light mode
+                      'dark:text-[#94a3b8]' // Light gray for dark mode
+                    )}
+                  >
+                    {teamIntro}
+                  </p>
                 )}
-                {history && <p className="mt-4 leading-relaxed text-[#64748b]">{history}</p>}
+                {history && (
+                  <p
+                    className={cn(
+                      'mt-4 leading-relaxed',
+                      'text-[#64748B]', // Medium gray for light mode
+                      'dark:text-[#64748b]' // Keep same for dark
+                    )}
+                  >
+                    {history}
+                  </p>
+                )}
               </div>
               {stats.length > 0 && (
                 <div className="grid grid-cols-2 gap-6">
@@ -236,13 +335,32 @@ export default async function AboutPage() {
                     return (
                       <div
                         key={stat.label}
-                        className="group rounded-2xl border border-[#C9A227]/30 bg-[#C9A227]/10 p-6 text-center backdrop-blur-sm transition-all duration-300 hover:border-[#C9A227] hover:bg-[#C9A227]/20"
+                        className={cn(
+                          'group relative overflow-hidden rounded-2xl border p-6 text-center',
+                          'transition-all duration-300 hover:-translate-y-1 hover:shadow-lg',
+                          // Light mode: white card
+                          'border-gray-200 bg-white',
+                          // Dark mode: match Values cards
+                          'dark:border-[#C9A227]/10 dark:bg-[#1F2937]'
+                        )}
                       >
+                        {/* Left golden accent line - inside the card */}
+                        <div className="absolute top-0 left-0 h-full w-1 bg-gradient-to-b from-[#C9A227] to-[#C9A227]/50" />
                         <div className="mb-3 flex justify-center">
-                          <IconComponent className="h-6 w-6 text-[#C9A227]" />
+                          <div className="rounded-lg bg-[#C9A227]/10 p-2 transition-colors group-hover:bg-[#C9A227]/20">
+                            <IconComponent className="h-6 w-6 text-[#C9A227]" />
+                          </div>
                         </div>
                         <p className="text-4xl font-bold text-[#C9A227]">{stat.value}</p>
-                        <p className="mt-2 text-sm font-medium text-white/80">{stat.label}</p>
+                        <p
+                          className={cn(
+                            'mt-2 text-sm font-medium',
+                            'text-[#475569]', // Slate for light mode
+                            'dark:text-[#94a3b8]' // Light gray for dark mode
+                          )}
+                        >
+                          {stat.label}
+                        </p>
                       </div>
                     );
                   })}

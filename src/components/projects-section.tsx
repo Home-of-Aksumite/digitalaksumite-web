@@ -45,7 +45,14 @@ export function ProjectsSection({
       : projects.slice(0, 3);
 
   return (
-    <section id="projects" className={cn('py-28 md:py-32', 'bg-[#121212]', 'dark:bg-[#121212]')}>
+    <section
+      id="projects"
+      className={cn(
+        'border-t border-[#E8E4DC] py-28 md:py-32',
+        'bg-[#FAFAF5]',
+        'dark:border-[#2D3748] dark:bg-[#18181B]'
+      )}
+    >
       <Container>
         {/* Section Header */}
         <div className="mb-16 flex flex-col items-start justify-between gap-4 md:flex-row md:items-end">
@@ -69,7 +76,7 @@ export function ProjectsSection({
             </ScrollReveal>
 
             <ScrollReveal delay={0.2}>
-              <p className={cn('mt-4 max-w-xl text-lg', 'text-[#6B7280]', 'dark:text-[#9CA3AF]')}>
+              <p className={cn('mt-4 max-w-xl text-lg', 'text-[#475569]', 'dark:text-[#9CA3AF]')}>
                 {subtitle}
               </p>
             </ScrollReveal>
@@ -104,11 +111,11 @@ function ProjectCard({ project }: { project: ApiProject }) {
   return (
     <motion.article
       className={cn(
-        'group relative overflow-hidden rounded-xl',
-        'bg-white shadow-sm',
-        'dark:bg-[#1F2937]',
+        'group relative overflow-hidden rounded-2xl',
+        'border border-gray-100 bg-white shadow-sm',
+        'dark:border-transparent dark:bg-[#1F2937]',
         'transition-all duration-500',
-        'hover:shadow-[0_20px_40px_rgba(15,42,68,0.15)]',
+        'hover:shadow-[0_20px_40px_rgba(15,42,68,0.12)]',
         'dark:hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)]',
         externalLink && 'cursor-pointer'
       )}
@@ -170,7 +177,7 @@ function ProjectCard({ project }: { project: ApiProject }) {
       <div className="p-6">
         <h3
           className={cn(
-            'mb-2 text-xl font-semibold',
+            'mb-2 text-xl font-bold',
             'text-[#0F2A44]',
             'dark:text-white',
             'transition-colors duration-300',
@@ -179,7 +186,7 @@ function ProjectCard({ project }: { project: ApiProject }) {
         >
           {project.title}
         </h3>
-        <p className={cn('text-sm leading-relaxed', 'text-[#6B7280]', 'dark:text-[#9CA3AF]')}>
+        <p className={cn('text-[15px] leading-relaxed', 'text-[#475569]', 'dark:text-[#9CA3AF]')}>
           {project.description}
         </p>
       </div>

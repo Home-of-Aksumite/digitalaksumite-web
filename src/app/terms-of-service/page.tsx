@@ -127,7 +127,7 @@ export default async function TermsOfServicePage() {
       : defaultSections;
 
   return (
-    <main className="min-h-screen bg-[#0F1419]">
+    <main className={cn('min-h-screen', 'bg-[#FAFAF5]', 'dark:bg-[#18181B]')}>
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-[#0F2A44] py-20 md:py-24">
         {/* Breadcrumb */}
@@ -196,7 +196,13 @@ export default async function TermsOfServicePage() {
           <div className="mx-auto max-w-4xl">
             {/* Quick Navigation */}
             <div className="mb-16">
-              <div className="rounded-2xl border border-[#C9A227]/10 bg-gradient-to-br from-[#1a2332] to-[#141b26] p-6 md:p-8">
+              <div
+                className={cn(
+                  'rounded-2xl border p-6 md:p-8',
+                  'border-gray-100 bg-white shadow-sm',
+                  'dark:border-[#C9A227]/10 dark:bg-[#1F2937]'
+                )}
+              >
                 <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-[#C9A227]">
                   <FileText className="h-5 w-5" />
                   Quick Navigation
@@ -210,10 +216,20 @@ export default async function TermsOfServicePage() {
                       <a
                         key={section.id}
                         href={`#section-${section.id}`}
-                        className="group flex items-center gap-3 rounded-xl px-4 py-3 transition-all duration-300 hover:bg-[#C9A227]/5"
+                        className={cn(
+                          'group flex items-center gap-3 rounded-xl px-4 py-3 transition-all duration-300',
+                          'hover:bg-[#C9A227]/5',
+                          'dark:hover:bg-[#C9A227]/5'
+                        )}
                       >
                         <IconComponent className="h-4 w-4 text-[#C9A227]/60 transition-colors group-hover:text-[#C9A227]" />
-                        <span className="text-sm text-white/70 transition-colors group-hover:text-white">
+                        <span
+                          className={cn(
+                            'text-sm transition-colors',
+                            'text-[#475569] group-hover:text-[#0F2A44]',
+                            'dark:text-white/70 dark:group-hover:text-white'
+                          )}
+                        >
                           {section.title}
                         </span>
                       </a>
@@ -234,7 +250,11 @@ export default async function TermsOfServicePage() {
                   <div
                     key={section.id}
                     id={`section-${section.id}`}
-                    className="group relative overflow-hidden rounded-2xl border border-[#C9A227]/10 bg-gradient-to-br from-[#1a2332] to-[#141b26] transition-all duration-300 hover:-translate-y-1 hover:border-[#C9A227]/30 hover:shadow-xl hover:shadow-[#C9A227]/5"
+                    className={cn(
+                      'group relative overflow-hidden rounded-2xl border transition-all duration-300',
+                      'border-gray-100 bg-white hover:-translate-y-1 hover:shadow-lg',
+                      'dark:border-[#C9A227]/10 dark:bg-gradient-to-br dark:from-[#1a2332] dark:to-[#141b26] dark:hover:border-[#C9A227]/30 dark:hover:shadow-xl dark:hover:shadow-[#C9A227]/5'
+                    )}
                   >
                     {/* Left accent line */}
                     <div className="absolute top-0 left-0 h-full w-1 bg-gradient-to-b from-[#C9A227] via-[#C9A227]/50 to-transparent" />
@@ -249,7 +269,13 @@ export default async function TermsOfServicePage() {
                           <span className="text-xs font-semibold tracking-wider text-[#C9A227]/70 uppercase">
                             Section {index + 1}
                           </span>
-                          <h2 className="mt-1 text-xl font-bold text-white md:text-2xl">
+                          <h2
+                            className={cn(
+                              'mt-1 text-xl font-bold md:text-2xl',
+                              'text-[#0F2A44]',
+                              'dark:text-white'
+                            )}
+                          >
                             {sectionTitle}
                           </h2>
                         </div>
@@ -258,12 +284,14 @@ export default async function TermsOfServicePage() {
                       {/* Section Content */}
                       <div
                         className={cn(
+                          'text-[#374151] dark:text-[#E5E7EB]/90',
                           'prose prose-lg max-w-none',
-                          'prose-p:text-[#94a3b8] prose-p:leading-relaxed',
+                          'prose-p:text-[#374151] prose-p:leading-relaxed',
                           'prose-a:text-[#C9A227] prose-a:no-underline hover:prose-a:underline',
-                          'prose-strong:text-white',
-                          'prose-ul:text-[#94a3b8] prose-li:marker:text-[#C9A227]',
-                          'prose-ol:text-[#94a3b8] prose-li:marker:text-[#C9A227]'
+                          'prose-strong:text-[#0F2A44]',
+                          'prose-ul:text-[#374151] prose-li:marker:text-[#C9A227]',
+                          'prose-ol:text-[#374151] prose-li:marker:text-[#C9A227]',
+                          'dark:prose-p:text-[#E5E7EB]/90 dark:prose-strong:text-white dark:prose-ul:text-[#E5E7EB]/90 dark:prose-ol:text-[#E5E7EB]/90'
                         )}
                         dangerouslySetInnerHTML={{
                           __html: section.content
@@ -286,10 +314,24 @@ export default async function TermsOfServicePage() {
 
             {/* Contact CTA */}
             <div className="mt-16 text-center">
-              <div className="rounded-2xl border border-[#C9A227]/20 bg-[#C9A227]/5 p-8 md:p-12">
+              <div
+                className={cn(
+                  'rounded-2xl border p-8 md:p-12',
+                  'border-gray-100 bg-[#FAFBFC]',
+                  'dark:border-[#C9A227]/20 dark:bg-[#C9A227]/5'
+                )}
+              >
                 <Scale className="mx-auto mb-4 h-12 w-12 text-[#C9A227]" />
-                <h3 className="mb-3 text-2xl font-bold text-white">Questions About Our Terms?</h3>
-                <p className="mx-auto mb-8 max-w-xl text-[#94a3b8]">
+                <h3 className={cn('mb-3 text-2xl font-bold', 'text-[#0F2A44]', 'dark:text-white')}>
+                  Questions About Our Terms?
+                </h3>
+                <p
+                  className={cn(
+                    'mx-auto mb-8 max-w-xl',
+                    'text-[#374151]',
+                    'dark:text-[#E5E7EB]/90'
+                  )}
+                >
                   We&apos;re here to help clarify any questions you may have about our terms of
                   service. Our legal team is available to assist you.
                 </p>
@@ -320,9 +362,9 @@ export default async function TermsOfServicePage() {
             </div>
 
             {/* Footer Note */}
-            <div className="mt-12 border-t border-white/10 pt-8">
+            <div className="mt-12 border-t border-gray-100 pt-8 dark:border-white/10">
               <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-                <p className="text-sm text-white/50">
+                <p className="text-sm text-[#64748B] dark:text-white/50">
                   © {new Date().getFullYear()} Digital Aksumite. All rights reserved.
                 </p>
                 <div className="flex items-center gap-6">
@@ -331,7 +373,7 @@ export default async function TermsOfServicePage() {
                   </Link>
                   <Link
                     href="/privacy-policy"
-                    className="text-sm text-white/60 transition-colors hover:text-[#C9A227]"
+                    className="text-sm text-[#64748B] transition-colors hover:text-[#C9A227] dark:text-white/60 dark:hover:text-[#C9A227]"
                   >
                     Privacy Policy
                   </Link>

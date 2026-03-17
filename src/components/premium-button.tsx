@@ -33,11 +33,12 @@ export function PremiumButton({
     'focus:outline-none focus:ring-2 focus:ring-[#C9A227]/50',
     variant === 'primary' && [
       'bg-[#C9A227] text-[#121212]',
+      'hover:bg-[#0F2A44] hover:text-[#C9A227]',
       'hover:shadow-[0_0_30px_rgba(201,162,39,0.3)]',
       'hover:scale-[1.02]',
     ],
     variant === 'secondary' && [
-      'border border-[#E5E7EB]/30 text-white',
+      'border border-[#0F2A44]/30 text-[#0F2A44]',
       'hover:border-[#C9A227]/50 hover:text-[#C9A227]',
       'hover:bg-[#C9A227]/5',
     ],

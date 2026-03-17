@@ -194,12 +194,12 @@ export function HeroSystemVisualization() {
           y="85"
           textAnchor="middle"
           fill="#C9A227"
-          fontSize="3.5"
+          fontSize="4"
           fontFamily="system-ui, sans-serif"
-          fontWeight="400"
+          fontWeight="500"
           letterSpacing="1.5"
           initial={{ opacity: 0 }}
-          animate={{ opacity: phase === 'formed' ? 0.5 : 0 }}
+          animate={{ opacity: phase === 'formed' ? 0.85 : 0 }}
           transition={{ duration: 2, delay: 0.5 }}
           style={{
             filter: 'drop-shadow(0 0 2px rgba(201,162,39,0.3))',
@@ -283,12 +283,12 @@ function ConnectionLine({
       y1={`${currentFrom.y}%`}
       x2={`${currentTo.x}%`}
       y2={`${currentTo.y}%`}
-      stroke="rgba(201,162,39,0.15)"
+      stroke="rgba(201,162,39,0.35)"
       strokeWidth="0.5"
       strokeLinecap="round"
       initial={{ opacity: 0 }}
       animate={{
-        opacity: phase === 'formed' ? [0.15, 0.25, 0.15] : 0.2,
+        opacity: phase === 'formed' ? [0.35, 0.5, 0.35] : 0.3,
       }}
       transition={{
         opacity: { duration: 8, repeat: Infinity, ease: 'easeInOut', delay: index * 0.3 },

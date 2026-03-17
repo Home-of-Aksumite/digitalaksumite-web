@@ -16,6 +16,7 @@ import { CareersInternshipApply } from './ui/careers-internship-apply';
 import { JobCardClient } from './ui/job-card-client';
 import { jobService } from '@/services/job.service';
 import { pageService } from '@/services/page.service';
+import { cn } from '@/lib/utils';
 import type { JobOpening } from '@/types/content';
 
 export const metadata: Metadata = {
@@ -44,7 +45,7 @@ export default async function CareersPage() {
   const internships = jobOpenings.filter((job) => job.isInternship);
 
   return (
-    <main className="min-h-screen bg-white dark:bg-[#121212]">
+    <main className={cn('min-h-screen', 'bg-[#FAFAF5]', 'dark:bg-[#18181B]')}>
       {/* Hero Section */}
       <section className="bg-[#0F2A44] py-20 md:py-28">
         <Container>
@@ -82,27 +83,47 @@ export default async function CareersPage() {
       </section>
 
       {/* Why Join Us */}
-      <section className="bg-[#0C0C0C] py-20 dark:bg-[#0C0C0C]">
+      <section
+        className={cn(
+          'border-t border-[#E8E4DC] py-20',
+          'bg-[#FAFAF5]',
+          'dark:border-[#2D3748] dark:bg-[#18181B]'
+        )}
+      >
         <Container>
           <div className="text-center">
             <span className="text-sm font-semibold tracking-wider text-[#C9A227] uppercase">
               Our Culture
             </span>
-            <h2 className="mt-3 text-3xl font-bold text-white">Why Work at Digital Aksumite?</h2>
+            <h2 className={cn('mt-3 text-3xl font-bold', 'text-[#0F2A44]', 'dark:text-white')}>
+              Why Work at Digital Aksumite?
+            </h2>
           </div>
           <div className="mt-12 grid gap-8 md:grid-cols-3">
             {benefits.map((benefit) => (
               <div
                 key={benefit.title}
-                className="rounded-2xl border border-white/10 bg-[#1F2937]/50 p-8 shadow-sm transition hover:border-[#C9A227]/20 hover:bg-[#1F2937]/70"
+                className={cn(
+                  'relative overflow-hidden rounded-2xl border p-8 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md',
+                  // Light mode: white card
+                  'border-gray-200 bg-white',
+                  // Dark mode: #1F2937 card with gold border
+                  'dark:border-[#C9A227]/10 dark:bg-[#1F2937]'
+                )}
               >
+                {/* Left golden accent line */}
+                <div className="absolute top-0 left-0 h-full w-1 bg-gradient-to-b from-[#C9A227] to-[#C9A227]/50" />
                 <div className="mb-5">
                   <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl border border-[#C9A227]/20 bg-[#C9A227]/10">
                     <benefit.icon className="h-6 w-6 text-[#C9A227]" />
                   </span>
                 </div>
-                <h3 className="text-xl font-bold text-white">{benefit.title}</h3>
-                <p className="mt-2 text-[#9CA3AF]">{benefit.description}</p>
+                <h3 className={cn('text-xl font-bold', 'text-[#0F2A44]', 'dark:text-white')}>
+                  {benefit.title}
+                </h3>
+                <p className={cn('mt-2', 'text-[#475569]', 'dark:text-[#9CA3AF]')}>
+                  {benefit.description}
+                </p>
               </div>
             ))}
           </div>
@@ -111,13 +132,21 @@ export default async function CareersPage() {
 
       {/* Open Positions */}
       {regularJobs.length > 0 && (
-        <section className="bg-[#121212] py-20 dark:bg-[#121212]">
+        <section
+          className={cn(
+            'border-t border-[#E8E4DC] py-20',
+            'bg-[#FAFAF5]',
+            'dark:border-[#2D3748] dark:bg-[#18181B]'
+          )}
+        >
           <Container>
             <div className="text-center">
               <span className="text-sm font-semibold tracking-wider text-[#C9A227] uppercase">
                 Open Positions
               </span>
-              <h2 className="mt-3 text-3xl font-bold text-white">Current Opportunities</h2>
+              <h2 className={cn('mt-3 text-3xl font-bold', 'text-[#0F2A44]', 'dark:text-white')}>
+                Current Opportunities
+              </h2>
             </div>
             <div className="mt-12 space-y-4">
               {regularJobs.map((job) => (
@@ -130,14 +159,22 @@ export default async function CareersPage() {
 
       {/* Internships */}
       {internships.length > 0 && (
-        <section className="bg-[#0C0C0C] py-20 dark:bg-[#0C0C0C]">
+        <section
+          className={cn(
+            'border-t border-[#E8E4DC] py-20',
+            'bg-[#FAFAF5]',
+            'dark:border-[#2D3748] dark:bg-[#18181B]'
+          )}
+        >
           <Container>
             <div className="text-center">
               <span className="text-sm font-semibold tracking-wider text-[#C9A227] uppercase">
                 For Students & Graduates
               </span>
-              <h2 className="mt-3 text-3xl font-bold text-white">Internship Programs</h2>
-              <p className="mx-auto mt-4 max-w-2xl text-[#9CA3AF]">
+              <h2 className={cn('mt-3 text-3xl font-bold', 'text-[#0F2A44]', 'dark:text-white')}>
+                Internship Programs
+              </h2>
+              <p className={cn('mx-auto mt-4 max-w-2xl', 'text-[#475569]', 'dark:text-[#9CA3AF]')}>
                 Start your career with hands-on experience and mentorship from industry experts.
               </p>
             </div>
@@ -152,11 +189,19 @@ export default async function CareersPage() {
 
       {/* No Jobs State */}
       {jobOpenings.length === 0 && (
-        <section className="bg-[#121212] py-20 dark:bg-[#121212]">
+        <section
+          className={cn(
+            'border-t border-[#E8E4DC] py-20',
+            'bg-[#FAFAF5]',
+            'dark:border-[#2D3748] dark:bg-[#18181B]'
+          )}
+        >
           <Container>
             <div className="text-center">
-              <h2 className="text-3xl font-bold text-white">No Open Positions Currently</h2>
-              <p className="mx-auto mt-4 max-w-2xl text-[#9CA3AF]">
+              <h2 className={cn('text-3xl font-bold', 'text-[#0F2A44]', 'dark:text-white')}>
+                No Open Positions Currently
+              </h2>
+              <p className={cn('mx-auto mt-4 max-w-2xl', 'text-[#475569]', 'dark:text-[#9CA3AF]')}>
                 We are not actively hiring right now, but we are always interested in meeting
                 talented people. Feel free to send your resume to{' '}
                 <a href={`mailto:${companyEmail}`} className="text-[#C9A227] hover:underline">
@@ -170,20 +215,28 @@ export default async function CareersPage() {
       )}
 
       {/* General Internship Application */}
-      <section className="bg-[#0F2A44] py-20">
+      <section className={cn('py-20', 'bg-[#FAFAF5]', 'dark:bg-[#0F2A44]')}>
         <Container>
           <div className="mx-auto max-w-3xl text-center">
             <span className="text-sm font-semibold tracking-wider text-[#C9A227] uppercase">
               Always Open
             </span>
-            <h2 className="mt-3 text-3xl font-bold text-white">Apply for Internship</h2>
-            <p className="mt-4 text-lg text-[#E5E7EB]/80">
+            <h2 className={cn('mt-3 text-3xl font-bold', 'text-[#0F2A44]', 'dark:text-white')}>
+              Apply for Internship
+            </h2>
+            <p className={cn('mt-4 text-lg', 'text-[#475569]', 'dark:text-[#E5E7EB]/80')}>
               Looking for hands-on experience? We accept internship applications year-round. Submit
               your details and we will contact you when opportunities arise.
             </p>
           </div>
 
-          <div className="mt-12 rounded-2xl border border-white/10 bg-[#1F2937] p-8 shadow-2xl">
+          <div
+            className={cn(
+              'mt-12 rounded-2xl border p-8 shadow-2xl',
+              'border-gray-200 bg-white',
+              'dark:border-white/10 dark:bg-[#1F2937]'
+            )}
+          >
             <CareersInternshipApply />
           </div>
         </Container>

@@ -45,7 +45,14 @@ export function ServicesSection({
   }
 
   return (
-    <section id="services" className={cn('py-28 md:py-32', 'bg-[#18181B]', 'dark:bg-[#18181B]')}>
+    <section
+      id="services"
+      className={cn(
+        'border-t border-[#E8E4DC] py-28 md:py-32',
+        'bg-[#FAFAF5]',
+        'dark:border-[#2D3748] dark:bg-[#18181B]'
+      )}
+    >
       <Container>
         {/* Section Header */}
         <div className="mb-16 text-center">
@@ -81,7 +88,7 @@ export function ServicesSection({
         </div>
 
         {/* Services Grid */}
-        <StaggerContainer className="grid gap-8 md:grid-cols-2 lg:grid-cols-4" staggerDelay={0.1}>
+        <StaggerContainer className="grid gap-6 md:grid-cols-2 lg:grid-cols-4" staggerDelay={0.1}>
           {services.map((service) => {
             const IconComponent = iconMap[service.slug] || DefaultIcon;
 
@@ -107,27 +114,27 @@ function ServiceCard({
   return (
     <motion.div
       className={cn(
-        'group relative rounded-xl border p-8',
-        'border-[#2D3748] bg-[#1F2937]',
-        'dark:border-[#2D3748] dark:bg-[#1F2937]',
+        'group relative rounded-2xl border p-8',
+        'border-gray-100 bg-white shadow-sm',
+        'dark:border-[#2D3748] dark:bg-[#1F2937] dark:shadow-none',
         'transition-all duration-500',
-        'hover:border-[#C9A227]/50 hover:shadow-[0_8px_30px_rgba(201,162,39,0.12)]',
+        'hover:border-[#C9A227]/30 hover:shadow-[0_8px_30px_rgba(15,42,68,0.08)]',
+        'dark:hover:border-[#C9A227]/50 dark:hover:shadow-[0_8px_30px_rgba(201,162,39,0.12)]',
         'hover:-translate-y-1'
       )}
       whileHover={{ y: -4 }}
       transition={{ duration: 0.3 }}
     >
       {/* Subtle gradient overlay on hover */}
-      <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-[#C9A227]/5 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+      <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#C9A227]/[0.03] to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
 
       {/* Icon */}
       <div
         className={cn(
-          'relative mb-6 inline-flex rounded-lg p-3',
-          'bg-[#0F2A44] text-white',
-          'dark:bg-[#C9A227] dark:text-[#121212]',
+          'relative mb-6 inline-flex rounded-xl p-3.5',
+          'bg-[#0F2A44] text-[#C9A227]',
           'transition-all duration-300',
-          'group-hover:scale-110 group-hover:shadow-lg'
+          'group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-[#C9A227]/10'
         )}
       >
         <IconComponent className="h-6 w-6" />
@@ -136,7 +143,7 @@ function ServiceCard({
       {/* Content */}
       <h3
         className={cn(
-          'relative mb-3 text-xl font-semibold',
+          'relative mb-3 text-xl font-bold',
           'text-[#0F2A44]',
           'dark:text-white',
           'transition-colors duration-300',
@@ -146,13 +153,17 @@ function ServiceCard({
         {service.title}
       </h3>
       <p
-        className={cn('relative text-sm leading-relaxed', 'text-[#6B7280]', 'dark:text-[#9CA3AF]')}
+        className={cn(
+          'relative text-[15px] leading-relaxed',
+          'text-[#475569]',
+          'dark:text-[#9CA3AF]'
+        )}
       >
         {service.description}
       </p>
 
       {/* Subtle bottom accent */}
-      <div className="absolute right-8 bottom-0 left-8 h-[2px] bg-gradient-to-r from-transparent via-[#C9A227] to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+      <div className="absolute right-8 bottom-0 left-8 h-[2px] scale-x-0 bg-gradient-to-r from-transparent via-[#C9A227] to-transparent transition-all duration-500 group-hover:scale-x-100" />
     </motion.div>
   );
 }

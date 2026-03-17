@@ -52,7 +52,14 @@ export function BlogSection({
   const displayPosts = posts.slice(0, 3);
 
   return (
-    <section id="blog" className={cn('py-28 md:py-32', 'bg-[#121212]', 'dark:bg-[#121212]')}>
+    <section
+      id="blog"
+      className={cn(
+        'border-t border-[#E8E4DC] py-28 md:py-32',
+        'bg-[#FAFAF5]',
+        'dark:border-[#2D3748] dark:bg-[#18181B]'
+      )}
+    >
       <Container>
         {/* Section Header */}
         <div className="mb-16 text-center">
@@ -114,9 +121,9 @@ function BlogCard({ post }: { post: ApiBlogPost }) {
     <Link href={href} className="group block">
       <motion.article
         className={cn(
-          'overflow-hidden rounded-xl',
-          'bg-white shadow-sm',
-          'dark:bg-[#1F2937]',
+          'overflow-hidden rounded-2xl',
+          'border border-gray-100 bg-white shadow-sm',
+          'dark:border-transparent dark:bg-[#1F2937]',
           'transition-all duration-500',
           'hover:shadow-[0_20px_40px_rgba(15,42,68,0.1)]',
           'dark:hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)]'
@@ -158,7 +165,7 @@ function BlogCard({ post }: { post: ApiBlogPost }) {
             {post.title}
           </h3>
 
-          <p className={cn('text-sm leading-relaxed', 'text-[#6B7280]', 'dark:text-[#9CA3AF]')}>
+          <p className={cn('text-[15px] leading-relaxed', 'text-[#475569]', 'dark:text-[#9CA3AF]')}>
             {post.excerpt}
           </p>
 

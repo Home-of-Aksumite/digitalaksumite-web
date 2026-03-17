@@ -64,9 +64,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     : undefined;
 
   return (
-    <main className="min-h-screen bg-white dark:bg-[#0a0a0a]">
+    <main className="min-h-screen bg-[#FAFAF5] dark:bg-[#18181B]">
       {/* Navigation Breadcrumb */}
-      <div className="border-b border-gray-100 bg-white dark:border-gray-800 dark:bg-[#0a0a0a]">
+      <div className="border-b border-gray-100 bg-[#FAFAF5] dark:border-[#2D3748] dark:bg-[#18181B]">
         <Container>
           <nav className="flex items-center gap-2 py-4 text-sm">
             <Link href="/" className="text-gray-500 transition-colors hover:text-[#C9A227]">
@@ -159,7 +159,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         {featuredImageUrl && (
           <div className="relative z-10 -mb-16 md:-mb-24">
             <Container>
-              <div className="relative aspect-[21/9] overflow-hidden rounded-2xl shadow-2xl ring-4 ring-white md:aspect-[3/1] dark:ring-gray-900">
+              <div className="relative aspect-[21/9] overflow-hidden rounded-2xl shadow-2xl ring-4 ring-[#FAFAF5] md:aspect-[3/1] dark:ring-[#1F2937]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={featuredImageUrl}
@@ -179,7 +179,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         <Container>
           <div className="mx-auto max-w-3xl">
             {/* Excerpt Card */}
-            <div className="mb-12 rounded-2xl border-l-4 border-[#C9A227] bg-gradient-to-br from-[#F9FAFB] to-[#F3F4F6] p-6 md:p-8 dark:from-[#1F2937] dark:to-[#111827]">
+            <div className="mb-12 rounded-2xl border-l-4 border-[#C9A227] bg-[#FAFAF5] p-6 md:p-8 dark:bg-[#1F2937]">
               <p className="text-lg leading-relaxed text-[#6B7280] italic md:text-xl dark:text-[#9CA3AF]">
                 &ldquo;{post.excerpt}&rdquo;
               </p>

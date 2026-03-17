@@ -42,7 +42,11 @@ export function TestimonialsSection({
   return (
     <section
       id="testimonials"
-      className={cn('py-28 md:py-32', 'bg-[#18181B]', 'dark:bg-[#18181B]')}
+      className={cn(
+        'border-t border-[#E8E4DC] py-28 md:py-32',
+        'bg-[#FAFAF5]',
+        'dark:border-[#2D3748] dark:bg-[#18181B]'
+      )}
     >
       <Container>
         {/* Section Header */}
@@ -102,21 +106,22 @@ function TestimonialCard({ testimonial }: { testimonial: ApiTestimonial }) {
   return (
     <motion.div
       className={cn(
-        'relative rounded-xl p-8',
-        'bg-[#F9FAFB]',
-        'dark:bg-[#1F2937]/50',
-        'border border-transparent',
+        'relative rounded-2xl p-8',
+        'border border-gray-100 bg-white',
+        'dark:border-transparent dark:bg-[#1F2937]/50',
         'transition-all duration-500',
-        'hover:border-[#C9A227]/20 hover:shadow-[0_8px_30px_rgba(15,42,68,0.08)]'
+        'hover:border-[#C9A227]/20 hover:shadow-[0_12px_40px_rgba(15,42,68,0.06)]'
       )}
       whileHover={{ y: -4 }}
       transition={{ duration: 0.3 }}
     >
       {/* Quote Icon */}
-      <div className="mb-4 text-4xl text-[#C9A227]/30">&ldquo;</div>
+      <div className="mb-4 text-4xl text-[#C9A227]/20">&ldquo;</div>
 
       {/* Content */}
-      <p className={cn('mb-6 text-base leading-relaxed', 'text-[#374151]', 'dark:text-[#E5E7EB]')}>
+      <p
+        className={cn('mb-6 text-[15px] leading-relaxed', 'text-[#475569]', 'dark:text-[#E5E7EB]')}
+      >
         {testimonial.quote}
       </p>
 
@@ -140,7 +145,7 @@ function TestimonialCard({ testimonial }: { testimonial: ApiTestimonial }) {
           <div className={cn('font-semibold', 'text-[#0F2A44]', 'dark:text-white')}>
             {testimonial.clientName}
           </div>
-          <div className="text-sm text-[#6B7280] dark:text-[#9CA3AF]">{testimonial.company}</div>
+          <div className="text-sm text-[#64748B] dark:text-[#9CA3AF]">{testimonial.company}</div>
         </div>
       </div>
 

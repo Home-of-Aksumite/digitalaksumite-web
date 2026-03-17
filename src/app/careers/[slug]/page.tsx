@@ -6,6 +6,7 @@ import { Container } from '@/components/container';
 import { jobService } from '@/services/job.service';
 import { pageService } from '@/services/page.service';
 import { extractTextFromBlocks } from '@/lib/content-utils';
+import { cn } from '@/lib/utils';
 import { JobApplySection } from './job-apply-section';
 
 interface JobDetailPageProps {
@@ -41,7 +42,7 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
   const companyEmail = siteSettings?.companyEmail || 'careers@digitalaksumite.com';
 
   return (
-    <main className="min-h-screen bg-white dark:bg-[#121212]">
+    <main className={cn('min-h-screen', 'bg-[#FAFAF5]', 'dark:bg-[#18181B]')}>
       {/* Hero */}
       <section className="bg-[#0F2A44] py-24 md:py-32">
         <Container>
@@ -98,15 +99,15 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
           <div className="lg:col-span-2">
             <div className="prose dark:prose-invert max-w-none">
               <h2 className="text-2xl font-bold text-[#0F2A44] dark:text-white">About This Role</h2>
-              <p className="mt-4 text-[#6B7280] dark:text-[#9CA3AF]">
+              <p className="mt-4 text-[#475569] dark:text-[#9CA3AF]">
                 {descriptionText || 'No description available for this position.'}
               </p>
             </div>
 
             {/* Application Form */}
-            <div className="mt-12 rounded-xl bg-[#F9FAFB] p-8 dark:bg-[#1F2937]/50">
+            <div className="mt-12 rounded-2xl border border-gray-100 bg-white p-8 shadow-sm dark:border-[#2D3748] dark:bg-[#1F2937]/50">
               <h2 className="text-2xl font-bold text-[#0F2A44] dark:text-white">Apply Now</h2>
-              <p className="mt-2 text-[#6B7280] dark:text-[#9CA3AF]">
+              <p className="mt-2 text-[#475569] dark:text-[#9CA3AF]">
                 Apply in seconds. Your application will be reviewed and we will get back to you
                 within 5 business days.
               </p>
@@ -118,29 +119,29 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
 
           {/* Sidebar */}
           <div className="space-y-6">
-            <div className="rounded-xl bg-[#F9FAFB] p-6 dark:bg-[#1F2937]/50">
+            <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm dark:border-[#2D3748] dark:bg-[#1F2937]/50">
               <h3 className="font-semibold text-[#0F2A44] dark:text-white">Job Overview</h3>
               <ul className="mt-4 space-y-3 text-sm">
                 <li className="flex justify-between">
-                  <span className="text-[#6B7280] dark:text-[#9CA3AF]">Department</span>
+                  <span className="text-[#475569] dark:text-[#9CA3AF]">Department</span>
                   <span className="font-medium text-[#0F2A44] dark:text-white">
                     {job.department || 'N/A'}
                   </span>
                 </li>
                 <li className="flex justify-between">
-                  <span className="text-[#6B7280] dark:text-[#9CA3AF]">Location</span>
+                  <span className="text-[#475569] dark:text-[#9CA3AF]">Location</span>
                   <span className="font-medium text-[#0F2A44] dark:text-white">
                     {job.location || 'N/A'}
                   </span>
                 </li>
                 <li className="flex justify-between">
-                  <span className="text-[#6B7280] dark:text-[#9CA3AF]">Employment Type</span>
+                  <span className="text-[#475569] dark:text-[#9CA3AF]">Employment Type</span>
                   <span className="font-medium text-[#0F2A44] dark:text-white">
                     {job.employmentType ? job.employmentType.replace('- ', '') : 'N/A'}
                   </span>
                 </li>
                 <li className="flex justify-between">
-                  <span className="text-[#6B7280] dark:text-[#9CA3AF]">Posted</span>
+                  <span className="text-[#475569] dark:text-[#9CA3AF]">Posted</span>
                   <span className="font-medium text-[#0F2A44] dark:text-white">
                     {job.publishedDate
                       ? new Date(job.publishedDate).toLocaleDateString()

@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { Container } from '@/components/container';
+import { cn } from '@/lib/utils';
 import { blogPostService } from '@/services/blog-post.service';
 import { strapiApiUrl } from '@/config/env';
 import { BlogContent } from '@/components/blog-content';
@@ -95,7 +96,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   };
 
   return (
-    <main className="min-h-screen bg-[#0F1419]">
+    <main className={cn('min-h-screen', 'bg-[#FAFAF5]', 'dark:bg-[#18181B]')}>
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-[#0F2A44] py-20 md:py-28">
         {/* Breadcrumb */}
@@ -190,12 +191,29 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       </section>
 
       {/* Content Section */}
-      <section className="pt-12 pb-16 md:pt-16">
+      <section className={cn('pt-12 pb-16 md:pt-16', 'bg-[#FAFAF5]', 'dark:bg-[#18181B]')}>
         <Container>
           <div className="mx-auto max-w-3xl">
             {/* Excerpt Card */}
-            <div className="mb-12 rounded-2xl border-l-4 border-[#C9A227] bg-gradient-to-br from-[#1a2332] to-[#141b26] p-6 md:p-8">
-              <p className="text-lg leading-relaxed text-[#94a3b8] italic md:text-xl">
+            <div
+              className={cn(
+                'relative mb-12 overflow-hidden rounded-2xl border p-6 md:p-8',
+                'transition-all duration-300 hover:-translate-y-1 hover:shadow-lg',
+                // Light mode: white card
+                'border-gray-200 bg-white',
+                // Dark mode: dark card
+                'dark:border-[#C9A227]/10 dark:bg-[#1F2937]'
+              )}
+            >
+              {/* Left golden accent line */}
+              <div className="absolute top-0 left-0 h-full w-1 bg-gradient-to-b from-[#C9A227] to-[#C9A227]/50" />
+              <p
+                className={cn(
+                  'text-lg leading-relaxed italic md:text-xl',
+                  'text-[#475569]',
+                  'dark:text-[#E5E7EB]/90'
+                )}
+              >
                 &ldquo;{post.excerpt}&rdquo;
               </p>
             </div>
@@ -203,19 +221,28 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             {/* Main Content */}
             <BlogContent content={post.content} />
 
-            {/* Dynamic Gallery - Between content and share */}
+            {/* Gallery */}
             {allImages.length > 0 && (
               <div className="my-12">
-                <h3 className="mb-6 text-center text-sm font-semibold tracking-widest text-[#64748b] uppercase">
+                <h3
+                  className={cn(
+                    'mb-6 text-center text-sm font-semibold tracking-widest uppercase',
+                    'text-[#64748B]',
+                    'dark:text-[#64748b]'
+                  )}
+                >
                   Gallery
                 </h3>
                 <div className={`grid ${getGridClasses(allImages.length)} gap-6`}>
                   {allImages.map((image, index) => (
                     <figure
                       key={index}
-                      className={`relative ${getAspectClass(allImages.length)} group cursor-pointer overflow-hidden rounded-xl shadow-lg ring-1 ring-[#C9A227]/20 ${
-                        allImages.length === 1 ? 'max-h-[500px]' : ''
-                      }`}
+                      className={cn(
+                        `relative ${getAspectClass(allImages.length)} group cursor-pointer overflow-hidden rounded-2xl shadow-lg`,
+                        allImages.length === 1 ? 'max-h-[500px]' : '',
+                        'ring-1 ring-gray-100',
+                        'dark:ring-[#C9A227]/20'
+                      )}
                     >
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
@@ -223,7 +250,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                         alt={image.alt}
                         className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#0F1419]/60 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                       <div className="absolute right-3 bottom-3 left-3 translate-y-full transition-transform duration-300 group-hover:translate-y-0">
                         <p className="truncate text-sm text-white/90">{image.alt}</p>
                       </div>
@@ -234,14 +261,20 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             )}
 
             {/* Share Section */}
-            <div className="mt-16 border-t border-[#1e293b] pt-8">
+            <div className={cn('mt-16 border-t pt-8', 'border-gray-100', 'dark:border-[#1e293b]')}>
               <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
                 <div>
-                  <h3 className="flex items-center gap-2 text-lg font-semibold text-white">
+                  <h3
+                    className={cn(
+                      'flex items-center gap-2 text-lg font-semibold',
+                      'text-[#0F2A44]',
+                      'dark:text-white'
+                    )}
+                  >
                     <Share2 className="h-5 w-5 text-[#C9A227]" />
                     Share this article
                   </h3>
-                  <p className="mt-1 text-sm text-[#64748b]">
+                  <p className={cn('mt-1 text-sm', 'text-[#64748B]', 'dark:text-[#64748b]')}>
                     Found this helpful? Share it with your network.
                   </p>
                 </div>
