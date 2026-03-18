@@ -20,20 +20,22 @@ export const testimonialService = {
       },
     });
     // Strapi v5 returns flat data - CMS fields: quote, clientName, company, rating, featured, clientPhoto
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     return response.data.data
-      .map((item: any) => ({
+      .map((item) => ({
         quote: item.quote || '',
         clientName: item.clientName || 'Anonymous',
         company: item.company || '',
         rating: item.rating || 5,
         featured: item.featured || false,
-        clientPhoto:
-          item.clientPhoto || // eslint-disable-next-line unicorn/no-null
-          null,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        clientPhoto: item.clientPhoto
+          ? {
+              url: item.clientPhoto.url,
+              alternativeText: item.clientPhoto.alternativeText ?? undefined,
+            }
+          : undefined,
       }))
-      .filter((item: any) => item.quote);
+      .filter((item) => item.quote);
   },
 
   async getFeatured(limit = 3) {
@@ -48,19 +50,21 @@ export const testimonialService = {
       },
     });
     // Strapi v5 returns flat data - CMS fields: quote, clientName, company, rating, featured, clientPhoto
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     return response.data.data
-      .map((item: any) => ({
+      .map((item) => ({
         quote: item.quote || '',
         clientName: item.clientName || 'Anonymous',
         company: item.company || '',
         rating: item.rating || 5,
         featured: item.featured || false,
-        clientPhoto:
-          item.clientPhoto || // eslint-disable-next-line unicorn/no-null
-          null,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        clientPhoto: item.clientPhoto
+          ? {
+              url: item.clientPhoto.url,
+              alternativeText: item.clientPhoto.alternativeText ?? undefined,
+            }
+          : undefined,
       }))
-      .filter((item: any) => item.quote);
+      .filter((item) => item.quote);
   },
 };
