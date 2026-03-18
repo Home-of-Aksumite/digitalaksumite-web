@@ -19,12 +19,6 @@ export const trustedPartnerService = {
         }
       );
 
-      // Debug logging
-
-      console.log('Trusted partners API response:', JSON.stringify(response.data, undefined, 2));
-
-      console.log('Strapi API URL:', strapiApiUrl);
-
       // Handle case where data might be nested differently
       const data = response.data?.data || [];
 
@@ -35,15 +29,9 @@ export const trustedPartnerService = {
 
       // Map and extract logo URL properly
       return data.map((item: TrustedPartner): ClientLogo => {
-        console.log('Processing item:', item);
-
-        console.log('Item logo field:', item.logo);
-
         // Strapi v5 media field structure - handle both flat and nested formats
         const logoData = item.logo as { url?: string; attributes?: { url?: string } } | undefined;
         const rawLogoUrl = logoData?.url || logoData?.attributes?.url;
-
-        console.log('Raw logo URL:', rawLogoUrl);
 
         const logoUrl = rawLogoUrl
           ? rawLogoUrl.startsWith('http')
@@ -52,10 +40,7 @@ export const trustedPartnerService = {
           : // eslint-disable-next-line unicorn/no-null
             null;
 
-        console.log('Constructed logo URL:', logoUrl);
-
         // Build the full StrapiMedia object with resolved URL
-
         const logoMedia: StrapiMedia | null = item.logo
           ? {
               ...item.logo,

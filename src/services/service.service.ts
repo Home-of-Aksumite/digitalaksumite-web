@@ -4,6 +4,7 @@
  */
 
 import { apiClient } from '@/lib/api-client';
+import { extractTextFromBlocks } from '@/lib/content-utils';
 import type { QueryParams, StrapiListResponse } from '@/types/api';
 import type { Service } from '@/types/content';
 
@@ -11,7 +12,14 @@ const ENDPOINT = '/services';
 
 export const serviceService = {
   async getAll(params?: QueryParams) {
-    const response = await apiClient.get<StrapiListResponse<Service>>(ENDPOINT, params);
+    const response = await apiClient.get<StrapiListResponse<Service>>(ENDPOINT, {
+      ...params,
+      populate: {
+        icon: {
+          fields: ['url', 'alternativeText'],
+        },
+      },
+    });
     // Strapi v5 returns flat data, v4 had attributes wrapper
     return response.data.data
       .map((item) => ({
@@ -19,6 +27,12 @@ export const serviceService = {
         slug: item.slug || '',
         shortDescription: item.shortDescription || item.description || '',
         fullDescription: item.fullDescription || item.description || '',
+        icon: item.icon
+          ? {
+              url: item.icon.url,
+              alternativeText: item.icon.alternativeText,
+            }
+          : undefined,
       }))
       .filter((item) => item.title && item.slug);
   },
@@ -35,10 +49,29 @@ export const serviceService = {
 
   async getFeatured(limit = 6) {
     const response = await apiClient.get<StrapiListResponse<Service>>(ENDPOINT, {
+      sort: ['publishedAt:desc'],
       filters: { featured: { $eq: true } },
       pagination: { limit },
-      sort: ['order:asc'],
+      populate: {
+        icon: {
+          fields: ['url', 'alternativeText'],
+        },
+      },
     });
-    return response.data.data;
+    // Map and extract text from blocks
+    return response.data.data
+      .map((item) => ({
+        title: item.title || '',
+        slug: item.slug || '',
+        shortDescription: extractTextFromBlocks(item.description) || '',
+        fullDescription: extractTextFromBlocks(item.description) || '',
+        icon: item.icon
+          ? {
+              url: item.icon.url,
+              alternativeText: item.icon.alternativeText,
+            }
+          : undefined,
+      }))
+      .filter((item) => item.title && item.slug);
   },
 };

@@ -106,7 +106,7 @@ function TestimonialCard({ testimonial }: { testimonial: ApiTestimonial }) {
   return (
     <motion.div
       className={cn(
-        'relative rounded-2xl p-8',
+        'relative overflow-hidden rounded-2xl p-8',
         'border border-gray-100 bg-white',
         'dark:border-transparent dark:bg-[#1F2937]/50',
         'transition-all duration-500',
@@ -120,7 +120,7 @@ function TestimonialCard({ testimonial }: { testimonial: ApiTestimonial }) {
 
       {/* Content */}
       <p
-        className={cn('mb-6 text-[15px] leading-relaxed', 'text-[#475569]', 'dark:text-[#E5E7EB]')}
+        className={cn('mb-6 text-[15px] leading-relaxed break-words', 'text-[#475569]', 'dark:text-[#E5E7EB]')}
       >
         {testimonial.quote}
       </p>

@@ -52,7 +52,7 @@ export const projectService = {
     const response = await apiClient.get<StrapiListResponse<Project>>(ENDPOINT, {
       filters: { featured: { $eq: true } },
       pagination: { limit },
-      sort: ['order:asc'],
+      sort: ['publishedAt:desc'],
       populate: {
         featuredImage: {
           fields: ['url', 'alternativeText', 'width', 'height', 'formats'],

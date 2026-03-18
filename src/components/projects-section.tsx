@@ -39,10 +39,7 @@ export function ProjectsSection({
     return undefined;
   }
 
-  const displayProjects =
-    projects.filter((p) => p.featured).length > 0
-      ? projects.filter((p) => p.featured)
-      : projects.slice(0, 3);
+  const displayProjects = projects;
 
   return (
     <section
@@ -186,7 +183,7 @@ function ProjectCard({ project }: { project: ApiProject }) {
         >
           {project.title}
         </h3>
-        <p className={cn('text-[15px] leading-relaxed', 'text-[#475569]', 'dark:text-[#9CA3AF]')}>
+        <p className={cn('text-[15px] leading-relaxed break-words', 'text-[#475569]', 'dark:text-[#9CA3AF]')}>
           {project.description}
         </p>
       </div>

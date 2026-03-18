@@ -193,17 +193,6 @@ export interface HomePage {
   heroPrimaryButtonUrl: string;
   heroSecondaryButtonText: string;
   heroSecondaryButtonUrl: string;
-  heroSlides: HeroSlide[];
-  aboutTitle: string;
-  aboutShortText: string;
-  aboutButtonText: string;
-  aboutSummary: string;
-  servicesIntro: string;
-  projectsIntro: string;
-  testimonialsIntro: string;
-  ctaTitle: string;
-  ctaSubtitle: string;
-  ctaButtonText: string;
   ctaPrimaryButtonText?: string;
   ctaPrimaryButtonUrl?: string;
   ctaSecondaryButtonText?: string;

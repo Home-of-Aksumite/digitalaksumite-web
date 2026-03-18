@@ -63,18 +63,15 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const setTheme = (newTheme: Theme) => {
-    console.log('[Theme] Setting theme to:', newTheme);
     setThemeState(newTheme);
     localStorage.setItem(STORAGE_KEY, newTheme);
     const isDark = newTheme === 'dark';
     document.documentElement.classList.toggle('dark', isDark);
-    console.log('[Theme] dark class on html:', document.documentElement.classList.contains('dark'));
   };
 
   const toggleTheme = () => {
     const current = theme;
     const newTheme = current === 'light' ? 'dark' : 'light';
-    console.log('[Theme] Toggling from', current, 'to', newTheme);
     setTheme(newTheme);
   };
 

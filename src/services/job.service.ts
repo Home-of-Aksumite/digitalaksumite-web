@@ -160,9 +160,6 @@ export const jobService = {
         applicationData.resume = [resumeId];
       }
 
-      console.log('Sending to Strapi:', { data: applicationData });
-      console.log('JSON payload:', JSON.stringify({ data: applicationData }));
-
       const response = await apiClient.post<StrapiSingleResponse<JobApplication>>(
         JOB_APPLICATIONS_ENDPOINT,
         { data: applicationData }

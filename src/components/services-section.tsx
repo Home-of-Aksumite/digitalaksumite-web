@@ -9,6 +9,7 @@ import { Container } from '@/components/container';
 import { ScrollReveal, StaggerContainer, StaggerItem } from '@/components/scroll-reveal';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
+import { strapiApiUrl } from '@/config/env';
 
 // Icon mapping from service slugs to React components
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -27,6 +28,10 @@ export interface ApiService {
   title: string;
   description: string;
   slug: string;
+  icon?: {
+    url: string;
+    alternativeText?: string | null;
+  } | null;
 }
 
 interface ServicesSectionProps {
@@ -88,8 +93,8 @@ export function ServicesSection({
         </div>
 
         {/* Services Grid */}
-        <StaggerContainer className="grid gap-6 md:grid-cols-2 lg:grid-cols-4" staggerDelay={0.1}>
-          {services.map((service) => {
+        <StaggerContainer className="grid gap-6 md:grid-cols-2 lg:grid-cols-3" staggerDelay={0.1}>
+          {services.slice(0, 6).map((service) => {
             const IconComponent = iconMap[service.slug] || DefaultIcon;
 
             return (
@@ -111,10 +116,17 @@ function ServiceCard({
   service: ApiService;
   IconComponent: React.ComponentType<{ className?: string }>;
 }) {
+  // Get icon URL from Strapi if available
+  const iconUrl = service.icon?.url
+    ? service.icon.url.startsWith('http')
+      ? service.icon.url
+      : `${strapiApiUrl}${service.icon.url}`
+    : undefined;
+
   return (
     <motion.div
       className={cn(
-        'group relative rounded-2xl border p-8',
+        'group relative overflow-hidden rounded-2xl border p-8',
         'border-gray-100 bg-white shadow-sm',
         'dark:border-[#2D3748] dark:bg-[#1F2937] dark:shadow-none',
         'transition-all duration-500',
@@ -132,12 +144,21 @@ function ServiceCard({
       <div
         className={cn(
           'relative mb-6 inline-flex rounded-xl p-3.5',
-          'bg-[#0F2A44] text-[#C9A227]',
+          'bg-[#0F2A44]',
           'transition-all duration-300',
           'group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-[#C9A227]/10'
         )}
       >
-        <IconComponent className="h-6 w-6" />
+        {iconUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={iconUrl}
+            alt={service.icon?.alternativeText || service.title}
+            className="h-6 w-6 object-contain"
+          />
+        ) : (
+          <IconComponent className="h-6 w-6 text-[#C9A227]" />
+        )}
       </div>
 
       {/* Content */}
@@ -154,7 +175,7 @@ function ServiceCard({
       </h3>
       <p
         className={cn(
-          'relative text-[15px] leading-relaxed',
+          'relative text-[15px] leading-relaxed break-words',
           'text-[#475569]',
           'dark:text-[#9CA3AF]'
         )}

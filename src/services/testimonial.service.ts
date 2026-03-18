@@ -40,7 +40,7 @@ export const testimonialService = {
     const response = await apiClient.get<StrapiListResponse<Testimonial>>(ENDPOINT, {
       filters: { featured: { $eq: true } },
       pagination: { limit },
-      sort: ['order:asc'],
+      sort: ['publishedAt:desc'],
       populate: {
         clientPhoto: {
           fields: ['url', 'alternativeText', 'width', 'height', 'formats'],

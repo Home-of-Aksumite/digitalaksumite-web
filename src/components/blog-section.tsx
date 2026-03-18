@@ -49,10 +49,8 @@ export function BlogSection({
     return undefined;
   }
 
-  const displayPosts = posts.slice(0, 3);
-
-  return (
-    <section
+    return (
+      <section
       id="blog"
       className={cn(
         'border-t border-[#E8E4DC] py-28 md:py-32',
@@ -96,7 +94,7 @@ export function BlogSection({
 
         {/* Posts Grid */}
         <StaggerContainer className="grid gap-8 md:grid-cols-2 lg:grid-cols-3" staggerDelay={0.1}>
-          {displayPosts.map((post) => (
+          {posts.map((post) => (
             <StaggerItem key={post.slug}>
               <BlogCard post={post} />
             </StaggerItem>
@@ -165,7 +163,7 @@ function BlogCard({ post }: { post: ApiBlogPost }) {
             {post.title}
           </h3>
 
-          <p className={cn('text-[15px] leading-relaxed', 'text-[#475569]', 'dark:text-[#9CA3AF]')}>
+          <p className={cn('text-[15px] leading-relaxed break-words', 'text-[#475569]', 'dark:text-[#9CA3AF]')}>
             {post.excerpt}
           </p>
 

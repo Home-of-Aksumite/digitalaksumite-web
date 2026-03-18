@@ -38,18 +38,19 @@ export default async function Home() {
   let trustedPartners: TrustedPartner[] = [];
 
   try {
-    const servicesData = await serviceService.getAll();
+    const servicesData = await serviceService.getFeatured(6);
     services = servicesData.map((service) => ({
       title: service.title,
       description: service.shortDescription || service.fullDescription || '',
       slug: service.slug,
+      icon: service.icon,
     }));
   } catch (error) {
     console.error('Failed to fetch services:', error);
   }
 
   try {
-    const projectsData = await projectService.getAll();
+    const projectsData = await projectService.getFeatured(6);
     projects = projectsData.map((project) => ({
       title: project.title,
       slug: project.slug,
@@ -68,13 +69,13 @@ export default async function Home() {
   }
 
   try {
-    testimonials = await testimonialService.getAll();
+    testimonials = await testimonialService.getFeatured(3);
   } catch (error) {
     console.error('Failed to fetch testimonials:', error);
   }
 
   try {
-    const blogPostsData = await blogPostService.getAll();
+    const blogPostsData = await blogPostService.getFeatured(3);
     blogPosts = blogPostsData.map((post) => ({
       title: post.title,
       slug: post.slug,

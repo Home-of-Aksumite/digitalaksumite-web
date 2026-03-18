@@ -63,6 +63,16 @@ export function Hero({ homePage, trustedPartners }: HeroProps) {
   const obeliskScale = useTransform(scrollY, [0, 400], [1, 0.9]);
 
   // Use Strapi data if available, otherwise fallback to defaults
+  const heroTitle = homePage?.heroTitle;
+  // Split title by newlines or pipe character to support multi-line titles
+  const titleLines = heroTitle
+    ? heroTitle.split(/\n|\|/)
+    : [];
+  // Only use defaults if no heroTitle provided at all
+  const line1 = titleLines[0]?.trim() || (heroTitle ? '' : 'We Build');
+  const line2 = titleLines[1]?.trim() || (heroTitle ? '' : 'Systems');
+  const line3 = titleLines[2]?.trim() || (heroTitle ? '' : 'That Last');
+
   const subtitle =
     homePage?.heroSubtitle ||
     'Digital Aksumite blends African heritage with cutting-edge engineering to build digital solutions that stand the test of time.';
@@ -93,25 +103,25 @@ export function Hero({ homePage, trustedPartners }: HeroProps) {
               initial="hidden"
               animate="visible"
             >
-              {/* Title - 3 lines: We Build / Systems / That Last - MUCH BIGGER */}
+              {/* Title - 3 lines: editable from Strapi via heroTitle */}
               <motion.h1 className="max-w-5xl" variants={containerVariants}>
                 <motion.span
                   className="block text-5xl leading-[1.08] font-bold tracking-tight text-white md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl"
                   variants={titleWordVariants}
                 >
-                  We Build
+                  {line1}
                 </motion.span>
                 <motion.span
                   className="mt-2 block text-5xl leading-[1.08] font-bold tracking-tight text-white md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl"
                   variants={titleWordVariants}
                 >
-                  Systems
+                  {line2}
                 </motion.span>
                 <motion.span
                   className="mt-2 block text-5xl leading-[1.08] font-bold tracking-tight text-white md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl"
                   variants={titleWordVariants}
                 >
-                  That Last
+                  {line3}
                 </motion.span>
               </motion.h1>
 

@@ -29,7 +29,6 @@ export default async function AboutPage() {
 
   try {
     aboutPage = await pageService.about();
-    console.log('About page data:', aboutPage);
   } catch (error) {
     console.error('Failed to fetch about page:', error);
   }

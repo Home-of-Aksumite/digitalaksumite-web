@@ -8,7 +8,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import PhoneInput from 'react-phone-number-input';
+import { StyledPhoneInput } from '@/components/styled-phone-input';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Container } from '@/components/container';
@@ -159,11 +159,11 @@ export function ContactSection({ contactPage, siteSettings }: ContactSectionProp
                       control={control}
                       name="phone"
                       render={({ field }) => (
-                        <PhoneInput
+                        <StyledPhoneInput
                           {...field}
                           defaultCountry="ET"
                           international
-                          className="PhoneInput--custom"
+                          placeholder="Enter phone number"
                         />
                       )}
                     />
