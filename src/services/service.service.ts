@@ -79,8 +79,9 @@ export const serviceService = {
           id: item.id || '',
           title: item.title || '',
           slug: item.slug || '',
-          shortDescription: extractTextFromBlocks(item.description) || '',
-          fullDescription: extractTextFromBlocks(item.description) || '',
+          description: extractTextFromBlocks(item.description) || item.shortDescription || '',
+          shortDescription: extractTextFromBlocks(item.description) || item.shortDescription || '',
+          fullDescription: extractTextFromBlocks(item.description) || item.fullDescription || '',
           featured: item.featured || false,
           icon: item.icon
             ? {
