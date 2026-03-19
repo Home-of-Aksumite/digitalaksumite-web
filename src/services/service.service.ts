@@ -8,70 +8,91 @@ import { extractTextFromBlocks } from '@/lib/content-utils';
 import type { QueryParams, StrapiListResponse } from '@/types/api';
 import type { Service } from '@/types/content';
 
+import { fallbackServices } from './fallback-data';
+
 const ENDPOINT = '/services';
 
 export const serviceService = {
   async getAll(params?: QueryParams) {
-    const response = await apiClient.get<StrapiListResponse<Service>>(ENDPOINT, {
-      ...params,
-      populate: {
-        icon: {
-          fields: ['url', 'alternativeText'],
+    try {
+      const response = await apiClient.get<StrapiListResponse<Service>>(ENDPOINT, {
+        ...params,
+        populate: {
+          icon: {
+            fields: ['url', 'alternativeText'],
+          },
         },
-      },
-    });
-    // Strapi v5 returns flat data, v4 had attributes wrapper
-    return response.data.data
-      .map((item) => ({
-        title: item.title || '',
-        slug: item.slug || '',
-        shortDescription: item.shortDescription || item.description || '',
-        fullDescription: item.fullDescription || item.description || '',
-        icon: item.icon
-          ? {
-              url: item.icon.url,
-              alternativeText: item.icon.alternativeText,
-            }
-          : undefined,
-      }))
-      .filter((item) => item.title && item.slug);
+      });
+      // Strapi v5 returns flat data, v4 had attributes wrapper
+      return response.data.data
+        .map((item) => ({
+          id: item.id || '',
+          title: item.title || '',
+          slug: item.slug || '',
+          shortDescription: item.shortDescription || item.description || '',
+          fullDescription: item.fullDescription || item.description || '',
+          featured: item.featured || false,
+          icon: item.icon
+            ? {
+                url: item.icon.url,
+                alternativeText: item.icon.alternativeText,
+              }
+            : undefined,
+        }))
+        .filter((item) => item.title && item.slug);
+    } catch {
+      // Return fallback data when Strapi is unavailable
+      return fallbackServices;
+    }
   },
 
   async getBySlug(slug: string, params?: QueryParams) {
-    const response = await apiClient.get<StrapiListResponse<Service>>(ENDPOINT, {
-      ...params,
-      filters: {
-        slug: { $eq: slug },
-      },
-    });
-    return response.data.data[0] || undefined;
+    try {
+      const response = await apiClient.get<StrapiListResponse<Service>>(ENDPOINT, {
+        ...params,
+        filters: {
+          slug: { $eq: slug },
+        },
+      });
+      return response.data.data[0] || undefined;
+    } catch {
+      // Return fallback service matching slug or undefined
+      return fallbackServices.find((s) => s.slug === slug);
+    }
   },
 
   async getFeatured(limit = 6) {
-    const response = await apiClient.get<StrapiListResponse<Service>>(ENDPOINT, {
-      sort: ['publishedAt:desc'],
-      filters: { featured: { $eq: true } },
-      pagination: { limit },
-      populate: {
-        icon: {
-          fields: ['url', 'alternativeText'],
+    try {
+      const response = await apiClient.get<StrapiListResponse<Service>>(ENDPOINT, {
+        sort: ['publishedAt:desc'],
+        filters: { featured: { $eq: true } },
+        pagination: { limit },
+        populate: {
+          icon: {
+            fields: ['url', 'alternativeText'],
+          },
         },
-      },
-    });
-    // Map and extract text from blocks
-    return response.data.data
-      .map((item) => ({
-        title: item.title || '',
-        slug: item.slug || '',
-        shortDescription: extractTextFromBlocks(item.description) || '',
-        fullDescription: extractTextFromBlocks(item.description) || '',
-        icon: item.icon
-          ? {
-              url: item.icon.url,
-              alternativeText: item.icon.alternativeText,
-            }
-          : undefined,
-      }))
-      .filter((item) => item.title && item.slug);
+      });
+      // Map and extract text from blocks
+      return response.data.data
+        .map((item) => ({
+          id: item.id || '',
+          title: item.title || '',
+          slug: item.slug || '',
+          shortDescription: extractTextFromBlocks(item.description) || '',
+          fullDescription: extractTextFromBlocks(item.description) || '',
+          featured: item.featured || false,
+          icon: item.icon
+            ? {
+                url: item.icon.url,
+                alternativeText: item.icon.alternativeText,
+              }
+            : undefined,
+        }))
+        .filter((item) => item.title && item.slug);
+    } catch {
+      // Return fallback data when Strapi is unavailable (limit to requested count)
+      return fallbackServices.slice(0, limit);
+    }
   },
 };

@@ -32,6 +32,8 @@ export interface BlogPost {
 // ============================================================================
 
 export interface Service {
+  id: number;
+  documentId: string;
   title: string;
   slug: string;
   shortDescription: string;
@@ -154,7 +156,7 @@ export interface ClientLogo {
   id: number;
   documentId: string;
   name: string;
-  logo: StrapiMedia | null;
+  logo: StrapiMedia | undefined;
   link?: string;
   order: number;
   featured: boolean;
@@ -189,10 +191,21 @@ export interface HeroSlide {
 export interface HomePage {
   heroTitle: string;
   heroSubtitle: string;
+  heroSlides?: HeroSlide[];
   heroPrimaryButtonText: string;
   heroPrimaryButtonUrl: string;
   heroSecondaryButtonText: string;
   heroSecondaryButtonUrl: string;
+  aboutTitle?: string;
+  aboutShortText?: string;
+  aboutButtonText?: string;
+  aboutSummary?: string;
+  servicesIntro?: string;
+  projectsIntro?: string;
+  testimonialsIntro?: string;
+  blogIntro?: string;
+  ctaTitle?: string;
+  ctaSubtitle?: string;
   ctaPrimaryButtonText?: string;
   ctaPrimaryButtonUrl?: string;
   ctaSecondaryButtonText?: string;

@@ -12,6 +12,7 @@ import { testimonialService } from '@/services/testimonial.service';
 import { blogPostService } from '@/services/blog-post.service';
 import { pageService } from '@/services/page.service';
 import { trustedPartnerService } from '@/services/client-logo.service';
+import { fallbackHomePage } from '@/services/fallback-data';
 import { extractTextFromBlocks, truncateText } from '@/lib/content-utils';
 import type { ApiService } from '@/components/services-section';
 import type { ApiProject } from '@/components/projects-section';
@@ -25,13 +26,17 @@ import type {
   TrustedPartner,
 } from '@/types/content';
 
+// Disable static caching to ensure fallback data is always used when Strapi is down
+export const revalidate = 0;
+export const dynamic = 'force-dynamic';
+
 export default async function Home() {
   // Fetch data from Strapi
   let services: ApiService[] = [];
   let projects: ApiProject[] = [];
   let testimonials: ApiTestimonial[] = [];
   let blogPosts: ApiBlogPost[] = [];
-  let homePage: HomePage | undefined = undefined;
+  let homePage: HomePage | undefined = fallbackHomePage;
   let aboutPage: AboutPage | undefined = undefined;
   let contactPage: ContactPage | undefined = undefined;
   let siteSettings: SiteSettings | undefined = undefined;

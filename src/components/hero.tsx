@@ -65,17 +65,14 @@ export function Hero({ homePage, trustedPartners }: HeroProps) {
   // Use Strapi data if available, otherwise fallback to defaults
   const heroTitle = homePage?.heroTitle;
   // Split title by newlines or pipe character to support multi-line titles
-  const titleLines = heroTitle
-    ? heroTitle.split(/\n|\|/)
-    : [];
+  const titleLines = heroTitle ? heroTitle.split(/\n|\|/) : [];
   // Only use defaults if no heroTitle provided at all
   const line1 = titleLines[0]?.trim() || (heroTitle ? '' : 'We Build');
   const line2 = titleLines[1]?.trim() || (heroTitle ? '' : 'Systems');
   const line3 = titleLines[2]?.trim() || (heroTitle ? '' : 'That Last');
 
   const subtitle =
-    homePage?.heroSubtitle ||
-    'Digital Aksumite blends African heritage with cutting-edge engineering to build digital solutions that stand the test of time.';
+    homePage?.heroSubtitle || 'We create systems that define, protect and guide our society.';
 
   const primaryText = homePage?.heroPrimaryButtonText?.trim();
   const primaryUrl = homePage?.heroPrimaryButtonUrl?.trim();

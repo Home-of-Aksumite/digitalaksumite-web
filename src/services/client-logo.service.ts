@@ -2,22 +2,22 @@ import { apiClient } from '@/lib/api-client';
 import type { StrapiListResponse, StrapiMedia } from '@/types/api';
 import type { TrustedPartner, ClientLogo } from '@/types/content';
 import { strapiApiUrl } from '@/config/env';
+import { fallbackTrustedPartners } from './fallback-data';
+
+const ENDPOINT = '/trusted-partners';
 
 export const trustedPartnerService = {
   async getAll(): Promise<ClientLogo[]> {
     try {
-      const response = await apiClient.get<StrapiListResponse<TrustedPartner>>(
-        '/trusted-partners',
-        {
-          populate: '*',
-          filters: {
-            featured: {
-              $eq: true,
-            },
+      const response = await apiClient.get<StrapiListResponse<TrustedPartner>>(ENDPOINT, {
+        populate: '*',
+        filters: {
+          featured: {
+            $eq: true,
           },
-          sort: ['order:asc'],
-        }
-      );
+        },
+        sort: ['order:asc'],
+      });
 
       // Handle case where data might be nested differently
       const data = response.data?.data || [];
@@ -37,17 +37,15 @@ export const trustedPartnerService = {
           ? rawLogoUrl.startsWith('http')
             ? rawLogoUrl
             : `${strapiApiUrl}${rawLogoUrl}`
-          : // eslint-disable-next-line unicorn/no-null
-            null;
+          : undefined;
 
         // Build the full StrapiMedia object with resolved URL
-        const logoMedia: StrapiMedia | null = item.logo
+        const logoMedia: StrapiMedia | undefined = item.logo
           ? {
               ...item.logo,
               url: logoUrl || '',
             }
-          : // eslint-disable-next-line unicorn/no-null
-            null;
+          : undefined;
 
         return {
           id: item.id,
@@ -63,9 +61,23 @@ export const trustedPartnerService = {
           publishedAt: item.publishedAt || new Date().toISOString(),
         };
       });
-    } catch (error) {
-      console.error('Trusted partners fetch error:', error);
-      return [] as ClientLogo[];
+    } catch {
+      // Return fallback data when Strapi is unavailable
+      return fallbackTrustedPartners.map(
+        (item): ClientLogo => ({
+          id: item.id || 0,
+          documentId: item.documentId || '',
+          name: item.name || '',
+          logo: item.logo || undefined,
+          link: item.link || '',
+          order: item.order || 0,
+          featured: item.featured || false,
+          category: 'partner',
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          publishedAt: new Date().toISOString(),
+        })
+      );
     }
   },
 };
