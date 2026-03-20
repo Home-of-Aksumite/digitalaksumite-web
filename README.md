@@ -84,4 +84,4 @@ Current build: ~50s (healthy)
 
 ---
 
-See `PROJECT_DOCUMENTATION.md` in parent folder for full project docs.
+See `PROJECT_DOCUMENTATION.md` for full project docs.
