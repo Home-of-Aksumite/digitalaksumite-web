@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Modal } from '@/components/modal';
 import { ApplicationForm } from '../[slug]/application-form';
@@ -15,7 +15,8 @@ interface JobApplyModalProps {
   syncToUrl?: boolean;
 }
 
-export function JobApplyModal({
+// Inner component that uses search params
+function JobApplyModalInner({
   job,
   buttonText = 'Apply',
   buttonClassName,
@@ -72,5 +73,28 @@ export function JobApplyModal({
         <ApplicationForm job={job} />
       </Modal>
     </>
+  );
+}
+
+// Wrapper with Suspense for static generation
+export function JobApplyModal(props: JobApplyModalProps) {
+  return (
+    <Suspense
+      fallback={
+        <button
+          type="button"
+          disabled
+          className={cn(
+            'inline-flex items-center justify-center rounded-lg px-6 py-3',
+            'bg-[#C9A227]/50 font-medium text-[#121212]/50',
+            props.buttonClassName
+          )}
+        >
+          {props.buttonText || 'Apply'}
+        </button>
+      }
+    >
+      <JobApplyModalInner {...props} />
+    </Suspense>
   );
 }

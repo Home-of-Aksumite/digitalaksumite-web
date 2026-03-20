@@ -71,18 +71,23 @@ export function ContactSection({ contactPage, siteSettings }: ContactSectionProp
       await contactService.submit(data);
       setIsSuccess(true);
       reset();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to send message. Please try again.');
+    } catch {
+      setError(
+        'Unable to send your message. Please try again later or contact us directly via email.'
+      );
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <section id="contact" className={cn('py-28 md:py-32', 'bg-[#0F2A44]', 'dark:bg-[#0F2A44]')}>
+    <section
+      id="contact"
+      className={cn('py-20 md:py-28 lg:py-32', 'bg-[#0F2A44]', 'dark:bg-[#0F2A44]')}
+    >
       <Container>
         {/* Header */}
-        <div className="mb-16 text-center">
+        <div className="mb-12 text-center md:mb-16">
           <ScrollReveal>
             <span className="text-sm font-semibold tracking-widest text-[#C9A227] uppercase">
               Contact Us
@@ -90,24 +95,29 @@ export function ContactSection({ contactPage, siteSettings }: ContactSectionProp
           </ScrollReveal>
 
           <ScrollReveal delay={0.1}>
-            <h2 className={cn('mt-4 text-4xl font-bold tracking-tight md:text-5xl', 'text-white')}>
+            <h2
+              className={cn(
+                'mt-4 text-3xl font-bold tracking-tight md:text-4xl lg:text-5xl',
+                'text-white'
+              )}
+            >
               {title}
             </h2>
           </ScrollReveal>
 
           <ScrollReveal delay={0.2}>
-            <p className="mx-auto mt-6 max-w-2xl text-lg text-[#E5E7EB]/80 md:text-xl">
+            <p className="mx-auto mt-4 max-w-2xl text-base text-[#E5E7EB]/80 md:mt-6 md:text-lg lg:text-xl">
               {description}
             </p>
           </ScrollReveal>
         </div>
 
-        <div className="grid gap-12 lg:grid-cols-2">
+        <div className="grid gap-8 md:gap-12 lg:grid-cols-2">
           {/* Left Column - Form */}
           <ScrollReveal>
-            <div className="rounded-xl border border-white/10 bg-white/5 p-8 backdrop-blur-sm">
-              <h3 className="text-2xl font-bold text-white">{formTitle}</h3>
-              <p className="mt-2 text-[#E5E7EB]/70">{formDescription}</p>
+            <div className="rounded-xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm md:p-8">
+              <h3 className="text-xl font-bold text-white md:text-2xl">{formTitle}</h3>
+              <p className="mt-2 text-sm text-[#E5E7EB]/70 md:text-base">{formDescription}</p>
 
               {isSuccess ? (
                 <div className="mt-8 rounded-xl border border-green-500/20 bg-green-500/10 p-8 text-center">
@@ -224,12 +234,12 @@ export function ContactSection({ contactPage, siteSettings }: ContactSectionProp
           {/* Right Column - Contact Info */}
           <ScrollReveal delay={0.2}>
             <div className="flex flex-col justify-center lg:pl-8">
-              <h3 className="text-2xl font-bold text-white">Contact Information</h3>
-              <p className="mt-2 text-[#E5E7EB]/70">
+              <h3 className="text-xl font-bold text-white md:text-2xl">Contact Information</h3>
+              <p className="mt-2 text-sm text-[#E5E7EB]/70 md:text-base">
                 Reach out to us directly through any of these channels.
               </p>
 
-              <div className="mt-10 space-y-8">
+              <div className="mt-8 space-y-6 md:mt-10 md:space-y-8">
                 <ContactItem
                   icon={EmailIcon}
                   label="Email"
@@ -246,14 +256,14 @@ export function ContactSection({ contactPage, siteSettings }: ContactSectionProp
               </div>
 
               {/* Quick CTA Card */}
-              <div className="mt-10 rounded-xl border border-[#C9A227]/20 bg-gradient-to-br from-[#C9A227]/10 to-transparent p-6">
-                <h4 className="text-lg font-semibold text-white">Prefer to call?</h4>
+              <div className="mt-8 rounded-xl border border-[#C9A227]/20 bg-gradient-to-br from-[#C9A227]/10 to-transparent p-5 md:mt-10 md:p-6">
+                <h4 className="text-base font-semibold text-white md:text-lg">Prefer to call?</h4>
                 <p className="mt-2 text-sm text-[#E5E7EB]/70">
                   Our team is available during office hours to discuss your project needs.
                 </p>
                 <Link
                   href={`tel:${phone}`}
-                  className="mt-4 inline-flex items-center text-[#C9A227] transition-colors hover:text-[#A18220]"
+                  className="mt-4 inline-flex items-center text-sm text-[#C9A227] transition-colors hover:text-[#A18220] md:text-base"
                 >
                   <PhoneIcon className="mr-2 h-4 w-4" />
                   Call us now

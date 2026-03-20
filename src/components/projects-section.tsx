@@ -45,14 +45,14 @@ export function ProjectsSection({
     <section
       id="projects"
       className={cn(
-        'border-t border-[#E8E4DC] py-28 md:py-32',
+        'border-t border-[#E8E4DC] py-20 md:py-28 lg:py-32',
         'bg-[#FAFAF5]',
         'dark:border-[#2D3748] dark:bg-[#18181B]'
       )}
     >
       <Container>
         {/* Section Header */}
-        <div className="mb-16 flex flex-col items-start justify-between gap-4 md:flex-row md:items-end">
+        <div className="mb-12 flex flex-col items-start justify-between gap-4 md:mb-16 md:flex-row md:items-end">
           <div>
             <ScrollReveal>
               <span className="text-sm font-semibold tracking-widest text-[#C9A227] uppercase">
@@ -63,7 +63,7 @@ export function ProjectsSection({
             <ScrollReveal delay={0.1}>
               <h2
                 className={cn(
-                  'mt-3 text-4xl font-bold tracking-tight md:text-5xl',
+                  'mt-3 text-3xl font-bold tracking-tight md:text-4xl lg:text-5xl',
                   'text-[#0F2A44]',
                   'dark:text-white'
                 )}
@@ -73,7 +73,13 @@ export function ProjectsSection({
             </ScrollReveal>
 
             <ScrollReveal delay={0.2}>
-              <p className={cn('mt-4 max-w-xl text-lg', 'text-[#475569]', 'dark:text-[#9CA3AF]')}>
+              <p
+                className={cn(
+                  'mt-4 max-w-xl text-base md:text-lg',
+                  'text-[#475569]',
+                  'dark:text-[#9CA3AF]'
+                )}
+              >
                 {subtitle}
               </p>
             </ScrollReveal>
@@ -183,7 +189,13 @@ function ProjectCard({ project }: { project: ApiProject }) {
         >
           {project.title}
         </h3>
-        <p className={cn('text-[15px] leading-relaxed break-words', 'text-[#475569]', 'dark:text-[#9CA3AF]')}>
+        <p
+          className={cn(
+            'text-[15px] leading-relaxed break-words',
+            'text-[#475569]',
+            'dark:text-[#9CA3AF]'
+          )}
+        >
           {project.description}
         </p>
       </div>

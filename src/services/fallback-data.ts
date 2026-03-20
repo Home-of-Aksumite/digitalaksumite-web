@@ -15,6 +15,7 @@ import type {
   TrustedPartner,
   Project,
   BlogPost,
+  JobOpening,
 } from '@/types/content';
 
 // Fallback Services (3 items with equal descriptions)
@@ -294,6 +295,42 @@ export const fallbackSiteSettings: SiteSettings = {
   favicon: null,
   updatedAt: new Date().toISOString(),
 };
+
+// Fallback Job Openings (2 sample positions)
+export const fallbackJobOpenings: JobOpening[] = [
+  {
+    id: 1,
+    documentId: '1',
+    title: 'Full Stack Developer',
+    slug: 'full-stack-developer',
+    department: 'Engineering',
+    location: 'Addis Ababa / Remote',
+    employmentType: '- Full-time',
+    description:
+      'We are looking for a talented Full Stack Developer to join our growing team. You will work on challenging projects that serve clients globally.',
+    publishedDate: new Date().toISOString(),
+    isInternship: false,
+    publishedAt: new Date().toISOString(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: 2,
+    documentId: '2',
+    title: 'UI/UX Design Intern',
+    slug: 'ui-ux-design-intern',
+    department: 'Design',
+    location: 'Addis Ababa',
+    employmentType: '- Internship',
+    description:
+      'Join our design team as an intern and learn from experienced designers working on international projects. Great opportunity to build your portfolio.',
+    publishedDate: new Date().toISOString(),
+    isInternship: true,
+    publishedAt: new Date().toISOString(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+];
 
 // Fallback Trusted Partners (3 items)
 export const fallbackTrustedPartners: TrustedPartner[] = [

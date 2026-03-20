@@ -103,7 +103,7 @@ export function HeroSystemVisualization() {
   return (
     <div
       ref={containerRef}
-      className="relative hidden h-[400px] w-full max-w-[420px] items-center justify-center lg:flex"
+      className="relative hidden h-[280px] w-full max-w-[360px] items-center justify-center sm:h-[320px] sm:max-w-[420px] lg:flex lg:h-[400px]"
     >
       {/* Enhanced radial gradient background - more subtle */}
       <div

@@ -30,7 +30,7 @@ export function CTASection({
   const resolvedTitle = homePage?.ctaTitle || title;
   const resolvedSubtitle = homePage?.ctaSubtitle || subtitle;
   const resolvedPrimaryCta = {
-    label: homePage?.ctaPrimaryButtonText || homePage?.ctaButtonText || primaryCta.label,
+    label: homePage?.ctaPrimaryButtonText || primaryCta.label,
     href: homePage?.ctaPrimaryButtonUrl || primaryCta.href,
   };
   const resolvedSecondaryCta = {
@@ -44,7 +44,7 @@ export function CTASection({
       <div className="absolute inset-0">
         {/* Subtle animated glow */}
         <motion.div
-          className="absolute top-1/2 left-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#C9A227]/10 blur-3xl"
+          className="absolute top-1/2 left-1/2 h-[360px] w-[360px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#C9A227]/10 blur-3xl sm:h-[500px] sm:w-[500px] lg:h-[600px] lg:w-[600px]"
           animate={{
             scale: [1, 1.2, 1],
             opacity: [0.3, 0.5, 0.3],
@@ -72,15 +72,15 @@ export function CTASection({
       <div className="absolute top-0 right-0 h-full w-[2px] bg-gradient-to-b from-transparent via-[#C9A227]/50 to-transparent" />
 
       <Container className="relative z-10">
-        <div className="py-28 text-center md:py-32">
+        <div className="py-20 text-center sm:py-24 md:py-32">
           <ScrollReveal>
-            <h2 className="text-4xl font-bold tracking-tight text-white md:text-5xl lg:text-6xl">
+            <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl lg:text-6xl">
               {resolvedTitle}
             </h2>
           </ScrollReveal>
 
           <ScrollReveal delay={0.1}>
-            <p className="mx-auto mt-6 max-w-2xl text-lg text-[#E5E7EB]/80 md:text-xl">
+            <p className="mx-auto mt-6 max-w-2xl text-base text-[#E5E7EB]/80 sm:text-lg md:text-xl">
               {resolvedSubtitle}
             </p>
           </ScrollReveal>

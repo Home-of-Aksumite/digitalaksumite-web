@@ -54,9 +54,19 @@ export const contactService = {
       submittedAt: new Date().toISOString(),
     };
 
-    const response = await apiClient.post<StrapiSingleResponse<ContactSubmission>>(ENDPOINT, {
-      data: sanitizedData,
-    });
-    return response.data;
+    try {
+      const response = await apiClient.post<StrapiSingleResponse<ContactSubmission>>(ENDPOINT, {
+        data: sanitizedData,
+      });
+      return response.data;
+    } catch (error) {
+      // Silently handle error - user gets friendly message via UI
+      if (error instanceof Error) {
+        throw error;
+      }
+      throw new Error(
+        'Unable to submit your message at this time. Please try again later or contact us directly via email.'
+      );
+    }
   },
 };

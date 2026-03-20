@@ -60,18 +60,23 @@ export function Footer({ siteSettings, footer }: FooterProps) {
   return (
     <footer className="bg-[#0F2A44]">
       <Container>
-        <div className="py-16">
+        <div className="py-12 md:py-16">
           {/* Main Footer Content */}
-          <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-8 md:grid-cols-2 md:gap-12 lg:grid-cols-3">
             {/* Brand */}
             <div className="lg:col-span-1">
-              <Link href="/" className="flex items-center gap-2 text-xl font-bold text-white">
+              <Link
+                href="/"
+                className="flex items-center gap-2 text-lg font-bold text-white md:text-xl"
+              >
                 <span className="text-2xl">◈</span>
                 <span>Digital Aksumite</span>
               </Link>
-              <p className="mt-4 text-sm leading-relaxed text-[#E5E7EB]/80">{brandDescription}</p>
+              <p className="mt-3 text-sm leading-relaxed text-[#E5E7EB]/80 md:mt-4">
+                {brandDescription}
+              </p>
               {/* Social Links */}
-              <div className="mt-6 flex gap-4">
+              <div className="mt-4 flex gap-4 md:mt-6">
                 {socialLinks.map((social) => (
                   <a
                     key={social.label}
@@ -89,10 +94,10 @@ export function Footer({ siteSettings, footer }: FooterProps) {
 
             {/* Company Links */}
             <div>
-              <h3 className="text-sm font-semibold tracking-wider text-[#C9A227] uppercase">
+              <h3 className="text-xs font-semibold tracking-wider text-[#C9A227] uppercase md:text-sm">
                 Company
               </h3>
-              <ul className="mt-4 space-y-3">
+              <ul className="mt-3 space-y-2 md:mt-4 md:space-y-3">
                 {footerLinks.company.map((link) => (
                   <li key={link.href}>
                     <Link
@@ -108,10 +113,10 @@ export function Footer({ siteSettings, footer }: FooterProps) {
 
             {/* Contact Info */}
             <div>
-              <h3 className="text-sm font-semibold tracking-wider text-[#C9A227] uppercase">
+              <h3 className="text-xs font-semibold tracking-wider text-[#C9A227] uppercase md:text-sm">
                 Contact
               </h3>
-              <ul className="mt-4 space-y-3 text-sm text-[#E5E7EB]/80">
+              <ul className="mt-3 space-y-2 text-sm text-[#E5E7EB]/80 md:mt-4 md:space-y-3">
                 {siteSettings?.companyEmail && (
                   <li>
                     <a
@@ -134,7 +139,7 @@ export function Footer({ siteSettings, footer }: FooterProps) {
                 )}
                 {siteSettings?.companyAddress && <li>{siteSettings.companyAddress}</li>}
               </ul>
-              <div className="mt-6">
+              <div className="mt-4 md:mt-6">
                 <a
                   href="/#contact"
                   className="inline-flex items-center text-sm font-medium text-[#C9A227] hover:text-[#A18220]"
@@ -147,17 +152,17 @@ export function Footer({ siteSettings, footer }: FooterProps) {
           </div>
 
           {/* Divider */}
-          <div className="mt-12 border-t border-[#C9A227]/30" />
+          <div className="mt-8 border-t border-[#C9A227]/30 md:mt-12" />
 
           {/* Bottom Bar */}
-          <div className="mt-8 flex flex-col items-center justify-between gap-4 md:flex-row">
-            <p className="text-sm text-[#E5E7EB]/60">{copyrightText}</p>
-            <div className="flex gap-6">
+          <div className="mt-6 flex flex-col items-center justify-between gap-4 md:mt-8 md:flex-row">
+            <p className="text-xs text-[#E5E7EB]/60 md:text-sm">{copyrightText}</p>
+            <div className="flex gap-4 md:gap-6">
               {footerLinks.legal.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="text-sm text-[#E5E7EB]/60 transition-colors hover:text-[#E5E7EB]"
+                  className="text-xs text-[#E5E7EB]/60 transition-colors hover:text-[#E5E7EB] md:text-sm"
                 >
                   {link.label}
                 </Link>

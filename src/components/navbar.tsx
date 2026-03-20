@@ -12,7 +12,8 @@ import { Container } from '@/components/container';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { cn } from '@/lib/utils';
 
-const navLinks = [
+// Desktop nav links (visible on lg and up, tablet will filter)
+const allNavLinks = [
   { href: '/', label: 'Home' },
   { href: '/#about', label: 'About' },
   { href: '/#services', label: 'Services' },
@@ -21,6 +22,16 @@ const navLinks = [
   { href: '/#blog', label: 'Blog' },
   { href: '/careers', label: 'Careers' },
   { href: '/#contact', label: 'Contact' },
+];
+
+// Tablet nav links (hidden on md, visible on lg)
+const tabletNavLinks = [
+  { href: '/', label: 'Home' },
+  { href: '/#about', label: 'About' },
+  { href: '/#services', label: 'Services' },
+  { href: '/#projects', label: 'Projects' },
+  { href: '/#blog', label: 'Blog' },
+  { href: '/careers', label: 'Careers' },
 ];
 
 export function Navbar() {
@@ -66,9 +77,9 @@ export function Navbar() {
             <span>Digital Aksumite</span>
           </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex md:items-center md:gap-6">
-            {navLinks.map((link) => (
+          {/* Desktop Navigation - lg and up */}
+          <div className="hidden lg:flex lg:items-center lg:gap-6">
+            {allNavLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
@@ -82,6 +93,37 @@ export function Navbar() {
             ))}
 
             {/* CTA Button */}
+            <Link
+              href="/#contact"
+              className={cn(
+                'rounded-lg px-4 py-2 text-sm font-medium transition-colors',
+                'bg-[#C9A227] text-[#121212] hover:bg-[#A18220]',
+                'dark:bg-[#C9A227] dark:text-[#121212] dark:hover:bg-[#A18220]'
+              )}
+            >
+              Get Started
+            </Link>
+
+            {/* Theme Toggle */}
+            <div className="hidden md:block">
+              <ThemeToggle variant="navbar" />
+            </div>
+          </div>
+
+          {/* Tablet Navigation - md only (no Contact) */}
+          <div className="hidden md:flex md:items-center md:gap-5 lg:hidden">
+            {tabletNavLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={cn(
+                  'text-sm font-medium transition-colors',
+                  'text-white/80 hover:text-[#C9A227]'
+                )}
+              >
+                {link.label}
+              </Link>
+            ))}
             <Link
               href="/#contact"
               className={cn(
@@ -125,7 +167,7 @@ export function Navbar() {
             )}
           >
             <div className="flex flex-col gap-4">
-              {navLinks.map((link) => (
+              {allNavLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}

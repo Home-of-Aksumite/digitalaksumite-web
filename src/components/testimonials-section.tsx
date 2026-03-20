@@ -43,14 +43,14 @@ export function TestimonialsSection({
     <section
       id="testimonials"
       className={cn(
-        'border-t border-[#E8E4DC] py-28 md:py-32',
+        'border-t border-[#E8E4DC] py-20 md:py-28 lg:py-32',
         'bg-[#FAFAF5]',
         'dark:border-[#2D3748] dark:bg-[#18181B]'
       )}
     >
       <Container>
         {/* Section Header */}
-        <div className="mb-16 text-center">
+        <div className="mb-12 text-center md:mb-16">
           <ScrollReveal>
             <span className="text-sm font-semibold tracking-widest text-[#C9A227] uppercase">
               Testimonials
@@ -60,7 +60,7 @@ export function TestimonialsSection({
           <ScrollReveal delay={0.1}>
             <h2
               className={cn(
-                'mt-3 text-4xl font-bold tracking-tight md:text-5xl',
+                'mt-3 text-3xl font-bold tracking-tight md:text-4xl lg:text-5xl',
                 'text-[#0F2A44]',
                 'dark:text-white'
               )}
@@ -72,7 +72,7 @@ export function TestimonialsSection({
           <ScrollReveal delay={0.2}>
             <p
               className={cn(
-                'mx-auto mt-4 max-w-2xl text-lg',
+                'mx-auto mt-4 max-w-2xl text-base md:text-lg',
                 'text-[#6B7280]',
                 'dark:text-[#9CA3AF]'
               )}
@@ -120,7 +120,11 @@ function TestimonialCard({ testimonial }: { testimonial: ApiTestimonial }) {
 
       {/* Content */}
       <p
-        className={cn('mb-6 text-[15px] leading-relaxed break-words', 'text-[#475569]', 'dark:text-[#E5E7EB]')}
+        className={cn(
+          'mb-6 text-[15px] leading-relaxed break-words',
+          'text-[#475569]',
+          'dark:text-[#E5E7EB]'
+        )}
       >
         {testimonial.quote}
       </p>

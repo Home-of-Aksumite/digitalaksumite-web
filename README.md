@@ -1,36 +1,87 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Digital Aksumite Frontend
 
-## Getting Started
+> Next.js 16 website with Strapi CMS integration, job applications, and contact forms.
 
-First, run the development server:
+## 🚀 Quick Start
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📁 Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+├── app/                 # Next.js pages (home, blog, careers, etc.)
+├── components/          # React components
+├── services/           # API calls to Strapi + fallback data
+├── types/              # TypeScript interfaces
+├── config/             # Environment setup
+└── utils/              # Security & validation
+```
 
-## Learn More
+## 🔌 CMS Connection
 
-To learn more about Next.js, take a look at the following resources:
+Set in `.env.local`:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+NEXT_PUBLIC_STRAPI_API_URL=http://localhost:1337
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+NEXT_PUBLIC_STRAPI_API_TOKEN=optional_token
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🛡️ Key Features
 
-## Deploy on Vercel
+| Feature       | Implementation                            |
+| ------------- | ----------------------------------------- |
+| Fallback data | Site works even if Strapi is down         |
+| SEO           | OpenGraph, Twitter Cards, structured data |
+| Security      | CSP headers, DOMPurify, Zod validation    |
+| Forms         | Contact + job applications to Strapi      |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📝 Common Tasks
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**Add a page:**
+
+1. Create `src/app/page-name/page.tsx`
+2. Add to `src/components/navbar.tsx`
+3. Create service + fallback data
+
+**Build:**
+
+```bash
+npm run build
+```
+
+**Deploy to Vercel:**
+
+1. Push to GitHub
+2. Import to Vercel
+3. Set env vars
+4. Deploy
+
+## 📦 Key Dependencies
+
+- Next.js 16 + React 19
+- Tailwind CSS 4
+- Framer Motion (animations)
+- React Hook Form + Zod
+
+## 🔍 Bundle Analysis
+
+Install in **this frontend folder only**:
+
+```bash
+npm install --save-dev @next/bundle-analyzer
+```
+
+Then modify `next.config.ts` and run `npm run build`.
+
+Current build: ~50s (healthy)
+
+---
+
+See `PROJECT_DOCUMENTATION.md` in parent folder for full project docs.

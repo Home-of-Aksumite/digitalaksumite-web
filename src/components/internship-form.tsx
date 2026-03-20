@@ -67,10 +67,8 @@ export function InternshipApplicationForm({
       );
       setIsSuccess(true);
       reset();
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to submit application. Please try again.'
-      );
+    } catch {
+      setError('Unable to submit your application. Please try again later or email us directly.');
     } finally {
       setIsSubmitting(false);
     }

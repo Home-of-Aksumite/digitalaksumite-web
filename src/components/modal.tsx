@@ -116,7 +116,7 @@ export function Modal({ open, onOpenChange, title, description, children, classN
           aria-labelledby={titleId}
           aria-describedby={description ? descriptionId : undefined}
           className={cn(
-            'w-full max-w-3xl rounded-2xl border shadow-2xl',
+            'flex max-h-[90vh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border shadow-2xl',
             'focus:outline-none',
             // Light mode
             'border-gray-200 bg-white text-[#0F2A44]',
@@ -127,7 +127,7 @@ export function Modal({ open, onOpenChange, title, description, children, classN
         >
           <div
             className={cn(
-              'flex items-start justify-between gap-6 border-b px-6 py-5',
+              'flex items-start justify-between gap-6 border-b px-4 py-4 sm:px-6 sm:py-5',
               'border-gray-100',
               'dark:border-white/10'
             )}
@@ -170,7 +170,7 @@ export function Modal({ open, onOpenChange, title, description, children, classN
               </svg>
             </button>
           </div>
-          <div className="max-h-[80vh] overflow-auto px-6 py-6">{children}</div>
+          <div className="flex-1 overflow-auto px-4 py-4 sm:px-6 sm:py-6">{children}</div>
         </div>
       </div>
     </div>,

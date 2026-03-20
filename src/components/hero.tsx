@@ -91,11 +91,11 @@ export function Hero({ homePage, trustedPartners }: HeroProps) {
 
       {/* Content */}
       <Container className="relative z-10">
-        <div className="flex min-h-[130vh] items-start pt-16 lg:pt-20">
+        <div className="flex min-h-screen items-start pt-24 md:items-center md:pt-20 lg:min-h-[130vh] lg:items-start lg:pt-20">
           <div className="grid w-full grid-cols-1 items-start gap-6 lg:grid-cols-2 lg:gap-8">
             {/* Left side - Text content */}
             <motion.div
-              className="flex flex-col items-center pt-4 text-center lg:items-start lg:pt-8 lg:text-left"
+              className="flex flex-col items-center pt-0 text-center lg:items-start lg:pt-8 lg:text-left"
               variants={containerVariants}
               initial="hidden"
               animate="visible"
@@ -103,19 +103,19 @@ export function Hero({ homePage, trustedPartners }: HeroProps) {
               {/* Title - 3 lines: editable from Strapi via heroTitle */}
               <motion.h1 className="max-w-5xl" variants={containerVariants}>
                 <motion.span
-                  className="block text-5xl leading-[1.08] font-bold tracking-tight text-white md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl"
+                  className="block text-6xl leading-[1.06] font-bold tracking-tight text-white md:text-7xl lg:text-7xl xl:text-8xl 2xl:text-9xl"
                   variants={titleWordVariants}
                 >
                   {line1}
                 </motion.span>
                 <motion.span
-                  className="mt-2 block text-5xl leading-[1.08] font-bold tracking-tight text-white md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl"
+                  className="mt-2 block text-6xl leading-[1.06] font-bold tracking-tight text-white md:text-7xl lg:text-7xl xl:text-8xl 2xl:text-9xl"
                   variants={titleWordVariants}
                 >
                   {line2}
                 </motion.span>
                 <motion.span
-                  className="mt-2 block text-5xl leading-[1.08] font-bold tracking-tight text-white md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl"
+                  className="mt-2 block text-6xl leading-[1.06] font-bold tracking-tight text-white md:text-7xl lg:text-7xl xl:text-8xl 2xl:text-9xl"
                   variants={titleWordVariants}
                 >
                   {line3}
@@ -132,7 +132,7 @@ export function Hero({ homePage, trustedPartners }: HeroProps) {
 
               {/* CTA Buttons */}
               <motion.div
-                className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center"
+                className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center md:mt-12 lg:mt-8"
                 variants={itemVariants}
               >
                 <PremiumButton
@@ -168,7 +168,7 @@ export function Hero({ homePage, trustedPartners }: HeroProps) {
         </div>
 
         {/* Client Logos Marquee - Trust Banner - positioned lower */}
-        <div className="absolute right-0 bottom-4 left-0 z-20">
+        <div className="relative z-20 mt-24 pb-14 md:mt-10 md:pb-10 lg:absolute lg:right-0 lg:bottom-4 lg:left-0 lg:mt-0 lg:pb-0">
           <Container>
             <p className="mb-4 text-center text-lg font-bold text-white/60">
               Trusted by industry leaders
@@ -178,7 +178,7 @@ export function Hero({ homePage, trustedPartners }: HeroProps) {
         </div>
 
         {/* Logo marquee placeholder area */}
-        <div className="absolute right-0 bottom-0 left-0 h-24" />
+        <div className="absolute right-0 bottom-0 left-0 hidden h-24 lg:block" />
       </Container>
 
       {/* Bottom accent line */}
