@@ -14,7 +14,7 @@ export function extractTextFromBlocks(blocks: unknown): string {
   for (const block of blocks) {
     if (typeof block === 'object' && block !== null) {
       const b = block as Record<string, unknown>;
-      
+
       // Extract from children array
       if (Array.isArray(b.children)) {
         for (const child of b.children) {

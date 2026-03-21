@@ -56,7 +56,10 @@ export default async function TermsOfServicePage() {
   const description =
     termsOfService?.pageDescription ||
     'Please read these terms carefully before using our services.';
-  const lastUpdated = termsOfService?.lastUpdated || termsOfService?.updatedAt?.split('T')[0] || new Date().toISOString().split('T')[0];
+  const lastUpdated =
+    termsOfService?.lastUpdated ||
+    termsOfService?.updatedAt?.split('T')[0] ||
+    new Date().toISOString().split('T')[0];
 
   const defaultSections = [
     {

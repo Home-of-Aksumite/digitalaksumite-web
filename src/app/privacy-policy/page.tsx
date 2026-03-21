@@ -51,7 +51,10 @@ export default async function PrivacyPolicyPage() {
   const description =
     privacyPolicy?.pageDescription ||
     'Our commitment to protecting your privacy and personal data.';
-  const lastUpdated = privacyPolicy?.lastUpdated || privacyPolicy?.updatedAt?.split('T')[0] || new Date().toISOString().split('T')[0];
+  const lastUpdated =
+    privacyPolicy?.lastUpdated ||
+    privacyPolicy?.updatedAt?.split('T')[0] ||
+    new Date().toISOString().split('T')[0];
 
   const defaultSections = [
     {

@@ -21,11 +21,7 @@ function useLocalStoragePrimitive<T>(key: string, initialValue: T) {
     return () => window.removeEventListener('storage', handleStorage);
   };
 
-  const storedValue = useSyncExternalStore(
-    subscribe,
-    getSnapshot,
-    () => initialValue
-  );
+  const storedValue = useSyncExternalStore(subscribe, getSnapshot, () => initialValue);
 
   const [isLoaded, setIsLoaded] = useState(false);
 

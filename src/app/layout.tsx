@@ -149,7 +149,7 @@ export const metadata: Metadata = {
     title: 'Digital Aksumite | Premium Software Development Company',
     description:
       'We build systems that define, protect and guide our society! Premium software development company delivering world-class solutions.',
-    images: ['/og-image.jpg'],
+    images: ['/og-image.png'],
     creator: '@digitalaksumite',
   },
   category: 'technology',
