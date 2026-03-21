@@ -6,134 +6,76 @@ import { TestimonialsSection } from '@/components/testimonials-section';
 import { BlogSection } from '@/components/blog-section';
 import { ContactSection } from '@/components/contact-section';
 import { CTASection } from '@/components/cta-section';
-import { serviceService } from '@/services/service.service';
-import { projectService } from '@/services/project.service';
-import { testimonialService } from '@/services/testimonial.service';
-import { blogPostService } from '@/services/blog-post.service';
-import { pageService } from '@/services/page.service';
-import { trustedPartnerService } from '@/services/client-logo.service';
-import { fallbackHomePage } from '@/services/fallback-data';
+import { homeBundleService } from '@/services/home-bundle.service';
 import { extractTextFromBlocks, truncateText } from '@/lib/content-utils';
 import type { ApiService } from '@/components/services-section';
 import type { ApiProject } from '@/components/projects-section';
 import type { ApiTestimonial } from '@/components/testimonials-section';
 import type { ApiBlogPost } from '@/components/blog-section';
-import type {
-  HomePage,
-  ContactPage,
-  AboutPage,
-  SiteSettings,
-  TrustedPartner,
-} from '@/types/content';
 
-// Disable static caching to ensure fallback data is always used when Strapi is down
-export const revalidate = 0;
-export const dynamic = 'force-dynamic';
+// ISR caching: revalidate every 60 seconds (1 minute delay acceptable per user)
+export const revalidate = 60;
 
 export default async function Home() {
-  // Fetch data from Strapi
-  let services: ApiService[] = [];
-  let projects: ApiProject[] = [];
-  let testimonials: ApiTestimonial[] = [];
-  let blogPosts: ApiBlogPost[] = [];
-  let homePage: HomePage | undefined = fallbackHomePage;
-  let aboutPage: AboutPage | undefined = undefined;
-  let contactPage: ContactPage | undefined = undefined;
-  let siteSettings: SiteSettings | undefined = undefined;
-  let trustedPartners: TrustedPartner[] = [];
+  // Fetch all home data in a single optimized request
+  const bundle = await homeBundleService.getBundle();
 
-  try {
-    const servicesData = await serviceService.getFeatured(6);
-    services = servicesData.map((service) => ({
-      title: service.title,
-      description: service.shortDescription || service.fullDescription || '',
-      slug: service.slug,
-      icon: service.icon,
-    }));
-  } catch (error) {
-    console.error('Failed to fetch services:', error);
-  }
+  // Transform data for components
+  const services: ApiService[] = bundle.featuredServices.map((service) => ({
+    title: service.title,
+    description: extractTextFromBlocks(service.description) || '',
+    slug: service.slug,
+    icon: service.icon,
+  }));
 
-  try {
-    const projectsData = await projectService.getFeatured(6);
-    projects = projectsData.map((project) => ({
-      title: project.title,
-      slug: project.slug,
-      description: truncateText(extractTextFromBlocks(project.description)),
-      featured: project.featured,
-      link: project.link,
-      featuredImage: project.featuredImage
-        ? {
-            url: project.featuredImage.url,
-            alternativeText: project.featuredImage.alternativeText,
-          }
-        : undefined,
-    }));
-  } catch (error) {
-    console.error('Failed to fetch projects:', error);
-  }
+  const projects: ApiProject[] = bundle.featuredProjects.map((project) => ({
+    title: project.title,
+    slug: project.slug,
+    description: truncateText(extractTextFromBlocks(project.description)),
+    featured: project.featured,
+    link: project.link,
+    featuredImage: project.featuredImage
+      ? {
+          url: project.featuredImage.url,
+          alternativeText: project.featuredImage.alternativeText,
+        }
+      : undefined,
+  }));
 
-  try {
-    testimonials = await testimonialService.getFeatured(3);
-  } catch (error) {
-    console.error('Failed to fetch testimonials:', error);
-  }
+  const testimonials: ApiTestimonial[] = bundle.featuredTestimonials.map((t) => ({
+    quote: t.quote,
+    clientName: t.clientName,
+    company: t.company,
+    rating: t.rating,
+    featured: t.featured,
+    clientPhoto: t.clientPhoto
+      ? {
+          url: t.clientPhoto.url,
+          alternativeText: t.clientPhoto.alternativeText ?? undefined,
+        }
+      : undefined,
+  }));
 
-  try {
-    const blogPostsData = await blogPostService.getFeatured(3);
-    blogPosts = blogPostsData.map((post) => ({
-      title: post.title,
-      slug: post.slug,
-      excerpt: post.excerpt,
-      featured: post.featured,
-      publishedAt: post.publishedAt,
-      author: post.author,
-      featuredImage: post.featuredImage,
-    }));
-  } catch (error) {
-    console.error('Failed to fetch blog posts:', error);
-  }
-
-  try {
-    homePage = await pageService.home();
-  } catch (error) {
-    console.error('Failed to fetch home page:', error);
-  }
-
-  try {
-    aboutPage = await pageService.about();
-  } catch (error) {
-    console.error('Failed to fetch about page:', error);
-  }
-
-  try {
-    contactPage = await pageService.contact();
-  } catch (error) {
-    console.error('Failed to fetch contact page:', error);
-  }
-
-  try {
-    siteSettings = await pageService.siteSettings();
-  } catch (error) {
-    console.error('Failed to fetch site settings:', error);
-  }
-
-  try {
-    trustedPartners = await trustedPartnerService.getAll();
-  } catch (error) {
-    console.error('Failed to fetch trusted partners:', error);
-  }
+  const blogPosts: ApiBlogPost[] = bundle.featuredBlogPosts.map((post) => ({
+    title: post.title,
+    slug: post.slug,
+    excerpt: post.excerpt,
+    featured: post.featured,
+    publishedAt: post.publishedAt,
+    author: post.author,
+    featuredImage: post.featuredImage,
+  }));
 
   return (
     <>
-      <Hero homePage={homePage} trustedPartners={trustedPartners} />
-      <AboutSection aboutPage={aboutPage} />
+      <Hero homePage={bundle.homePage} trustedPartners={bundle.trustedPartners} />
+      <AboutSection aboutPage={bundle.aboutPage} />
       <ServicesSection services={services} />
       <ProjectsSection projects={projects} />
       <TestimonialsSection testimonials={testimonials} />
       <BlogSection posts={blogPosts} />
-      <ContactSection contactPage={contactPage} siteSettings={siteSettings} />
-      <CTASection homePage={homePage} />
+      <ContactSection contactPage={bundle.contactPage} siteSettings={bundle.siteSettings} />
+      <CTASection homePage={bundle.homePage} />
     </>
   );
 }

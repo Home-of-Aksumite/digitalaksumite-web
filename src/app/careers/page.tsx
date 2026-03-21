@@ -16,6 +16,8 @@ import { CareersInternshipApply } from './ui/careers-internship-apply';
 import { JobCardClient } from './ui/job-card-client';
 import { jobService } from '@/services/job.service';
 import { pageService } from '@/services/page.service';
+import { fallbackSiteSettings } from '@/services/fallback-data';
+import type { SiteSettings } from '@/types/content';
 import { cn } from '@/lib/utils';
 import type { JobOpening } from '@/types/content';
 
@@ -27,18 +29,29 @@ export const metadata: Metadata = {
 
 export default async function CareersPage() {
   let jobOpenings: JobOpening[] = [];
-  let siteSettings = undefined;
+  let siteSettings: SiteSettings | undefined = undefined;
 
   try {
     [jobOpenings, siteSettings] = await Promise.all([
       jobService.openings.getAll(),
-      pageService.siteSettings().catch(() => undefined),
+      pageService.siteSettings(),
     ]);
   } catch (error) {
-    console.error('Failed to fetch data:', error);
+    console.error('Failed to fetch careers data:', error);
+    // Try to fetch at least the job openings if siteSettings fails
+    try {
+      if (jobOpenings.length === 0) {
+        jobOpenings = await jobService.openings.getAll();
+      }
+    } catch (jobsError) {
+      console.error('Failed to fetch job openings:', jobsError);
+    }
   }
 
-  const companyEmail = siteSettings?.companyEmail || 'careers@digitalaksumite.com';
+  const companyEmail =
+    siteSettings?.companyEmail ||
+    fallbackSiteSettings.companyEmail ||
+    'careers@digitalaksumite.com';
 
   // Separate internships from regular positions
   const regularJobs = jobOpenings.filter((job) => !job.isInternship);

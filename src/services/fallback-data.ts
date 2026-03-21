@@ -16,6 +16,8 @@ import type {
   Project,
   BlogPost,
   JobOpening,
+  Footer,
+  Testimonial,
 } from '@/types/content';
 
 // Fallback Services (3 items with equal descriptions)
@@ -125,14 +127,7 @@ export const fallbackProjects: Project[] = [
 ];
 
 // Fallback Testimonials (3 fictional) - matches service return type
-export const fallbackTestimonials: {
-  quote: string;
-  clientName: string;
-  company: string;
-  rating: number;
-  featured: boolean;
-  clientPhoto?: { url: string; alternativeText?: string };
-}[] = [
+export const fallbackTestimonials: Testimonial[] = [
   {
     clientName: 'Marcus Chen',
     company: 'Pacific Trade Network',
@@ -140,7 +135,7 @@ export const fallbackTestimonials: {
       'Our platform processes transactions across twelve time zones. Digital Aksumite built the backbone we never worry about. That peace of mind is rare.',
     rating: 5,
     featured: true,
-    clientPhoto: undefined,
+    clientPhoto: null,
   },
   {
     clientName: 'Sarah Williams',
@@ -149,7 +144,7 @@ export const fallbackTestimonials: {
       'We needed a system that understood both African infrastructure and North American standards. They delivered exactly that. No compromises.',
     rating: 5,
     featured: true,
-    clientPhoto: undefined,
+    clientPhoto: null,
   },
   {
     clientName: 'Dr. Yonas Alemu',
@@ -158,7 +153,7 @@ export const fallbackTestimonials: {
       'Our patients trust us with their sight. We trust Digital Aksumite with our technology. That says everything.',
     rating: 5,
     featured: true,
-    clientPhoto: undefined,
+    clientPhoto: null,
   },
 ];
 
@@ -293,6 +288,14 @@ export const fallbackSiteSettings: SiteSettings = {
     'Digital Aksumite crafts enduring digital systems that empower organizations across the world.',
   logo: null,
   favicon: null,
+  updatedAt: new Date().toISOString(),
+};
+
+// Fallback Footer
+export const fallbackFooter: Footer = {
+  description:
+    'Ancient power meets modern technology. We build digital solutions that honor our heritage while embracing the future.',
+  copyrightText: `© ${new Date().getFullYear()} Digital Aksumite. All rights reserved.`,
   updatedAt: new Date().toISOString(),
 };
 

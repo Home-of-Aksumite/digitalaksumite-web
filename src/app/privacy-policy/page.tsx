@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Container } from '@/components/container';
 import { cn } from '@/lib/utils';
 import { pageService } from '@/services/page.service';
+import { fallbackSiteSettings } from '@/services/fallback-data';
 import type { PrivacyPolicy as PrivacyPolicyType, SiteSettings } from '@/types/content';
 import {
   Shield,
@@ -39,13 +40,26 @@ export default async function PrivacyPolicyPage() {
   let siteSettings: SiteSettings | undefined = undefined;
 
   try {
-    privacyPolicy = await pageService.privacyPolicy();
-    siteSettings = await pageService.siteSettings();
+    [privacyPolicy, siteSettings] = await Promise.all([
+      pageService.privacyPolicy(),
+      pageService.siteSettings(),
+    ]);
   } catch (error) {
-    console.error('Failed to fetch privacy policy:', error);
+    console.error('Failed to fetch privacy policy data:', error);
+    // Try to fetch at least the privacy policy if siteSettings fails
+    try {
+      if (!privacyPolicy) {
+        privacyPolicy = await pageService.privacyPolicy();
+      }
+    } catch (policyError) {
+      console.error('Failed to fetch privacy policy:', policyError);
+    }
   }
 
-  const contactEmail = siteSettings?.companyEmail || 'privacy@digitalaksumite.com';
+  const contactEmail =
+    siteSettings?.companyEmail ||
+    fallbackSiteSettings.companyEmail ||
+    'privacy@digitalaksumite.com';
 
   const title = privacyPolicy?.pageTitle || 'Privacy Policy';
   const description =

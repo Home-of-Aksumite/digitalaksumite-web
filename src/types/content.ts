@@ -81,12 +81,15 @@ export interface Testimonial {
   clientName: string;
   company: string;
   quote: string;
-  clientPhoto: StrapiMedia | null;
+  clientPhoto?: {
+    url: string;
+    alternativeText?: string | null;
+  } | null;
   rating: number;
   featured: boolean;
-  order: number;
-  createdAt: string;
-  updatedAt: string;
+  order?: number;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 // ============================================================================

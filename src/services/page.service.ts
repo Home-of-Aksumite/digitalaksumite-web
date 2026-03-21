@@ -1,6 +1,7 @@
 /**
  * Page Service
  * Handles all API operations for single page types
+ * Optimized: Uses targeted populate/fields instead of populate='*'
  */
 
 import { apiClient } from '@/lib/api-client';
@@ -27,11 +28,21 @@ export const pageService = {
   home: async () => {
     try {
       const response = await apiClient.get<StrapiSingleResponse<HomePage>>('/home-page', {
-        populate: '*',
+        fields: [
+          'heroTitle',
+          'heroSubtitle',
+          'heroPrimaryButtonText',
+          'heroPrimaryButtonUrl',
+          'heroSecondaryButtonText',
+          'heroSecondaryButtonUrl',
+          'ctaPrimaryButtonText',
+          'ctaPrimaryButtonUrl',
+          'ctaSecondaryButtonText',
+          'ctaSecondaryButtonUrl',
+        ],
       });
       return response.data.data;
     } catch {
-      // Return fallback data when Strapi is unavailable
       return fallbackHomePage;
     }
   },
@@ -39,11 +50,15 @@ export const pageService = {
   about: async () => {
     try {
       const response = await apiClient.get<StrapiSingleResponse<AboutPage>>('/about-page', {
-        populate: '*',
+        fields: ['title', 'mission', 'vision', 'teamIntro', 'history'],
+        populate: {
+          values: true,
+          stats: true,
+          companyImages: { fields: ['url', 'alternativeText', 'width', 'height', 'formats'] },
+        },
       });
       return response.data.data;
     } catch {
-      // Return fallback data when Strapi is unavailable
       return fallbackAboutPage;
     }
   },
@@ -51,11 +66,10 @@ export const pageService = {
   contact: async () => {
     try {
       const response = await apiClient.get<StrapiSingleResponse<ContactPage>>('/contact-page', {
-        populate: '*',
+        fields: ['title', 'description', 'formTitle', 'formDescription'],
       });
       return response.data.data;
     } catch {
-      // Return fallback data when Strapi is unavailable
       return fallbackContactPage;
     }
   },
@@ -63,11 +77,25 @@ export const pageService = {
   siteSettings: async () => {
     try {
       const response = await apiClient.get<StrapiSingleResponse<SiteSettings>>('/site-setting', {
-        populate: '*',
+        fields: [
+          'siteName',
+          'companyEmail',
+          'companyPhone',
+          'companyAddress',
+          'linkedin',
+          'twitter',
+          'github',
+          'instagram',
+          'facebook',
+          'defaultSEODescription',
+        ],
+        populate: {
+          logo: { fields: ['url', 'alternativeText', 'width', 'height'] },
+          favicon: { fields: ['url', 'alternativeText'] },
+        },
       });
       return response.data.data;
     } catch {
-      // Return fallback data when Strapi is unavailable
       return fallbackSiteSettings;
     }
   },
@@ -75,20 +103,14 @@ export const pageService = {
   navbar: async () => {
     try {
       const response = await apiClient.get<StrapiSingleResponse<Navbar>>('/navbar', {
-        populate: '*',
+        populate: {
+          logo: { fields: ['url', 'alternativeText', 'width', 'height'] },
+        },
       });
       return response.data.data;
     } catch {
-      // Return minimal fallback navbar data
       return {
         logo: { url: '/logo.svg', alternativeText: 'Digital Aksumite' },
-        links: [
-          { label: 'Home', url: '/' },
-          { label: 'About', url: '/about' },
-          { label: 'Services', url: '/services' },
-          { label: 'Projects', url: '/projects' },
-          { label: 'Contact', url: '/contact' },
-        ],
         updatedAt: new Date().toISOString(),
       };
     }
@@ -97,14 +119,13 @@ export const pageService = {
   footer: async () => {
     try {
       const response = await apiClient.get<StrapiSingleResponse<Footer>>('/footer', {
-        populate: '*',
+        fields: ['description', 'copyrightText'],
       });
       return response.data.data;
     } catch {
-      // Return minimal fallback footer data
       return {
         description: 'Building systems that define, protect and guide our society.',
-        copyrightText: '© 2026 Digital Aksumite. All rights reserved.',
+        copyrightText: `© ${new Date().getFullYear()} Digital Aksumite. All rights reserved.`,
         updatedAt: new Date().toISOString(),
       };
     }
@@ -113,11 +134,10 @@ export const pageService = {
   privacyPolicy: async () => {
     try {
       const response = await apiClient.get<StrapiSingleResponse<PrivacyPolicy>>('/privacy-policy', {
-        populate: '*',
+        fields: ['pageTitle', 'pageDescription', 'lastUpdated', 'sections'],
       });
       return response.data.data;
     } catch {
-      // Return minimal fallback privacy policy
       return {
         pageTitle: 'Privacy Policy',
         pageDescription: 'Your Data. Your Trust. Our Responsibility.',
@@ -132,11 +152,12 @@ export const pageService = {
     try {
       const response = await apiClient.get<StrapiSingleResponse<TermsOfService>>(
         '/terms-of-service',
-        { populate: '*' }
+        {
+          fields: ['pageTitle', 'pageDescription', 'lastUpdated', 'sections'],
+        }
       );
       return response.data.data;
     } catch {
-      // Return minimal fallback terms of service
       return {
         pageTitle: 'Terms of Service',
         pageDescription: 'Clear Agreements. Fair Terms. Delivered As Promised.',

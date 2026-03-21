@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Container } from '@/components/container';
 import { cn } from '@/lib/utils';
 import { pageService } from '@/services/page.service';
+import { fallbackSiteSettings } from '@/services/fallback-data';
 import type { TermsOfService as TermsOfServiceType, SiteSettings } from '@/types/content';
 import {
   Scale,
@@ -44,13 +45,24 @@ export default async function TermsOfServicePage() {
   let siteSettings: SiteSettings | undefined = undefined;
 
   try {
-    termsOfService = await pageService.termsOfService();
-    siteSettings = await pageService.siteSettings();
+    [termsOfService, siteSettings] = await Promise.all([
+      pageService.termsOfService(),
+      pageService.siteSettings(),
+    ]);
   } catch (error) {
-    console.error('Failed to fetch terms of service:', error);
+    console.error('Failed to fetch terms of service data:', error);
+    // Try to fetch at least the terms of service if siteSettings fails
+    try {
+      if (!termsOfService) {
+        termsOfService = await pageService.termsOfService();
+      }
+    } catch (termsError) {
+      console.error('Failed to fetch terms of service:', termsError);
+    }
   }
 
-  const contactEmail = siteSettings?.companyEmail || 'legal@digitalaksumite.com';
+  const contactEmail =
+    siteSettings?.companyEmail || fallbackSiteSettings.companyEmail || 'legal@digitalaksumite.com';
 
   const title = termsOfService?.pageTitle || 'Terms of Service';
   const description =
