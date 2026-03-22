@@ -4,6 +4,7 @@
  */
 
 import { apiClient } from '@/lib/api-client';
+import { strapiApiUrl } from '@/config/env';
 import type { StrapiSingleResponse, StrapiListResponse } from '@/types/api';
 import type { JobApplication } from '@/types/content';
 
@@ -96,7 +97,7 @@ export const jobApplicationService = {
       const formData = new FormData();
       formData.append('files', file);
 
-      const uploadUrl = `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/upload`;
+      const uploadUrl = `${strapiApiUrl}/api/upload`;
 
       const response = await fetch(uploadUrl, {
         method: 'POST',

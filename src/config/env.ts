@@ -6,8 +6,8 @@
 import { z } from 'zod';
 
 const envSchema = z.object({
-  // Strapi CMS - Use env var or localhost fallback for dev, fail in production if missing
-  NEXT_PUBLIC_STRAPI_API_URL: z.string().url().default('http://localhost:1337'),
+  // Strapi CMS
+  NEXT_PUBLIC_STRAPI_API_URL: z.string().url().optional(),
   NEXT_PUBLIC_STRAPI_API_TOKEN: z.string().min(1).optional(),
 
   // Application
@@ -29,7 +29,18 @@ if (!parsedEnv.success) {
   throw new Error('Invalid environment configuration');
 }
 
-export const env = parsedEnv.data;
+const resolvedStrapiApiUrl =
+  parsedEnv.data.NEXT_PUBLIC_STRAPI_API_URL ||
+  (parsedEnv.data.NODE_ENV === 'production' ? undefined : 'http://localhost:1337');
+
+if (!resolvedStrapiApiUrl) {
+  throw new Error('Missing NEXT_PUBLIC_STRAPI_API_URL in production environment');
+}
+
+export const env = {
+  ...parsedEnv.data,
+  NEXT_PUBLIC_STRAPI_API_URL: resolvedStrapiApiUrl,
+};
 
 // Helper to check if running in production
 export const isProduction = env.NODE_ENV === 'production';
