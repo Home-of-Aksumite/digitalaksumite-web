@@ -6,8 +6,8 @@
 import { z } from 'zod';
 
 const envSchema = z.object({
-  // Strapi CMS
-  NEXT_PUBLIC_STRAPI_API_URL: z.string().url().default('http://localhost:1337'),
+  // Strapi CMS - Production URL (no default to force proper configuration)
+  NEXT_PUBLIC_STRAPI_API_URL: z.string().url(),
   NEXT_PUBLIC_STRAPI_API_TOKEN: z.string().min(1).optional(),
 
   // Application
