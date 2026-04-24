@@ -23,6 +23,10 @@ function asRecord(value: unknown): Record<string, unknown> {
   return value && typeof value === 'object' ? (value as Record<string, unknown>) : {};
 }
 
+function isClientLogoCategory(value: unknown): value is ClientLogo['category'] {
+  return value === 'client' || value === 'technology' || value === 'partner';
+}
+
 export const trustedPartnerService = {
   async getAll(): Promise<ClientLogo[]> {
     try {
@@ -58,6 +62,8 @@ export const trustedPartnerService = {
         const idRaw = docRecord.id;
         const id = typeof idRaw === 'string' || typeof idRaw === 'number' ? idRaw : 0;
 
+        const categoryRaw = docRecord.category;
+
         return {
           id,
           documentId: typeof docRecord.documentId === 'string' ? docRecord.documentId : '',
@@ -67,7 +73,7 @@ export const trustedPartnerService = {
           order:
             typeof docRecord.order === 'number' ? docRecord.order : Number(docRecord.order ?? 0),
           featured: Boolean(docRecord.featured),
-          category: typeof docRecord.category === 'string' ? docRecord.category : 'partner',
+          category: isClientLogoCategory(categoryRaw) ? categoryRaw : 'partner',
           createdAt:
             typeof docRecord.createdAt === 'string'
               ? docRecord.createdAt
