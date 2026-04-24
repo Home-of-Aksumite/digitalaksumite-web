@@ -103,7 +103,8 @@ export const jobService = {
           depth: 2,
         });
 
-        return (response.data.docs ?? []).map(ensureJobSlug);
+        const docs = (response.data.docs ?? []) as JobOpening[];
+        return docs.map(ensureJobSlug);
       } catch {
         // Silently return fallback data - no console spam in production
         return fallbackJobOpenings;
