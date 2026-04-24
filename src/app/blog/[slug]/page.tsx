@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { Container } from '@/components/container';
 import { cn } from '@/lib/utils';
 import { blogPostService } from '@/services/blog-post.service';
-import { strapiApiUrl, siteUrl } from '@/config/env';
+import { cmsOrigin, siteUrl } from '@/config/env';
 import { BlogContent } from '@/components/blog-content';
 import { ArrowLeft, Calendar, Clock, User, Share2, ChevronRight, Home } from 'lucide-react';
 
@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   const imageUrl = post.featuredImage
     ? post.featuredImage.url.startsWith('http')
       ? post.featuredImage.url
-      : `${strapiApiUrl}${post.featuredImage.url}`
+      : `${cmsOrigin}${post.featuredImage.url}`
     : `${siteUrl}/og-image.png`;
 
   return {
@@ -75,6 +75,11 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
 
 // Calculate reading time
 function calculateReadingTime(content: unknown): number {
+  if (typeof content === 'string') {
+    const wordCount = content.trim() ? content.trim().split(/\s+/).length : 0;
+    return Math.max(1, Math.ceil(wordCount / 200));
+  }
+
   if (!content || !Array.isArray(content)) return 3;
 
   let wordCount = 0;
@@ -110,7 +115,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const featuredImageUrl = post.featuredImage
     ? post.featuredImage.url.startsWith('http')
       ? post.featuredImage.url
-      : `${strapiApiUrl}${post.featuredImage.url}`
+      : `${cmsOrigin}${post.featuredImage.url}`
     : undefined;
 
   // Article structured data for Google rich results
@@ -144,17 +149,11 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   // Get gallery images
   const galleryImages =
     post.gallery?.map((img) => ({
-      url: img.url.startsWith('http') ? img.url : `${strapiApiUrl}${img.url}`,
+      url: img.url.startsWith('http') ? img.url : `${cmsOrigin}${img.url}`,
       alt: img.alternativeText || post.title,
     })) || [];
 
-  // Combine featured image with gallery for display
-  const allImages = featuredImageUrl
-    ? [
-        { url: featuredImageUrl, alt: post.featuredImage?.alternativeText || post.title },
-        ...galleryImages,
-      ]
-    : galleryImages;
+  const galleryOnlyImages = galleryImages;
 
   // Determine grid layout based on image count
   const getGridClasses = (count: number) => {
@@ -277,6 +276,25 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         <section className={cn('pt-12 pb-16 md:pt-16', 'bg-[#FAFAF5]', 'dark:bg-[#18181B]')}>
           <Container>
             <div className="mx-auto max-w-3xl">
+              {featuredImageUrl && (
+                <figure
+                  className={cn(
+                    'relative mb-10 overflow-hidden rounded-2xl shadow-lg',
+                    'aspect-[16/9]',
+                    'ring-1 ring-gray-100',
+                    'dark:ring-[#C9A227]/20'
+                  )}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={featuredImageUrl}
+                    alt={post.featuredImage?.alternativeText || post.title}
+                    className="h-full w-full object-cover"
+                    loading="lazy"
+                  />
+                </figure>
+              )}
+
               {/* Excerpt Card */}
               <div
                 className={cn(
@@ -305,7 +323,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               <BlogContent content={post.content} />
 
               {/* Gallery */}
-              {allImages.length > 0 && (
+              {galleryOnlyImages.length > 0 && (
                 <div className="my-12">
                   <h3
                     className={cn(
@@ -316,13 +334,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                   >
                     Gallery
                   </h3>
-                  <div className={`grid ${getGridClasses(allImages.length)} gap-6`}>
-                    {allImages.map((image, index) => (
+                  <div className={`grid ${getGridClasses(galleryOnlyImages.length)} gap-6`}>
+                    {galleryOnlyImages.map((image, index) => (
                       <figure
                         key={index}
                         className={cn(
-                          `relative ${getAspectClass(allImages.length)} group cursor-pointer overflow-hidden rounded-2xl shadow-lg`,
-                          allImages.length === 1 ? 'max-h-[500px]' : '',
+                          `relative ${getAspectClass(galleryOnlyImages.length)} group cursor-pointer overflow-hidden rounded-2xl shadow-lg`,
+                          galleryOnlyImages.length === 1 ? 'max-h-[500px]' : '',
                           'ring-1 ring-gray-100',
                           'dark:ring-[#C9A227]/20'
                         )}

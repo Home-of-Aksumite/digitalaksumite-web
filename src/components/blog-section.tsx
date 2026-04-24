@@ -8,11 +8,11 @@
 import Link from 'next/link';
 import { Container } from '@/components/container';
 import { ScrollReveal, StaggerContainer, StaggerItem } from '@/components/scroll-reveal';
-import { strapiApiUrl } from '@/config/env';
+import { cmsApiUrl } from '@/config/env';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 
-// API BlogPost interface (matches Strapi response)
+// API BlogPost interface
 export interface ApiBlogPost {
   title: string;
   slug: string;
@@ -112,7 +112,7 @@ function BlogCard({ post }: { post: ApiBlogPost }) {
   const imageUrl = post.featuredImage
     ? post.featuredImage.url.startsWith('http')
       ? post.featuredImage.url
-      : `${strapiApiUrl}${post.featuredImage.url}`
+      : `${cmsApiUrl}${post.featuredImage.url}`
     : undefined;
 
   return (

@@ -9,9 +9,9 @@ import { Container } from '@/components/container';
 import { ScrollReveal, StaggerContainer, StaggerItem } from '@/components/scroll-reveal';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
-import { strapiApiUrl } from '@/config/env';
+import { cmsOrigin } from '@/config/env';
 
-// API Project interface (matches Strapi response)
+// API Project interface
 export interface ApiProject {
   title: string;
   slug: string;
@@ -105,7 +105,7 @@ function ProjectCard({ project }: { project: ApiProject }) {
   const imageUrl = hasImage
     ? project.featuredImage!.url.startsWith('http')
       ? project.featuredImage!.url
-      : `${strapiApiUrl}${project.featuredImage!.url}`
+      : `${cmsOrigin}${project.featuredImage!.url}`
     : undefined;
 
   // Use link for external website, or undefined if not available
@@ -191,7 +191,7 @@ function ProjectCard({ project }: { project: ApiProject }) {
         </h3>
         <p
           className={cn(
-            'text-[15px] leading-relaxed break-words',
+            'text-[15px] leading-relaxed break-words whitespace-pre-line',
             'text-[#475569]',
             'dark:text-[#9CA3AF]'
           )}

@@ -62,7 +62,7 @@ export function Hero({ homePage, trustedPartners }: HeroProps) {
   const obeliskOpacity = useTransform(scrollY, [0, 400], [1, 0]);
   const obeliskScale = useTransform(scrollY, [0, 400], [1, 0.9]);
 
-  // Use Strapi data if available, otherwise fallback to defaults
+  // Use CMS data if available, otherwise fallback to defaults
   const heroTitle = homePage?.heroTitle;
   // Split title by newlines or pipe character to support multi-line titles
   const titleLines = heroTitle ? heroTitle.split(/\n|\|/) : [];
@@ -100,7 +100,7 @@ export function Hero({ homePage, trustedPartners }: HeroProps) {
               initial="hidden"
               animate="visible"
             >
-              {/* Title - 3 lines: editable from Strapi via heroTitle */}
+              {/* Title - 3 lines: editable from the CMS via heroTitle */}
               <motion.h1 className="max-w-5xl" variants={containerVariants}>
                 <motion.span
                   className="block text-6xl leading-[1.06] font-bold tracking-tight text-white md:text-7xl lg:text-7xl xl:text-8xl 2xl:text-9xl"

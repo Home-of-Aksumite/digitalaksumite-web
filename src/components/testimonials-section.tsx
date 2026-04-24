@@ -9,9 +9,9 @@ import { Container } from '@/components/container';
 import { ScrollReveal, StaggerContainer, StaggerItem } from '@/components/scroll-reveal';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
-import { strapiApiUrl } from '@/config/env';
+import { cmsOrigin } from '@/config/env';
 
-// API Testimonial interface (matches Strapi response)
+// API Testimonial interface
 export interface ApiTestimonial {
   quote: string;
   clientName: string;
@@ -100,7 +100,7 @@ function TestimonialCard({ testimonial }: { testimonial: ApiTestimonial }) {
   const photoUrl = hasPhoto
     ? testimonial.clientPhoto!.url.startsWith('http')
       ? testimonial.clientPhoto!.url
-      : `${strapiApiUrl}${testimonial.clientPhoto!.url}`
+      : `${cmsOrigin}${testimonial.clientPhoto!.url}`
     : undefined;
 
   return (

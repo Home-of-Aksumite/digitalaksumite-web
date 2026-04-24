@@ -1,10 +1,10 @@
 /**
  * Fallback Data Service
- * Provides seed content when Strapi is unavailable
+ * Provides seed content when the CMS is unavailable
  * Hero subtitle uses "We create..." as chit code to indicate fallback mode
  */
 
-/* eslint-disable unicorn/no-null -- Strapi types require null for optional media fields */
+/* eslint-disable unicorn/no-null -- Types require null for optional media fields */
 
 import type {
   HomePage,
@@ -209,7 +209,7 @@ export const fallbackBlogPosts: BlogPost[] = [
   },
 ];
 
-// Fallback HomePage (CHIT CODE: "We create..." = Strapi down)
+// Fallback HomePage (CHIT CODE: "We create..." = CMS down)
 export const fallbackHomePage: HomePage = {
   heroTitle: 'We Build Systems That Last',
   heroSubtitle: 'We create systems that define, protect and guide our society.',
@@ -276,7 +276,7 @@ export const fallbackContactPage: ContactPage = {
 export const fallbackSiteSettings: SiteSettings = {
   siteName: 'Digital Aksumite',
   tagline: 'We build systems that define, protect and guide our society.',
-  companyEmail: 'hello.digitalaksumite.com',
+  companyEmail: 'hello@digitalaksumite.com',
   companyPhone: '+2519 80698989',
   companyAddress: 'Addis Ababa, Ethiopia',
   workingHours: 'Monday - Friday: 9:00 AM - 6:00 PM EAT',

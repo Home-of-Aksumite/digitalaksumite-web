@@ -1,6 +1,6 @@
 /**
  * API Type Definitions
- * Core types for API communication with Strapi CMS
+ * Core types for API communication with the CMS
  */
 
 // ============================================================================
@@ -26,7 +26,7 @@ export interface ApiError {
   error: ApiErrorDetails;
 }
 
-export interface StrapiListResponse<T> {
+export interface CmsListResponse<T> {
   data: T[];
   meta: {
     pagination?: {
@@ -38,7 +38,7 @@ export interface StrapiListResponse<T> {
   };
 }
 
-export interface StrapiSingleResponse<T> {
+export interface CmsSingleResponse<T> {
   data: T;
   meta: Record<string, unknown>;
 }
@@ -60,13 +60,16 @@ export interface QueryParams {
   fields?: string[];
   publicationState?: 'live' | 'preview';
   locale?: string | string[];
+
+  // Allow CMS-specific query params (e.g. Payload: where, depth, limit)
+  [key: string]: unknown;
 }
 
 // ============================================================================
-// Strapi Media Types
+// CMS Media Types
 // ============================================================================
 
-export interface StrapiMediaFormat {
+export interface CmsMediaFormat {
   name: string;
   hash: string;
   ext: string;
@@ -79,27 +82,29 @@ export interface StrapiMediaFormat {
   url: string;
 }
 
-export interface StrapiMedia {
-  id: number;
-  name: string;
-  alternativeText: string | null;
-  caption: string | null;
-  width: number;
-  height: number;
-  formats: {
-    thumbnail?: StrapiMediaFormat;
-    small?: StrapiMediaFormat;
-    medium?: StrapiMediaFormat;
-    large?: StrapiMediaFormat;
+export interface CmsMedia {
+  id?: number | string;
+  name?: string;
+  filename?: string;
+  alternativeText?: string | null;
+  alt?: string;
+  caption?: string | null;
+  width?: number;
+  height?: number;
+  formats?: {
+    thumbnail?: CmsMediaFormat;
+    small?: CmsMediaFormat;
+    medium?: CmsMediaFormat;
+    large?: CmsMediaFormat;
   } | null;
-  hash: string;
-  ext: string;
-  mime: string;
-  size: number;
+  hash?: string;
+  ext?: string;
+  mime?: string;
+  size?: number;
   url: string;
-  previewUrl: string | null;
-  provider: string;
-  provider_metadata: Record<string, unknown> | null;
-  createdAt: string;
-  updatedAt: string;
+  previewUrl?: string | null;
+  provider?: string;
+  provider_metadata?: Record<string, unknown> | null;
+  createdAt?: string;
+  updatedAt?: string;
 }

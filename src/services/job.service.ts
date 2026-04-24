@@ -4,9 +4,9 @@
  */
 
 import { apiClient } from '@/lib/api-client';
-import type { QueryParams, StrapiListResponse, StrapiSingleResponse } from '@/types/api';
+import type { QueryParams } from '@/types/api';
 import type { JobOpening, JobApplication } from '@/types/content';
-import { strapiApiUrl, strapiApiToken } from '@/config/env';
+import { cmsApiToken, cmsOrigin } from '@/config/env';
 import {
   formatZodError,
   internshipApplicationSchema,
@@ -17,7 +17,20 @@ import { fallbackJobOpenings } from './fallback-data';
 
 const JOB_OPENINGS_ENDPOINT = '/job-openings';
 const JOB_APPLICATIONS_ENDPOINT = '/job-applications';
-const UPLOAD_ENDPOINT = '/upload';
+const RESUME_UPLOADS_ENDPOINT = '/resume-uploads';
+
+type PayloadListResponse<T> = {
+  docs: T[];
+  totalDocs: number;
+  limit: number;
+  totalPages: number;
+  page: number;
+  pagingCounter: number;
+  hasPrevPage: boolean;
+  hasNextPage: boolean;
+  prevPage: number | null;
+  nextPage: number | null;
+};
 
 // Generate slug from title as fallback
 function generateSlug(title: string): string {
@@ -45,15 +58,15 @@ export interface ApplicationFormData {
   portfolioLink?: string;
 }
 
-async function uploadFile(file: File): Promise<number | undefined> {
+async function uploadFile(file: File): Promise<string | number | undefined> {
   const formData = new FormData();
-  formData.append('files', file);
+  formData.append('file', file);
 
-  const uploadUrl = `${strapiApiUrl}/api${UPLOAD_ENDPOINT}`;
+  const uploadUrl = `${cmsOrigin}/api${RESUME_UPLOADS_ENDPOINT}`;
 
   const headers: Record<string, string> = {};
-  if (strapiApiToken) {
-    headers.Authorization = `Bearer ${strapiApiToken}`;
+  if (cmsApiToken) {
+    headers.Authorization = `Bearer ${cmsApiToken}`;
   }
 
   try {
@@ -68,10 +81,9 @@ async function uploadFile(file: File): Promise<number | undefined> {
       throw new Error(errorText || `File upload failed: ${response.statusText}`);
     }
 
-    const data = (await response.json()) as Array<{ id: number }>;
-    return data[0]?.id;
+    const data = (await response.json()) as { doc?: { id?: string | number } };
+    return data?.doc?.id;
   } catch {
-    // Resume upload error is handled by throwing user-friendly message
     throw new Error('Failed to upload resume. Please try again or contact us directly.');
   }
 }
@@ -80,14 +92,18 @@ export const jobService = {
   openings: {
     async getAll(params?: QueryParams) {
       try {
-        const response = await apiClient.get<StrapiListResponse<JobOpening>>(
-          JOB_OPENINGS_ENDPOINT,
-          {
-            ...params,
-            filters: { isActive: { $eq: true } },
-          }
-        );
-        return response.data.data.map(ensureJobSlug);
+        const response = await apiClient.get<PayloadListResponse<unknown>>(JOB_OPENINGS_ENDPOINT, {
+          ...params,
+          where: {
+            isActive: {
+              equals: true,
+            },
+          },
+          sort: typeof params?.sort === 'string' ? params.sort : '-publishedDate',
+          depth: 2,
+        });
+
+        return (response.data.docs ?? []).map(ensureJobSlug);
       } catch {
         // Silently return fallback data - no console spam in production
         return fallbackJobOpenings;
@@ -96,30 +112,22 @@ export const jobService = {
 
     async getBySlug(slug: string, params?: QueryParams) {
       try {
-        const response = await apiClient.get<StrapiListResponse<JobOpening>>(
-          JOB_OPENINGS_ENDPOINT,
-          {
-            ...params,
-            fields: [
-              'documentId',
-              'title',
-              'slug',
-              'department',
-              'location',
-              'employmentType',
-              'description',
-              'publishedDate',
-              'isInternship',
-            ],
-            filters: {
-              isActive: { $eq: true },
+        const response = await apiClient.get<PayloadListResponse<unknown>>(JOB_OPENINGS_ENDPOINT, {
+          ...params,
+          where: {
+            isActive: {
+              equals: true,
             },
-          }
-        );
-        // Find job by slug (either from API or generated)
-        const jobs = response.data.data.map(ensureJobSlug);
-        const job = jobs.find((job) => job.slug === slug);
-        return job;
+            slug: {
+              equals: slug,
+            },
+          },
+          limit: 1,
+          depth: 2,
+        });
+
+        const job = response.data.docs?.[0];
+        return job ? ensureJobSlug(job as JobOpening) : undefined;
       } catch {
         // Silently return fallback job matching slug or undefined
         return fallbackJobOpenings.find((job) => job.slug === slug);
@@ -156,13 +164,12 @@ export const jobService = {
 
       try {
         // Upload resume if provided
-        let resumeId: number | undefined;
+        let resumeId: string | number | undefined;
         if (formData.resume) {
           resumeId = await uploadFile(formData.resume);
         }
 
-        // Build application data to match Strapi schema
-        // Note: Strapi controller expects string coverLetter and converts to blocks internally
+        // Build application data to match the CMS schema
         const applicationData: Record<string, unknown> = {
           name: `${formData.firstName} ${formData.lastName}`,
           email: formData.email,
@@ -173,21 +180,21 @@ export const jobService = {
           submittedAt: new Date().toISOString(),
         };
 
-        // Add job opening relation only if provided
+        // Add job opening relation only if provided (Payload relationship)
         if (options?.jobOpeningId) {
-          applicationData.job_opening = { documentId: options.jobOpeningId };
+          applicationData.jobOpening = options.jobOpeningId;
         }
 
         // Add resume relation if file was uploaded
         if (resumeId) {
-          applicationData.resume = [resumeId];
+          applicationData.resume = resumeId;
         }
 
-        const response = await apiClient.post<StrapiSingleResponse<JobApplication>>(
+        const response = await apiClient.post<JobApplication>(
           JOB_APPLICATIONS_ENDPOINT,
-          { data: applicationData }
+          applicationData
         );
-        return response.data.data;
+        return response.data;
       } catch (error) {
         // Re-throw user-friendly message, no console spam
         if (error instanceof Error) {

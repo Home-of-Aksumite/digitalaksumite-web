@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { Container } from '@/components/container';
 import { cn } from '@/lib/utils';
 import { pageService } from '@/services/page.service';
-import { strapiApiUrl } from '@/config/env';
+import { cmsApiUrl } from '@/config/env';
 import type { AboutPage as AboutPageType } from '@/types/content';
 import {
   Target,
@@ -40,7 +40,7 @@ export default async function AboutPage() {
   const history = aboutPage?.history;
   const companyImages = aboutPage?.companyImages ?? [];
 
-  // Only use Strapi data, no fallbacks
+  // Only use CMS data, no fallbacks
   const values = aboutPage?.values ?? [];
   const stats = aboutPage?.stats ?? [];
 
@@ -263,7 +263,7 @@ export default async function AboutPage() {
                   {image.url && (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
-                      src={image.url.startsWith('http') ? image.url : `${strapiApiUrl}${image.url}`}
+                      src={image.url.startsWith('http') ? image.url : `${cmsApiUrl}${image.url}`}
                       alt={image.alternativeText || 'Company image'}
                       className="h-full w-full object-cover transition-all duration-700 group-hover:scale-110"
                       loading="lazy"

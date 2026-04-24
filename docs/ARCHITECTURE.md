@@ -22,8 +22,8 @@ Digital Aksumite website follows a **Headless CMS + Modern Frontend** architectu
 ┌─────────────────────────────────────────────────────────────────┐
 │                      API LAYER                                  │
 │  ┌─────────────────────────────────────────────────────────┐   │
-│  │                  Strapi CMS                             │   │
-│  │  • REST API    • GraphQL    • Media Library            │   │
+│  │                  Payload CMS                            │   │
+│  │  • REST API    • Media Library                          │   │
 │  └─────────────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────────────┘
                               │
@@ -155,7 +155,7 @@ export const blogPostService = {
    └── 2. Server Component
         └── 3. Service Layer
              └── 4. API Client
-                  └── 5. Strapi CMS
+                  └── 5. Payload CMS
                        └── 6. PostgreSQL
 ```
 
@@ -183,7 +183,7 @@ export default async function BlogPage() {
         └── 3. API Route Handler
              └── 4. Server-side Sanitization
                   └── 5. Service Layer POST
-                       └── 6. Strapi CMS
+                       └── 6. Payload CMS
 ```
 
 ---
@@ -208,7 +208,7 @@ export interface BlogPost {
   title: string;
   slug: string;
   content: string;
-  featuredImage: StrapiMedia | null;
+  featuredImage: CmsMedia | null;
   author: string;
   publishedAt: string;
   // ... other fields
@@ -334,7 +334,7 @@ headers: async () => [
 
 ## CMS Integration
 
-### Strapi Content Types
+### CMS Content Types
 
 **Collection Types:**
 

@@ -59,7 +59,7 @@ Permissions-Policy
 1. **Never commit `.env.local`** - It contains sensitive data
 2. **Use strong passwords** - For all CMS admin accounts
 3. **Keep dependencies updated** - Run `npm audit` regularly
-4. **Enable 2FA** - On all accounts (Vercel, Strapi, GitHub)
+4. **Enable 2FA** - On all accounts (Vercel, CMS admin, GitHub)
 5. **Review code** - Before merging any PRs
 
 ---

@@ -4,78 +4,87 @@
  */
 
 import { apiClient } from '@/lib/api-client';
-import type { QueryParams, StrapiListResponse } from '@/types/api';
+import type { QueryParams } from '@/types/api';
 import type { Testimonial } from '@/types/content';
 
 import { fallbackTestimonials } from './fallback-data';
 
 const ENDPOINT = '/testimonials';
 
+type PayloadListResponse<T> = {
+  docs: T[];
+  totalDocs: number;
+  limit: number;
+  totalPages: number;
+  page: number;
+  pagingCounter: number;
+  hasPrevPage: boolean;
+  hasNextPage: boolean;
+  prevPage: number | null;
+  nextPage: number | null;
+};
+
+function asRecord(value: unknown): Record<string, unknown> {
+  return value && typeof value === 'object' ? (value as Record<string, unknown>) : {};
+}
+
+function mapPayloadTestimonial(input: unknown): Testimonial {
+  const doc = asRecord(input);
+  const clientPhoto = asRecord(doc.clientPhoto);
+  return {
+    quote: typeof doc.quote === 'string' ? doc.quote : '',
+    clientName: typeof doc.clientName === 'string' ? doc.clientName : 'Anonymous',
+    company: typeof doc.company === 'string' ? doc.company : '',
+    rating: typeof doc.rating === 'number' ? doc.rating : Number(doc.rating ?? 5),
+    featured: Boolean(doc.featured),
+    clientPhoto: doc.clientPhoto
+      ? {
+          url: typeof clientPhoto.url === 'string' ? clientPhoto.url : '',
+          alternativeText:
+            typeof clientPhoto.alternativeText === 'string'
+              ? clientPhoto.alternativeText
+              : typeof clientPhoto.alt === 'string'
+                ? clientPhoto.alt
+                : undefined,
+        }
+      : undefined,
+    createdAt: typeof doc.createdAt === 'string' ? doc.createdAt : undefined,
+    updatedAt: typeof doc.updatedAt === 'string' ? doc.updatedAt : undefined,
+  };
+}
+
 export const testimonialService = {
   async getAll(params?: QueryParams) {
     try {
-      const response = await apiClient.get<StrapiListResponse<Testimonial>>(ENDPOINT, {
+      const response = await apiClient.get<PayloadListResponse<unknown>>(ENDPOINT, {
         ...params,
-        populate: {
-          clientPhoto: {
-            fields: ['url', 'alternativeText', 'width', 'height', 'formats'],
-          },
-        },
+        sort: typeof params?.sort === 'string' ? params.sort : 'order',
+        depth: 2,
       });
-      // Strapi v5 returns flat data - CMS fields: quote, clientName, company, rating, featured, clientPhoto
 
-      return response.data.data
-        .map((item) => ({
-          quote: item.quote || '',
-          clientName: item.clientName || 'Anonymous',
-          company: item.company || '',
-          rating: item.rating || 5,
-          featured: item.featured || false,
-          clientPhoto: item.clientPhoto
-            ? {
-                url: item.clientPhoto.url,
-                alternativeText: item.clientPhoto.alternativeText ?? undefined,
-              }
-            : undefined,
-        }))
-        .filter((item) => item.quote);
+      return (response.data.docs ?? []).map(mapPayloadTestimonial).filter((t) => t.quote);
     } catch {
-      // Return fallback data when Strapi is unavailable
+      // Return fallback data when the CMS is unavailable
       return fallbackTestimonials;
     }
   },
 
   async getFeatured(limit = 3) {
     try {
-      const response = await apiClient.get<StrapiListResponse<Testimonial>>(ENDPOINT, {
-        filters: { featured: { $eq: true } },
-        pagination: { limit },
-        sort: ['publishedAt:desc'],
-        populate: {
-          clientPhoto: {
-            fields: ['url', 'alternativeText', 'width', 'height', 'formats'],
+      const response = await apiClient.get<PayloadListResponse<unknown>>(ENDPOINT, {
+        where: {
+          featured: {
+            equals: true,
           },
         },
+        limit,
+        sort: 'order',
+        depth: 2,
       });
-      // Strapi v5 returns flat data - CMS fields: quote, clientName, company, rating, featured, clientPhoto
 
-      return response.data.data
-        .map((item) => ({
-          quote: item.quote || '',
-          clientName: item.clientName || 'Anonymous',
-          company: item.company || '',
-          rating: item.rating || 5,
-          featured: item.featured || false,
-          clientPhoto: item.clientPhoto
-            ? {
-                url: item.clientPhoto.url,
-                alternativeText: item.clientPhoto.alternativeText ?? undefined,
-              }
-            : undefined,
-        }))
-        .filter((item) => item.quote);
+      return (response.data.docs ?? []).map(mapPayloadTestimonial).filter((t) => t.quote);
     } catch {
-      // Return fallback data when Strapi is unavailable (limit to requested count)
+      // Return fallback data when the CMS is unavailable (limit to requested count)
       return fallbackTestimonials.slice(0, limit);
     }
   },

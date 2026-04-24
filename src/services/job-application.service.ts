@@ -4,11 +4,24 @@
  */
 
 import { apiClient } from '@/lib/api-client';
-import { strapiApiUrl } from '@/config/env';
-import type { StrapiSingleResponse, StrapiListResponse } from '@/types/api';
 import type { JobApplication } from '@/types/content';
+import { jobService } from './job.service';
+import type { ApplicationFormData } from './job.service';
 
 const ENDPOINT = '/job-applications';
+
+type PayloadListResponse<T> = {
+  docs: T[];
+  totalDocs: number;
+  limit: number;
+  totalPages: number;
+  page: number;
+  pagingCounter: number;
+  hasPrevPage: boolean;
+  hasNextPage: boolean;
+  prevPage: number | null;
+  nextPage: number | null;
+};
 
 export interface CreateJobApplicationData {
   name: string;
@@ -18,16 +31,6 @@ export interface CreateJobApplicationData {
   coverLetter?: string;
   portfolioLink?: string;
   jobOpening?: number; // ID of the job opening
-}
-
-export interface ApplicationFormData {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  resume: File | null;
-  coverLetter: string;
-  portfolioLink?: string;
 }
 
 export const jobApplicationService = {
@@ -40,44 +43,11 @@ export const jobApplicationService = {
     applicationType: 'Job Application' | 'Internship' | 'General Application' = 'Job Application'
   ): Promise<JobApplication> {
     try {
-      // First, upload the resume file if provided
-      let resumeId: number | undefined;
-
-      if (formData.resume) {
-        const uploadResponse = await this.uploadFile(formData.resume);
-        resumeId = uploadResponse.id;
-      }
-
-      // Create the job application entry
-      const applicationData: CreateJobApplicationData = {
-        name: `${formData.firstName} ${formData.lastName}`,
-        email: formData.email,
-        phone: formData.phone,
+      const created = await jobService.applications.create(formData, {
+        jobOpeningId: jobOpeningId ? String(jobOpeningId) : undefined,
         applicationType,
-        coverLetter: formData.coverLetter,
-        portfolioLink: formData.portfolioLink,
-      };
-
-      // Add job opening relation if provided
-      if (jobOpeningId) {
-        applicationData.jobOpening = jobOpeningId;
-      }
-
-      // Add resume relation if file was uploaded
-      const requestBody: Record<string, unknown> = {
-        data: applicationData,
-      };
-
-      if (resumeId) {
-        (requestBody.data as Record<string, unknown>).resume = resumeId;
-      }
-
-      const response = await apiClient.post<StrapiSingleResponse<JobApplication>>(
-        ENDPOINT,
-        requestBody
-      );
-
-      return response.data.data;
+      });
+      return created;
     } catch (error) {
       // Silently handle error - user gets friendly message via UI
       if (error instanceof Error) {
@@ -90,45 +60,16 @@ export const jobApplicationService = {
   },
 
   /**
-   * Upload a file to Strapi
-   */
-  async uploadFile(file: File): Promise<{ id: number; url: string }> {
-    try {
-      const formData = new FormData();
-      formData.append('files', file);
-
-      const uploadUrl = `${strapiApiUrl}/api/upload`;
-
-      const response = await fetch(uploadUrl, {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error(`File upload failed: ${response.statusText}`);
-      }
-
-      const data = (await response.json()) as Array<{ id: number; url: string }>;
-      if (!data[0]) {
-        throw new Error('File upload returned empty response');
-      }
-      return data[0];
-    } catch (error) {
-      // Silently handle upload error
-      if (error instanceof Error) {
-        throw error;
-      }
-      throw new Error('Failed to upload file. Please check your connection and try again.');
-    }
-  },
-
-  /**
    * Get all job applications (admin only)
    */
   async getAll() {
     try {
-      const response = await apiClient.get<StrapiListResponse<JobApplication>>(ENDPOINT);
-      return response.data.data;
+      const response = await apiClient.get<PayloadListResponse<JobApplication>>(ENDPOINT, {
+        limit: 100,
+        sort: '-createdAt',
+        depth: 2,
+      });
+      return response.data.docs;
     } catch {
       // Silently return empty array
       return [];
@@ -140,16 +81,17 @@ export const jobApplicationService = {
    */
   async getByJobOpening(jobOpeningId: number) {
     try {
-      const response = await apiClient.get<StrapiListResponse<JobApplication>>(ENDPOINT, {
-        filters: {
-          job_opening: {
-            id: {
-              $eq: jobOpeningId,
-            },
+      const response = await apiClient.get<PayloadListResponse<JobApplication>>(ENDPOINT, {
+        where: {
+          jobOpening: {
+            equals: String(jobOpeningId),
           },
         },
+        limit: 100,
+        sort: '-createdAt',
+        depth: 2,
       });
-      return response.data.data;
+      return response.data.docs;
     } catch {
       // Silently return empty array
       return [];

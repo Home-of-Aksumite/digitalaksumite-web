@@ -40,6 +40,14 @@ const sectionIcons: Record<string, React.ComponentType<{ className?: string }>> 
   'Contact Information': Mail,
 };
 
+function formatDateOnly(value: string): string {
+  const parsed = new Date(value);
+  if (!Number.isNaN(parsed.getTime())) {
+    return parsed.toISOString().split('T')[0] as string;
+  }
+  return value.split('T')[0] as string;
+}
+
 export default async function TermsOfServicePage() {
   let termsOfService: TermsOfServiceType | undefined = undefined;
   let siteSettings: SiteSettings | undefined = undefined;
@@ -68,10 +76,9 @@ export default async function TermsOfServicePage() {
   const description =
     termsOfService?.pageDescription ||
     'Please read these terms carefully before using our services.';
-  const lastUpdated =
-    termsOfService?.lastUpdated ||
-    termsOfService?.updatedAt?.split('T')[0] ||
-    new Date().toISOString().split('T')[0];
+  const lastUpdatedRaw =
+    termsOfService?.lastUpdated || termsOfService?.updatedAt || new Date().toISOString();
+  const lastUpdated = formatDateOnly(lastUpdatedRaw);
 
   const defaultSections = [
     {

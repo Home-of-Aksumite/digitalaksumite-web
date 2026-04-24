@@ -4,56 +4,91 @@
  */
 
 import { apiClient } from '@/lib/api-client';
-import type { QueryParams, StrapiListResponse } from '@/types/api';
+import type { QueryParams } from '@/types/api';
 import type { Project } from '@/types/content';
 
 import { fallbackProjects } from './fallback-data';
 
 const ENDPOINT = '/projects';
 
+type PayloadListResponse<T> = {
+  docs: T[];
+  totalDocs: number;
+  limit: number;
+  totalPages: number;
+  page: number;
+  pagingCounter: number;
+  hasPrevPage: boolean;
+  hasNextPage: boolean;
+  prevPage: number | null;
+  nextPage: number | null;
+};
+
+function asRecord(value: unknown): Record<string, unknown> {
+  return value && typeof value === 'object' ? (value as Record<string, unknown>) : {};
+}
+
+function mapPayloadProject(input: unknown): Project {
+  const doc = asRecord(input);
+  return {
+    title: typeof doc.title === 'string' ? doc.title : '',
+    slug: typeof doc.slug === 'string' ? doc.slug : '',
+    client: typeof doc.client === 'string' ? doc.client : '',
+    summary: typeof doc.summary === 'string' ? doc.summary : '',
+    description:
+      typeof doc.description === 'string'
+        ? doc.description
+        : typeof doc.summary === 'string'
+          ? doc.summary
+          : '',
+    featuredImage: doc.featuredImage as unknown as Project['featuredImage'],
+    technologies: Array.isArray(doc.technologies)
+      ? (doc.technologies as Project['technologies'])
+      : [],
+    websiteUrl: typeof doc.websiteUrl === 'string' ? doc.websiteUrl : undefined,
+    githubUrl: typeof doc.githubUrl === 'string' ? doc.githubUrl : undefined,
+    link: typeof doc.link === 'string' ? doc.link : undefined,
+    completedDate: typeof doc.completedDate === 'string' ? doc.completedDate : '',
+    featured: Boolean(doc.featured),
+    order: typeof doc.order === 'number' ? doc.order : Number(doc.order ?? 0),
+    seoTitle: typeof doc.seoTitle === 'string' ? doc.seoTitle : undefined,
+    seoDescription: typeof doc.seoDescription === 'string' ? doc.seoDescription : undefined,
+    createdAt: typeof doc.createdAt === 'string' ? doc.createdAt : new Date().toISOString(),
+    updatedAt: typeof doc.updatedAt === 'string' ? doc.updatedAt : new Date().toISOString(),
+  };
+}
+
 export const projectService = {
   async getAll(params?: QueryParams) {
     try {
-      const response = await apiClient.get<StrapiListResponse<Project>>(ENDPOINT, {
+      const response = await apiClient.get<PayloadListResponse<unknown>>(ENDPOINT, {
         ...params,
-        populate: {
-          featuredImage: {
-            fields: ['url', 'alternativeText', 'width', 'height', 'formats'],
-          },
-        },
+        sort: typeof params?.sort === 'string' ? params.sort : 'order',
+        depth: 2,
       });
-      // Strapi v5 returns flat data
-      return response.data.data
-        .map((item) => ({
-          title: item.title,
-          slug: item.slug,
-          description: item.description || item.summary || '',
-          featured: item.featured,
-          link: item.link,
-          featuredImage: item.featuredImage,
-        }))
-        .filter((item) => item.title && item.slug);
+
+      return (response.data.docs ?? []).map(mapPayloadProject).filter((p) => p.title && p.slug);
     } catch {
-      // Return fallback data when Strapi is unavailable
+      // Return fallback data when the CMS is unavailable
       return fallbackProjects;
     }
   },
 
   async getBySlug(slug: string, params?: QueryParams) {
     try {
-      const response = await apiClient.get<StrapiListResponse<Project>>(ENDPOINT, {
+      const response = await apiClient.get<PayloadListResponse<unknown>>(ENDPOINT, {
         ...params,
-        filters: { slug: { $eq: slug } },
+        where: {
+          slug: {
+            equals: slug,
+          },
+        },
+        limit: 1,
+        depth: 2,
       });
-      const item = response.data.data[0];
-      if (!item) return undefined;
-      return {
-        title: item.title,
-        slug: item.slug,
-        description: item.description || item.summary || '',
-        featured: item.featured || false,
-        link: item.link,
-      };
+
+      const doc = response.data.docs?.[0];
+      return doc ? mapPayloadProject(doc) : undefined;
     } catch {
       // Return fallback project matching slug or undefined
       return fallbackProjects.find((p) => p.slug === slug);
@@ -62,29 +97,20 @@ export const projectService = {
 
   async getFeatured(limit = 6) {
     try {
-      const response = await apiClient.get<StrapiListResponse<Project>>(ENDPOINT, {
-        filters: { featured: { $eq: true } },
-        pagination: { limit },
-        sort: ['publishedAt:desc'],
-        populate: {
-          featuredImage: {
-            fields: ['url', 'alternativeText', 'width', 'height', 'formats'],
+      const response = await apiClient.get<PayloadListResponse<unknown>>(ENDPOINT, {
+        where: {
+          featured: {
+            equals: true,
           },
         },
+        limit,
+        sort: 'order',
+        depth: 2,
       });
-      // Strapi v5 returns flat data
-      return response.data.data
-        .map((item) => ({
-          title: item.title,
-          slug: item.slug,
-          description: item.description || item.summary || '',
-          featured: item.featured,
-          link: item.link,
-          featuredImage: item.featuredImage,
-        }))
-        .filter((item) => item.title && item.slug);
+
+      return (response.data.docs ?? []).map(mapPayloadProject).filter((p) => p.title && p.slug);
     } catch {
-      // Return fallback data when Strapi is unavailable (limit to requested count)
+      // Return fallback data when the CMS is unavailable (limit to requested count)
       return fallbackProjects.slice(0, limit);
     }
   },

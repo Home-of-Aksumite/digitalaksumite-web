@@ -4,7 +4,6 @@
  */
 
 import { apiClient } from '@/lib/api-client';
-import type { StrapiSingleResponse } from '@/types/api';
 import type { ContactSubmission } from '@/types/content';
 import { sanitizeHtml } from '@/utils/sanitize';
 import { contactFormSchema, formatZodError } from '@/utils/security';
@@ -29,7 +28,7 @@ export const contactService = {
       throw new Error(formatZodError(parsed.error));
     }
 
-    // Map subject to inquiryType enum values that Strapi expects
+    // Map subject to inquiryType enum values that the CMS expects
     const inquiryTypeMap: Record<string, string> = {
       'General Inquiry': 'General Inquiry',
       'Start a Project': 'Project Request',
@@ -44,20 +43,12 @@ export const contactService = {
       email: data.email.trim().toLowerCase(),
       phone: data.phone ? sanitizeHtml(data.phone) : undefined,
       inquiryType: inquiryTypeMap[data.subject] || 'General Inquiry',
-      // Format message as Strapi blocks (rich text)
-      message: [
-        {
-          type: 'paragraph',
-          children: [{ type: 'text', text: sanitizeHtml(data.message) }],
-        },
-      ],
+      message: sanitizeHtml(data.message),
       submittedAt: new Date().toISOString(),
     };
 
     try {
-      const response = await apiClient.post<StrapiSingleResponse<ContactSubmission>>(ENDPOINT, {
-        data: sanitizedData,
-      });
+      const response = await apiClient.post<ContactSubmission>(ENDPOINT, sanitizedData);
       return response.data;
     } catch (error) {
       // Silently handle error - user gets friendly message via UI

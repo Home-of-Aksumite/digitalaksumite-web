@@ -1,17 +1,17 @@
 /**
  * Blog Content Component
- * Renders Strapi blocks content with support for rich text, images, headings, lists, etc.
+ * Renders blocks content with support for rich text, images, headings, lists, etc.
  */
 
 'use client';
 
-import { strapiApiUrl } from '@/config/env';
+import { cmsOrigin } from '@/config/env';
 
 interface BlogContentProps {
   content: unknown;
 }
 
-// Strapi Block Types
+// Block Types
 interface TextNode {
   type: 'text';
   text: string;
@@ -210,7 +210,7 @@ function renderBlock(block: Block, index: number): React.ReactNode {
     case 'image': {
       const imageUrl = block.image.url.startsWith('http')
         ? block.image.url
-        : `${strapiApiUrl}${block.image.url}`;
+        : `${cmsOrigin}${block.image.url}`;
 
       return (
         <figure key={index} className="my-8">
@@ -236,6 +236,26 @@ function renderBlock(block: Block, index: number): React.ReactNode {
 }
 
 export function BlogContent({ content }: BlogContentProps) {
+  if (typeof content === 'string') {
+    const normalized = content.replace(/\r\n/g, '\n').trim();
+    if (!normalized) return undefined;
+
+    const paragraphs = normalized
+      .split(/\n\s*\n+/)
+      .map((p) => p.trim())
+      .filter(Boolean);
+
+    return (
+      <article className="prose prose-lg dark:prose-invert max-w-none">
+        {paragraphs.map((p, i) => (
+          <p key={i} className="mb-6 leading-relaxed text-gray-700 dark:text-gray-300">
+            {p}
+          </p>
+        ))}
+      </article>
+    );
+  }
+
   if (!content || !Array.isArray(content)) {
     return undefined;
   }

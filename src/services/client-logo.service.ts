@@ -1,68 +1,91 @@
 import { apiClient } from '@/lib/api-client';
-import type { StrapiListResponse, StrapiMedia } from '@/types/api';
+import type { CmsMedia } from '@/types/api';
 import type { TrustedPartner, ClientLogo } from '@/types/content';
-import { strapiApiUrl } from '@/config/env';
+import { cmsOrigin } from '@/config/env';
 import { fallbackTrustedPartners } from './fallback-data';
 
 const ENDPOINT = '/trusted-partners';
 
+type PayloadListResponse<T> = {
+  docs: T[];
+  totalDocs: number;
+  limit: number;
+  totalPages: number;
+  page: number;
+  pagingCounter: number;
+  hasPrevPage: boolean;
+  hasNextPage: boolean;
+  prevPage: number | null;
+  nextPage: number | null;
+};
+
+function asRecord(value: unknown): Record<string, unknown> {
+  return value && typeof value === 'object' ? (value as Record<string, unknown>) : {};
+}
+
 export const trustedPartnerService = {
   async getAll(): Promise<ClientLogo[]> {
     try {
-      const response = await apiClient.get<StrapiListResponse<TrustedPartner>>(ENDPOINT, {
-        populate: '*',
-        filters: {
+      const response = await apiClient.get<PayloadListResponse<unknown>>(ENDPOINT, {
+        where: {
           featured: {
-            $eq: true,
+            equals: true,
           },
         },
-        sort: ['order:asc'],
+        sort: 'order',
+        depth: 2,
       });
 
-      // Handle case where data might be nested differently
-      const data = response.data?.data || [];
+      const docs = response.data?.docs ?? [];
 
-      if (!Array.isArray(data)) {
-        console.warn('Trusted partners data is not an array:', data);
-        return [] as ClientLogo[];
-      }
-
-      // Map and extract logo URL properly
-      return data.map((item: TrustedPartner): ClientLogo => {
-        // Strapi v5 media field structure - handle both flat and nested formats
-        const logoData = item.logo as { url?: string; attributes?: { url?: string } } | undefined;
-        const rawLogoUrl = logoData?.url || logoData?.attributes?.url;
-
+      return docs.map((doc: TrustedPartner): ClientLogo => {
+        const docRecord = asRecord(doc);
+        const logoRecord = asRecord(docRecord.logo);
+        const rawLogoUrl = typeof logoRecord.url === 'string' ? logoRecord.url : undefined;
         const logoUrl = rawLogoUrl
           ? rawLogoUrl.startsWith('http')
             ? rawLogoUrl
-            : `${strapiApiUrl}${rawLogoUrl}`
+            : `${cmsOrigin}${rawLogoUrl}`
           : undefined;
 
-        // Build the full StrapiMedia object with resolved URL
-        const logoMedia: StrapiMedia | undefined = item.logo
+        const logoMedia: CmsMedia | undefined = docRecord.logo
           ? {
-              ...item.logo,
+              ...(logoRecord as unknown as CmsMedia),
               url: logoUrl || '',
             }
           : undefined;
 
+        const idRaw = docRecord.id;
+        const id = typeof idRaw === 'string' || typeof idRaw === 'number' ? idRaw : 0;
+
         return {
-          id: item.id,
-          documentId: item.documentId,
-          name: item.name || '',
+          id,
+          documentId: typeof docRecord.documentId === 'string' ? docRecord.documentId : '',
+          name: typeof docRecord.name === 'string' ? docRecord.name : '',
           logo: logoMedia,
-          link: item.link || '',
-          order: item.order || 0,
-          featured: item.featured || false,
-          category: item.category || 'partner',
-          createdAt: item.createdAt || new Date().toISOString(),
-          updatedAt: item.updatedAt || new Date().toISOString(),
-          publishedAt: item.publishedAt || new Date().toISOString(),
+          link: typeof docRecord.link === 'string' ? docRecord.link : '',
+          order:
+            typeof docRecord.order === 'number' ? docRecord.order : Number(docRecord.order ?? 0),
+          featured: Boolean(docRecord.featured),
+          category: typeof docRecord.category === 'string' ? docRecord.category : 'partner',
+          createdAt:
+            typeof docRecord.createdAt === 'string'
+              ? docRecord.createdAt
+              : new Date().toISOString(),
+          updatedAt:
+            typeof docRecord.updatedAt === 'string'
+              ? docRecord.updatedAt
+              : new Date().toISOString(),
+          publishedAt:
+            typeof docRecord.publishedAt === 'string'
+              ? docRecord.publishedAt
+              : typeof docRecord.createdAt === 'string'
+                ? docRecord.createdAt
+                : new Date().toISOString(),
         };
       });
     } catch {
-      // Return fallback data when Strapi is unavailable
+      // Return fallback data when the CMS is unavailable
       return fallbackTrustedPartners.map(
         (item): ClientLogo => ({
           id: item.id || 0,

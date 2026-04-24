@@ -7,7 +7,7 @@ import { BlogSection } from '@/components/blog-section';
 import { ContactSection } from '@/components/contact-section';
 import { CTASection } from '@/components/cta-section';
 import { homeBundleService } from '@/services/home-bundle.service';
-import { extractTextFromBlocks, truncateText } from '@/lib/content-utils';
+import { extractTextFromBlocks } from '@/lib/content-utils';
 import type { ApiService } from '@/components/services-section';
 import type { ApiProject } from '@/components/projects-section';
 import type { ApiTestimonial } from '@/components/testimonials-section';
@@ -31,7 +31,7 @@ export default async function Home() {
   const projects: ApiProject[] = bundle.featuredProjects.map((project) => ({
     title: project.title,
     slug: project.slug,
-    description: truncateText(extractTextFromBlocks(project.description)),
+    description: extractTextFromBlocks(project.description),
     featured: project.featured,
     link: project.link,
     featuredImage: project.featuredImage

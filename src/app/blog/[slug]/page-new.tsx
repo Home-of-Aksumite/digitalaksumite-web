@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { Container } from '@/components/container';
 import { blogPostService } from '@/services/blog-post.service';
-import { strapiApiUrl } from '@/config/env';
+import { cmsApiUrl } from '@/config/env';
 import { BlogContent } from '@/components/blog-content';
 import { ArrowLeft, Calendar, Clock, User, Share2, ChevronRight } from 'lucide-react';
 
@@ -60,7 +60,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const featuredImageUrl = post.featuredImage
     ? post.featuredImage.url.startsWith('http')
       ? post.featuredImage.url
-      : `${strapiApiUrl}${post.featuredImage.url}`
+      : `${cmsApiUrl}${post.featuredImage.url}`
     : undefined;
 
   return (

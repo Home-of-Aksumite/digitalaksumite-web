@@ -113,7 +113,7 @@ export function InternshipApplicationForm({
             {...register('firstName')}
             className={cn(
               'block w-full rounded-xl border px-4 py-3.5',
-              'border-[#E5E7EB] bg-white focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none',
+              'border-[#E5E7EB] bg-white text-[#0F2A44] focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none',
               'placeholder:text-gray-400',
               'dark:border-[#374151] dark:bg-[#1F2937] dark:text-white dark:placeholder:text-gray-500',
               errors.firstName && 'border-red-500 focus:border-red-500 focus:ring-red-500'
@@ -139,7 +139,7 @@ export function InternshipApplicationForm({
             {...register('lastName')}
             className={cn(
               'block w-full rounded-xl border px-4 py-3.5',
-              'border-[#E5E7EB] bg-white focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none',
+              'border-[#E5E7EB] bg-white text-[#0F2A44] focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none',
               'placeholder:text-gray-400',
               'dark:border-[#374151] dark:bg-[#1F2937] dark:text-white dark:placeholder:text-gray-500',
               errors.lastName && 'border-red-500 focus:border-red-500 focus:ring-red-500'
@@ -165,7 +165,7 @@ export function InternshipApplicationForm({
           {...register('email')}
           className={cn(
             'block w-full rounded-xl border px-4 py-3.5',
-            'border-[#E5E7EB] bg-white focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none',
+            'border-[#E5E7EB] bg-white text-[#0F2A44] focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none',
             'placeholder:text-gray-400',
             'dark:border-[#374151] dark:bg-[#1F2937] dark:text-white dark:placeholder:text-gray-500',
             errors.email && 'border-red-500 focus:border-red-500 focus:ring-red-500'
@@ -217,7 +217,7 @@ export function InternshipApplicationForm({
           {...register('portfolioLink')}
           className={cn(
             'block w-full rounded-xl border px-4 py-3.5',
-            'border-[#E5E7EB] bg-white focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none',
+            'border-[#E5E7EB] bg-white text-[#0F2A44] focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none',
             'placeholder:text-gray-400',
             'dark:border-[#374151] dark:bg-[#1F2937] dark:text-white dark:placeholder:text-gray-500',
             errors.portfolioLink && 'border-red-500 focus:border-red-500 focus:ring-red-500'
@@ -260,7 +260,7 @@ export function InternshipApplicationForm({
           {...register('coverLetter')}
           className={cn(
             'block w-full rounded-xl border px-4 py-3.5',
-            'border-[#E5E7EB] bg-white focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none',
+            'border-[#E5E7EB] bg-white text-[#0F2A44] focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none',
             'placeholder:text-gray-400',
             'dark:border-[#374151] dark:bg-[#1F2937] dark:text-white dark:placeholder:text-gray-500',
             'resize-y',

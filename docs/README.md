@@ -30,10 +30,10 @@ Digital Aksumite is a high-end software engineering company website built with m
 
 ### Backend
 
-- **CMS:** Strapi 5 (Headless)
+- **CMS:** Payload 3 (Headless)
 - **Database:** PostgreSQL
-- **API:** REST with GraphQL option
-- **Media:** AWS S3 / Cloudinary
+- **API:** REST
+- **Media:** Local storage (dev) / S3-compatible (prod)
 
 ### Deployment
 
@@ -113,13 +113,13 @@ digitalaksumite-web/
 
 Copy `.env.example` to `.env.local` and configure:
 
-| Variable                     | Description              | Required                |
-| ---------------------------- | ------------------------ | ----------------------- |
-| `NEXT_PUBLIC_STRAPI_API_URL` | Strapi CMS URL           | Yes                     |
-| `STRAPI_API_TOKEN`           | API authentication token | No (for public content) |
-| `NEXT_PUBLIC_SITE_URL`       | Production site URL      | Yes                     |
-| `NODE_ENV`                   | Environment mode         | Auto-set                |
-| `COOKIE_SECRET`              | Session cookie secret    | Production only         |
+| Variable                    | Description              | Required                |
+| --------------------------- | ------------------------ | ----------------------- |
+| `NEXT_PUBLIC_CMS_API_URL`   | CMS API base URL         | Yes                     |
+| `NEXT_PUBLIC_CMS_API_TOKEN` | API authentication token | No (for public content) |
+| `NEXT_PUBLIC_SITE_URL`      | Production site URL      | Yes                     |
+| `NODE_ENV`                  | Environment mode         | Auto-set                |
+| `COOKIE_SECRET`             | Session cookie secret    | Production only         |
 
 ---
 

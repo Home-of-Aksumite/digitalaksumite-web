@@ -1,9 +1,9 @@
 /**
  * Content Type Definitions
- * TypeScript interfaces matching Strapi CMS content types
+ * TypeScript interfaces matching CMS content types
  */
 
-import type { StrapiMedia } from './api';
+import type { CmsMedia } from './api';
 
 // ============================================================================
 // BlogPost
@@ -14,8 +14,8 @@ export interface BlogPost {
   slug: string;
   excerpt: string;
   content: string;
-  featuredImage: StrapiMedia | null;
-  gallery: StrapiMedia[];
+  featuredImage: CmsMedia | null;
+  gallery: CmsMedia[];
   author: string;
   publishedAt: string;
   updatedAt: string;
@@ -32,14 +32,14 @@ export interface BlogPost {
 // ============================================================================
 
 export interface Service {
-  id: number;
-  documentId: string;
+  id: number | string;
+  documentId?: string;
   title: string;
   slug: string;
   shortDescription: string;
   fullDescription: string;
   description?: string;
-  icon: StrapiMedia | null;
+  icon: CmsMedia | null;
   features: string[];
   order: number;
   featured: boolean;
@@ -59,7 +59,7 @@ export interface Project {
   client: string;
   summary: string;
   description: string;
-  featuredImage: StrapiMedia | null;
+  featuredImage: CmsMedia | null;
   technologies: string[];
   websiteUrl?: string;
   githubUrl?: string;
@@ -97,8 +97,8 @@ export interface Testimonial {
 // ============================================================================
 
 export interface JobOpening {
-  id: number;
-  documentId: string;
+  id: number | string;
+  documentId?: string;
   title: string;
   slug: string;
   department: string;
@@ -117,6 +117,8 @@ export interface JobOpening {
 // ============================================================================
 
 export interface JobApplication {
+  id?: number;
+  documentId?: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -124,7 +126,7 @@ export interface JobApplication {
   linkedIn?: string;
   portfolio?: string;
   coverLetter: string;
-  resume: StrapiMedia | null;
+  resume: CmsMedia | null;
   jobOpening: { id: number };
   status: 'pending' | 'reviewing' | 'interviewed' | 'rejected' | 'hired';
   appliedAt: string;
@@ -156,10 +158,10 @@ export interface ContactSubmission {
 // ============================================================================
 
 export interface ClientLogo {
-  id: number;
-  documentId: string;
+  id: number | string;
+  documentId?: string;
   name: string;
-  logo: StrapiMedia | undefined;
+  logo: CmsMedia | undefined;
   link?: string;
   order: number;
   featured: boolean;
@@ -169,7 +171,6 @@ export interface ClientLogo {
   publishedAt: string;
 }
 
-// Alias for renamed collection type
 export type TrustedPartner = ClientLogo;
 
 // ============================================================================
@@ -187,7 +188,7 @@ export interface TitleContentSection {
 // ============================================================================
 
 export interface HeroSlide {
-  image: StrapiMedia;
+  image: CmsMedia;
   alt: string;
 }
 
@@ -233,7 +234,7 @@ export interface AboutPage {
     value: string;
     label: string;
   }>;
-  companyImages: StrapiMedia[];
+  companyImages: CmsMedia[];
   seoTitle?: string;
   seoDescription?: string;
   updatedAt: string;
@@ -273,13 +274,13 @@ export interface SiteSettings {
   facebook?: string;
   github?: string;
   defaultSEODescription?: string;
-  logo: StrapiMedia | null;
-  favicon: StrapiMedia | null;
+  logo: CmsMedia | null;
+  favicon: CmsMedia | null;
   updatedAt: string;
 }
 
 export interface Navbar {
-  logo: StrapiMedia | null;
+  logo: CmsMedia | null;
   logoAlt: string;
   updatedAt: string;
 }

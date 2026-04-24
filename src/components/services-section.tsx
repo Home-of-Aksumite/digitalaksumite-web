@@ -9,7 +9,7 @@ import { Container } from '@/components/container';
 import { ScrollReveal, StaggerContainer, StaggerItem } from '@/components/scroll-reveal';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
-import { strapiApiUrl } from '@/config/env';
+import { cmsOrigin } from '@/config/env';
 
 // Icon mapping from service slugs to React components
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -23,7 +23,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   'ui-ux-design': DesignIcon,
 };
 
-// API Service interface (matches Strapi response)
+// API Service interface
 export interface ApiService {
   title: string;
   description: string;
@@ -116,11 +116,11 @@ function ServiceCard({
   service: ApiService;
   IconComponent: React.ComponentType<{ className?: string }>;
 }) {
-  // Get icon URL from Strapi if available
+  // Get icon URL if available
   const iconUrl = service.icon?.url
     ? service.icon.url.startsWith('http')
       ? service.icon.url
-      : `${strapiApiUrl}${service.icon.url}`
+      : `${cmsOrigin}${service.icon.url}`
     : undefined;
 
   return (

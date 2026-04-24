@@ -34,7 +34,7 @@ export function ContactSection({ contactPage, siteSettings }: ContactSectionProp
     contactPage?.formDescription ||
     'Fill out the form below and we will respond within 24 hours. Every message is read by our team.';
 
-  const email = siteSettings?.companyEmail || 'contact@digitalaksumite.com';
+  const email = siteSettings?.companyEmail || 'hello@digitalaksumite.com';
   const phone = siteSettings?.companyPhone || '+251 911 234 567';
   const address = siteSettings?.companyAddress || 'Addis Ababa, Ethiopia';
   const officeHours = siteSettings?.workingHours || 'Monday - Friday: 9:00 AM - 6:00 PM';
@@ -71,10 +71,11 @@ export function ContactSection({ contactPage, siteSettings }: ContactSectionProp
       await contactService.submit(data);
       setIsSuccess(true);
       reset();
-    } catch {
-      setError(
-        'Unable to send your message. Please try again later or contact us directly via email.'
-      );
+    } catch (err) {
+      const message = err instanceof Error ? err.message : undefined;
+      const fallback =
+        'Unable to send your message right now. Please try again later or contact us directly via email.';
+      setError(process.env.NODE_ENV === 'production' ? fallback : message || fallback);
     } finally {
       setIsSubmitting(false);
     }

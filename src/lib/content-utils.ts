@@ -1,10 +1,14 @@
 /**
  * Content Utilities
- * Helper functions for processing Strapi content
+ * Helper functions for processing CMS content
  */
 
-// Extract plain text from Strapi blocks JSON
+// Extract plain text from blocks JSON
 export function extractTextFromBlocks(blocks: unknown): string {
+  if (typeof blocks === 'string') {
+    return blocks.trim();
+  }
+
   if (!blocks || !Array.isArray(blocks)) {
     return '';
   }

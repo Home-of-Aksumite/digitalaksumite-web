@@ -64,8 +64,11 @@ export function ApplicationForm({ job }: ApplicationFormProps) {
       });
       setIsSuccess(true);
       reset();
-    } catch {
-      setError('Unable to submit your application. Please try again later or email us directly.');
+    } catch (err) {
+      const message = err instanceof Error ? err.message : undefined;
+      const fallback =
+        'Unable to submit your application right now. Please try again later or email us directly.';
+      setError(process.env.NODE_ENV === 'production' ? fallback : message || fallback);
     } finally {
       setIsSubmitting(false);
     }
@@ -110,8 +113,9 @@ export function ApplicationForm({ job }: ApplicationFormProps) {
             {...register('firstName')}
             className={cn(
               'block w-full rounded-xl border px-4 py-3.5',
-              'border-[#E5E7EB] bg-white focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none',
-              'dark:border-[#374151] dark:bg-[#1F2937] dark:text-white',
+              'border-[#E5E7EB] bg-white text-[#0F2A44] focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none',
+              'placeholder:text-gray-400',
+              'dark:border-[#374151] dark:bg-[#1F2937] dark:text-white dark:placeholder:text-gray-500',
               errors.firstName && 'border-red-500 focus:border-red-500 focus:ring-red-500'
             )}
             placeholder="Your first name"
@@ -135,8 +139,9 @@ export function ApplicationForm({ job }: ApplicationFormProps) {
             {...register('lastName')}
             className={cn(
               'block w-full rounded-xl border px-4 py-3.5',
-              'border-[#E5E7EB] bg-white focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none',
-              'dark:border-[#374151] dark:bg-[#1F2937] dark:text-white',
+              'border-[#E5E7EB] bg-white text-[#0F2A44] focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none',
+              'placeholder:text-gray-400',
+              'dark:border-[#374151] dark:bg-[#1F2937] dark:text-white dark:placeholder:text-gray-500',
               errors.lastName && 'border-red-500 focus:border-red-500 focus:ring-red-500'
             )}
             placeholder="Your last name"
@@ -160,8 +165,9 @@ export function ApplicationForm({ job }: ApplicationFormProps) {
           {...register('email')}
           className={cn(
             'block w-full rounded-xl border px-4 py-3.5',
-            'border-[#E5E7EB] bg-white focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none',
-            'dark:border-[#374151] dark:bg-[#1F2937] dark:text-white',
+            'border-[#E5E7EB] bg-white text-[#0F2A44] focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none',
+            'placeholder:text-gray-400',
+            'dark:border-[#374151] dark:bg-[#1F2937] dark:text-white dark:placeholder:text-gray-500',
             errors.email && 'border-red-500 focus:border-red-500 focus:ring-red-500'
           )}
           placeholder="your@email.com"
@@ -211,8 +217,9 @@ export function ApplicationForm({ job }: ApplicationFormProps) {
           {...register('portfolioLink')}
           className={cn(
             'block w-full rounded-xl border px-4 py-3.5',
-            'border-[#E5E7EB] bg-white focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none',
-            'dark:border-[#374151] dark:bg-[#1F2937] dark:text-white',
+            'border-[#E5E7EB] bg-white text-[#0F2A44] focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none',
+            'placeholder:text-gray-400',
+            'dark:border-[#374151] dark:bg-[#1F2937] dark:text-white dark:placeholder:text-gray-500',
             errors.portfolioLink && 'border-red-500 focus:border-red-500 focus:ring-red-500'
           )}
           placeholder="https://yourportfolio.com"
@@ -254,8 +261,9 @@ export function ApplicationForm({ job }: ApplicationFormProps) {
           {...register('coverLetter')}
           className={cn(
             'block w-full rounded-xl border px-4 py-3.5',
-            'border-[#E5E7EB] bg-white focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none',
-            'dark:border-[#374151] dark:bg-[#1F2937] dark:text-white',
+            'border-[#E5E7EB] bg-white text-[#0F2A44] focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none',
+            'placeholder:text-gray-400',
+            'dark:border-[#374151] dark:bg-[#1F2937] dark:text-white dark:placeholder:text-gray-500',
             'resize-y',
             errors.coverLetter && 'border-red-500 focus:border-red-500 focus:ring-red-500'
           )}

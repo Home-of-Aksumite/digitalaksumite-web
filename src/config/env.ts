@@ -6,9 +6,9 @@
 import { z } from 'zod';
 
 const envSchema = z.object({
-  // Strapi CMS
-  NEXT_PUBLIC_STRAPI_API_URL: z.string().url().optional(),
-  NEXT_PUBLIC_STRAPI_API_TOKEN: z.string().min(1).optional(),
+  // CMS (Payload)
+  NEXT_PUBLIC_CMS_API_URL: z.string().url().optional(),
+  NEXT_PUBLIC_CMS_API_TOKEN: z.string().min(1).optional(),
 
   // Application
   NEXT_PUBLIC_SITE_URL: z.string().url().default('http://localhost:3000'),
@@ -29,17 +29,17 @@ if (!parsedEnv.success) {
   throw new Error('Invalid environment configuration');
 }
 
-const resolvedStrapiApiUrl =
-  parsedEnv.data.NEXT_PUBLIC_STRAPI_API_URL ||
-  (parsedEnv.data.NODE_ENV === 'production' ? undefined : 'http://localhost:1337');
+const resolvedCmsApiUrl =
+  parsedEnv.data.NEXT_PUBLIC_CMS_API_URL ||
+  (parsedEnv.data.NODE_ENV === 'production' ? undefined : 'http://localhost:8000');
 
-if (!resolvedStrapiApiUrl) {
-  throw new Error('Missing NEXT_PUBLIC_STRAPI_API_URL in production environment');
+if (!resolvedCmsApiUrl) {
+  throw new Error('Missing NEXT_PUBLIC_CMS_API_URL in production environment');
 }
 
 export const env = {
   ...parsedEnv.data,
-  NEXT_PUBLIC_STRAPI_API_URL: resolvedStrapiApiUrl,
+  NEXT_PUBLIC_CMS_API_URL: resolvedCmsApiUrl,
 };
 
 // Helper to check if running in production
@@ -48,11 +48,13 @@ export const isProduction = env.NODE_ENV === 'production';
 // Helper to check if running in development
 export const isDevelopment = env.NODE_ENV === 'development';
 
-// Strapi API URL with trailing slash handling
-export const strapiApiUrl = env.NEXT_PUBLIC_STRAPI_API_URL.replace(/\/$/, '');
+// CMS API URL with trailing slash handling
+export const cmsApiUrl = env.NEXT_PUBLIC_CMS_API_URL.replace(/\/$/, '');
 
-// Strapi API Token (public for client-side use)
-export const strapiApiToken = env.NEXT_PUBLIC_STRAPI_API_TOKEN;
+export const cmsOrigin = cmsApiUrl.replace(/\/(api)(\/)?$/, '');
+
+// CMS API Token (public for client-side use)
+export const cmsApiToken = env.NEXT_PUBLIC_CMS_API_TOKEN;
 
 // Site URL with trailing slash handling
 export const siteUrl = env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, '');

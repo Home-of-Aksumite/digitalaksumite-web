@@ -38,6 +38,7 @@ export function StyledPhoneInput({
         className={cn(
           'block w-full rounded-lg border px-4 py-3',
           'border-[#E5E7EB] bg-white focus:border-[#C9A227] focus:ring-1 focus:ring-[#C9A227] focus:outline-none',
+          'text-[#0F2A44]',
           'dark:border-[#374151] dark:bg-[#1F2937] dark:text-white',
           error && 'border-red-500 focus:border-red-500 focus:ring-red-500'
         )}

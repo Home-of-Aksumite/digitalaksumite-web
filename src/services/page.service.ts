@@ -5,7 +5,6 @@
  */
 
 import { apiClient } from '@/lib/api-client';
-import type { StrapiSingleResponse } from '@/types/api';
 import type {
   HomePage,
   AboutPage,
@@ -27,21 +26,8 @@ import {
 export const pageService = {
   home: async () => {
     try {
-      const response = await apiClient.get<StrapiSingleResponse<HomePage>>('/home-page', {
-        fields: [
-          'heroTitle',
-          'heroSubtitle',
-          'heroPrimaryButtonText',
-          'heroPrimaryButtonUrl',
-          'heroSecondaryButtonText',
-          'heroSecondaryButtonUrl',
-          'ctaPrimaryButtonText',
-          'ctaPrimaryButtonUrl',
-          'ctaSecondaryButtonText',
-          'ctaSecondaryButtonUrl',
-        ],
-      });
-      return response.data.data;
+      const response = await apiClient.get<HomePage>('/globals/home-page');
+      return response.data;
     } catch {
       return fallbackHomePage;
     }
@@ -49,15 +35,8 @@ export const pageService = {
 
   about: async () => {
     try {
-      const response = await apiClient.get<StrapiSingleResponse<AboutPage>>('/about-page', {
-        fields: ['title', 'mission', 'vision', 'teamIntro', 'history'],
-        populate: {
-          values: true,
-          stats: true,
-          companyImages: { fields: ['url', 'alternativeText', 'width', 'height', 'formats'] },
-        },
-      });
-      return response.data.data;
+      const response = await apiClient.get<AboutPage>('/globals/about-page');
+      return response.data;
     } catch {
       return fallbackAboutPage;
     }
@@ -65,10 +44,8 @@ export const pageService = {
 
   contact: async () => {
     try {
-      const response = await apiClient.get<StrapiSingleResponse<ContactPage>>('/contact-page', {
-        fields: ['title', 'description', 'formTitle', 'formDescription'],
-      });
-      return response.data.data;
+      const response = await apiClient.get<ContactPage>('/globals/contact-page');
+      return response.data;
     } catch {
       return fallbackContactPage;
     }
@@ -76,25 +53,8 @@ export const pageService = {
 
   siteSettings: async () => {
     try {
-      const response = await apiClient.get<StrapiSingleResponse<SiteSettings>>('/site-setting', {
-        fields: [
-          'siteName',
-          'companyEmail',
-          'companyPhone',
-          'companyAddress',
-          'linkedin',
-          'twitter',
-          'github',
-          'instagram',
-          'facebook',
-          'defaultSEODescription',
-        ],
-        populate: {
-          logo: { fields: ['url', 'alternativeText', 'width', 'height'] },
-          favicon: { fields: ['url', 'alternativeText'] },
-        },
-      });
-      return response.data.data;
+      const response = await apiClient.get<SiteSettings>('/globals/site-settings');
+      return response.data;
     } catch {
       return fallbackSiteSettings;
     }
@@ -102,12 +62,8 @@ export const pageService = {
 
   navbar: async () => {
     try {
-      const response = await apiClient.get<StrapiSingleResponse<Navbar>>('/navbar', {
-        populate: {
-          logo: { fields: ['url', 'alternativeText', 'width', 'height'] },
-        },
-      });
-      return response.data.data;
+      const response = await apiClient.get<Navbar>('/globals/navbar');
+      return response.data;
     } catch {
       return {
         logo: { url: '/logo.svg', alternativeText: 'Digital Aksumite' },
@@ -118,10 +74,8 @@ export const pageService = {
 
   footer: async () => {
     try {
-      const response = await apiClient.get<StrapiSingleResponse<Footer>>('/footer', {
-        fields: ['description', 'copyrightText'],
-      });
-      return response.data.data;
+      const response = await apiClient.get<Footer>('/globals/footer');
+      return response.data;
     } catch {
       return {
         description: 'Building systems that define, protect and guide our society.',
@@ -133,10 +87,8 @@ export const pageService = {
 
   privacyPolicy: async () => {
     try {
-      const response = await apiClient.get<StrapiSingleResponse<PrivacyPolicy>>('/privacy-policy', {
-        fields: ['pageTitle', 'pageDescription', 'lastUpdated', 'sections'],
-      });
-      return response.data.data;
+      const response = await apiClient.get<PrivacyPolicy>('/globals/privacy-policy');
+      return response.data;
     } catch {
       return {
         pageTitle: 'Privacy Policy',
@@ -150,13 +102,8 @@ export const pageService = {
 
   termsOfService: async () => {
     try {
-      const response = await apiClient.get<StrapiSingleResponse<TermsOfService>>(
-        '/terms-of-service',
-        {
-          fields: ['pageTitle', 'pageDescription', 'lastUpdated', 'sections'],
-        }
-      );
-      return response.data.data;
+      const response = await apiClient.get<TermsOfService>('/globals/terms-of-service');
+      return response.data;
     } catch {
       return {
         pageTitle: 'Terms of Service',

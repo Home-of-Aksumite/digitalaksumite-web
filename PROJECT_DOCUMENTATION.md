@@ -30,10 +30,9 @@ digitalaksumite/
 │   │   └── utils/                 # Utilities
 │   └── public/                    # Static assets
 │
-└── digitalaksumite-cms/           # Strapi Backend
-    ├── src/api/                   # Content types
-    ├── config/                    # Strapi config
-    └── database/                  # SQLite (dev)
+└── digitalaksumite-cms/           # CMS Backend (Payload)
+    ├── src/                       # Collections, globals, endpoints, seed
+    └── public/                    # Uploaded media (if using local storage)
 ```
 
 ---
@@ -54,18 +53,18 @@ digitalaksumite/
 
 **File**: `src/services/fallback-data.ts`
 
-Every service returns fallback data if Strapi is down. This ensures the site always works.
+Every service returns fallback data if the CMS API is down. This ensures the site always works.
 
 ```typescript
 // Example: Home page has fallback
 export const fallbackHomePage: HomePage = {
   heroTitle: 'We Build Systems That Last',
-  heroSubtitle: 'We create systems...', // CHIT CODE: "We create..." means Strapi is down
+  heroSubtitle: 'We create systems...',
   // ...
 };
 ```
 
-**How to check if Strapi is down**: Look for subtitle "We create systems that define, protect and guide our society." - this is the fallback indicator.
+**How to check if the CMS is down**: Look for subtitle "We create systems that define, protect and guide our society." - this is the fallback indicator.
 
 #### 2. SEO & Social Sharing
 
@@ -73,7 +72,7 @@ export const fallbackHomePage: HomePage = {
 
 - **Meta tags**: Dynamic OpenGraph + Twitter Cards per page
 - **Structured Data**: Article schema (blog), JobPosting schema (careers)
-- **Sitemap**: Auto-generated from Strapi content
+- **Sitemap**: Auto-generated from CMS content
 - **Robots.txt**: Configured for crawlers
 
 #### 3. Security
@@ -159,11 +158,11 @@ async getBySlug(slug: string) {
 
 ---
 
-## 🗄️ Backend (Strapi 5)
+## 🗄️ Backend (Payload)
 
 ### Tech Stack
 
-- **Strapi**: 5.38.0
+- **Payload**: 3.x
 - **Database**: SQLite (dev) / PostgreSQL (prod recommended)
 - **Auth**: Users & Permissions plugin
 - **Upload**: Local provider (dev)
@@ -234,11 +233,11 @@ async getBySlug(slug: string) {
 
 ```bash
 # Required
-NEXT_PUBLIC_STRAPI_API_URL=http://localhost:1337
+NEXT_PUBLIC_CMS_API_URL=http://localhost:8000/api
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 
 # Optional - for production CMS
-NEXT_PUBLIC_STRAPI_API_TOKEN=your_token_here
+NEXT_PUBLIC_CMS_API_TOKEN=your_token_here
 
 # Security (optional)
 COOKIE_SECRET=32_character_random_string
@@ -252,20 +251,15 @@ NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX
 
 ```bash
 # Database
-DATABASE_CLIENT=sqlite
-DATABASE_FILENAME=.tmp/data.db
+DATABASE_URL=postgres://user:password@localhost:5432/digitalaksumite
 
-# JWT secrets (auto-generated on first run)
-JWT_SECRET=your_jwt_secret
-ADMIN_JWT_SECRET=your_admin_jwt_secret
-APP_KEYS=key1,key2,key3,key4
-
-# API Token Salt
-API_TOKEN_SALT=your_salt
+# Payload
+PAYLOAD_SECRET=your_payload_secret
+PAYLOAD_PUBLIC_SERVER_URL=http://localhost:8000
 
 # Server
 HOST=0.0.0.0
-PORT=1337
+PORT=8000
 ```
 
 ---
@@ -277,7 +271,7 @@ PORT=1337
 1. Push to GitHub
 2. Import to Vercel
 3. Set environment variables:
-   - `NEXT_PUBLIC_STRAPI_API_URL`: Your CMS URL
+   - `NEXT_PUBLIC_CMS_API_URL`: Your CMS URL
    - `NEXT_PUBLIC_SITE_URL`: Your domain
 4. Deploy
 
@@ -290,11 +284,11 @@ PORT=1337
 
 ### Backend (Self-Hosted or Cloud)
 
-**Option A: Strapi Cloud**
+**Option A: Managed Hosting**
 
-- Deploy directly from Strapi dashboard
+- Deploy directly from your hosting provider dashboard
 - Managed database and CDN
-- $9/month starter plan
+- Pricing depends on provider
 
 **Option B: Self-Hosted (VPS)**
 
@@ -319,7 +313,7 @@ COPY package*.json ./
 RUN npm ci --only=production
 COPY . .
 RUN npm run build
-EXPOSE 1337
+EXPOSE 8000
 CMD ["npm", "start"]
 ```
 
@@ -355,17 +349,17 @@ npm run validate     # Run all checks
 ```bash
 cd digitalaksumite-cms
 
-npm run develop      # Start dev server with hot reload (port 1337)
+npm run dev          # Start dev server (port 8000)
 npm run build        # Production build
 npm run start        # Start production server
-npm run seed:example # Seed with example data
+npm run seed         # Seed content (if needed)
 ```
 
 ### Full Stack (Both)
 
 ```bash
 # Terminal 1 - Backend
-cd digitalaksumite-cms && npm run develop
+cd digitalaksumite-cms && npm run dev
 
 # Terminal 2 - Frontend
 cd digitalaksumite-web && npm run dev
@@ -384,13 +378,13 @@ cd digitalaksumite-web && npm run dev
 
 **Images not loading**
 
-- Check `next.config.ts` - `images.remotePatterns` must include Strapi URL
-- Verify Strapi is running and accessible
+- Check `next.config.ts` - `images.remotePatterns` must include the CMS URL
+- Verify the CMS is running and accessible
 
 **Form submissions fail**
 
-- Check Strapi is running on correct port
-- Verify public permissions are set in Strapi Admin
+- Check the CMS is running on the correct port
+- Verify public access rules are configured in the CMS
 - Check browser console for CORS errors
 
 ### Backend Issues
@@ -398,17 +392,16 @@ cd digitalaksumite-web && npm run dev
 **Admin panel 403 errors**
 
 - Clear browser cookies/localStorage
-- Restart Strapi server
+- Restart CMS server
 
-**Database locked (SQLite)**
+**Database issues**
 
-- Stop Strapi, delete `.tmp/data.db`, restart
-- Or switch to PostgreSQL
+- Check database connectivity and migrations
 
 **Uploads not working**
 
 - Check `config/middlewares.ts` - body parsing enabled
-- Verify file size limits in both Strapi and frontend
+- Verify file size limits in both CMS and frontend
 
 ---
 
@@ -416,7 +409,7 @@ cd digitalaksumite-web && npm run dev
 
 ### Daily
 
-- Check form submissions in Strapi Admin
+- Check form submissions in CMS Admin
 - Monitor error logs (if Sentry enabled)
 
 ### Weekly
@@ -448,10 +441,10 @@ cd digitalaksumite-web && npm run dev
 3. Create service in `src/services/page.service.ts`
 4. Add fallback data in `src/services/fallback-data.ts`
 
-### Add a New Content Type (Strapi)
+### Add a New Content Type (CMS)
 
-1. Create in Strapi Admin or CLI
-2. Set public permissions
+1. Create a collection/global in the CMS admin/config
+2. Set public access rules as needed
 3. Add TypeScript interface in `src/types/content.ts`
 4. Create service in `src/services/`
 5. Add fallback data
@@ -460,7 +453,7 @@ cd digitalaksumite-web && npm run dev
 
 1. Update Zod schema in `src/utils/security.ts`
 2. Update form component
-3. Update Strapi content type if needed
+3. Update CMS schema if needed
 4. Update service layer
 
 ---
@@ -471,7 +464,7 @@ cd digitalaksumite-web && npm run dev
 
 2. **Static Generation**: All pages are SSG. Fast, SEO-friendly, no server needed.
 
-3. **No API Routes**: Forms submit directly to Strapi. Simpler, no Next.js API layer.
+3. **No API Routes**: Forms submit directly to the CMS. Simpler, no Next.js API layer.
 
 4. **Type Safety**: Full TypeScript with Zod validation. Runtime and compile-time safety.
 
@@ -483,9 +476,8 @@ cd digitalaksumite-web && npm run dev
 
 ## 📞 Support Contacts
 
-- **Technical Issues**: Check logs in Vercel Dashboard and Strapi logs
-- **Content Updates**: Use Strapi Admin at `/admin`
-- **Emergency**: Database backup in `digitalaksumite-cms/.tmp/data.db`
+- **Technical Issues**: Check logs in your hosting provider dashboard and CMS logs
+- **Content Updates**: Use CMS Admin at `/admin`
 
 ---
 

@@ -1,9 +1,9 @@
 /**
  * Core API Client
- * Base HTTP client for all API communications with Strapi CMS
+ * Base HTTP client for all API communications with the CMS
  */
 
-import { strapiApiUrl, strapiApiToken } from '@/config/env';
+import { cmsApiUrl, cmsApiToken } from '@/config/env';
 import type { ApiError, ApiResponse, QueryParams } from '@/types/api';
 
 class ApiErrorClass extends Error {
@@ -18,9 +18,9 @@ class ApiErrorClass extends Error {
 }
 
 /**
- * Build query string from parameters using Strapi bracket notation
+ * Build query string from parameters using bracket notation
  */
-function buildQueryString(params: QueryParams, prefix = ''): string {
+function buildQueryString(params: Record<string, unknown>, prefix = ''): string {
   const query = new URLSearchParams();
 
   Object.entries(params).forEach(([key, value]) => {
@@ -46,7 +46,7 @@ function buildQueryString(params: QueryParams, prefix = ''): string {
         }
       });
     } else if (typeof value === 'object') {
-      const nested = buildQueryString(value, fullKey);
+      const nested = buildQueryString(value as Record<string, unknown>, fullKey);
       if (nested) {
         nested
           .substring(1)
@@ -74,7 +74,7 @@ async function fetchApi<T>(
   params?: QueryParams
 ): Promise<ApiResponse<T>> {
   const queryString = params ? buildQueryString(params) : '';
-  const url = `${strapiApiUrl}/api${endpoint}${queryString}`;
+  const url = `${cmsApiUrl}/api${endpoint}${queryString}`;
 
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -83,8 +83,8 @@ async function fetchApi<T>(
   };
 
   // Add API token if available
-  if (strapiApiToken) {
-    headers.Authorization = `Bearer ${strapiApiToken}`;
+  if (cmsApiToken) {
+    headers.Authorization = `Bearer ${cmsApiToken}`;
   }
 
   try {

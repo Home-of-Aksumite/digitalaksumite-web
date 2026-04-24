@@ -35,6 +35,14 @@ const sectionIcons: Record<string, React.ComponentType<{ className?: string }>> 
   'Contact Us': Mail,
 };
 
+function formatDateOnly(value: string): string {
+  const parsed = new Date(value);
+  if (!Number.isNaN(parsed.getTime())) {
+    return parsed.toISOString().split('T')[0] as string;
+  }
+  return value.split('T')[0] as string;
+}
+
 export default async function PrivacyPolicyPage() {
   let privacyPolicy: PrivacyPolicyType | undefined = undefined;
   let siteSettings: SiteSettings | undefined = undefined;
@@ -65,10 +73,9 @@ export default async function PrivacyPolicyPage() {
   const description =
     privacyPolicy?.pageDescription ||
     'Our commitment to protecting your privacy and personal data.';
-  const lastUpdated =
-    privacyPolicy?.lastUpdated ||
-    privacyPolicy?.updatedAt?.split('T')[0] ||
-    new Date().toISOString().split('T')[0];
+  const lastUpdatedRaw =
+    privacyPolicy?.lastUpdated || privacyPolicy?.updatedAt || new Date().toISOString();
+  const lastUpdated = formatDateOnly(lastUpdatedRaw);
 
   const defaultSections = [
     {

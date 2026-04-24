@@ -1,10 +1,12 @@
 import type { NextConfig } from 'next';
 
+const cmsURL = process.env.NEXT_PUBLIC_CMS_API_URL || 'http://localhost:8000/api';
+const cmsOrigin = cmsURL.replace(/\/(api)(\/)?$/, '');
+
 const securityHeaders = [
   {
     key: 'Content-Security-Policy',
-    value:
-      "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data: https: http://localhost:1337; font-src 'self'; connect-src 'self' https: http://localhost:1337;",
+    value: `default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data: https: ${cmsOrigin}; font-src 'self'; connect-src 'self' https: ${cmsOrigin};`,
   },
   {
     key: 'X-Content-Type-Options',
@@ -37,13 +39,13 @@ const nextConfig: NextConfig = {
       {
         protocol: 'http',
         hostname: 'localhost',
-        port: '1337',
-        pathname: '/uploads/**',
+        port: '8000',
+        pathname: '/media/**',
       },
       {
         protocol: 'https',
         hostname: '**.digitalaksumite.com',
-        pathname: '/uploads/**',
+        pathname: '/media/**',
       },
     ],
     formats: ['image/webp', 'image/avif'],
@@ -65,7 +67,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/admin',
-        destination: process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337/admin',
+        destination: `${cmsOrigin}/admin`,
         permanent: false,
       },
     ];
@@ -74,7 +76,7 @@ const nextConfig: NextConfig = {
   // Environment variables available at build time
   env: {
     NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
-    NEXT_PUBLIC_STRAPI_API_URL: process.env.NEXT_PUBLIC_STRAPI_API_URL,
+    NEXT_PUBLIC_CMS_API_URL: process.env.NEXT_PUBLIC_CMS_API_URL,
   },
 
   // Compiler options
