@@ -36,7 +36,7 @@ export const trustedPartnerService = {
         depth: 2,
       });
 
-      const docs = response.data?.docs ?? [];
+      const docs = (response.data?.docs ?? []) as TrustedPartner[];
 
       return docs.map((doc: TrustedPartner): ClientLogo => {
         const docRecord = asRecord(doc);
