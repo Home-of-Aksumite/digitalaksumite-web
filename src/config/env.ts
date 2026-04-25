@@ -49,7 +49,7 @@ export const isProduction = env.NODE_ENV === 'production';
 export const isDevelopment = env.NODE_ENV === 'development';
 
 // CMS API URL with trailing slash handling
-export const cmsApiUrl = env.NEXT_PUBLIC_CMS_API_URL.replace(/\/$/, '');
+export const cmsApiUrl = env.NEXT_PUBLIC_CMS_API_URL.replace(/\/$/, '').replace(/\/(api)$/, '');
 
 export const cmsOrigin = cmsApiUrl.replace(/\/(api)(\/)?$/, '');
 
