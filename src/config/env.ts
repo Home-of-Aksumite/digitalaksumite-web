@@ -51,7 +51,22 @@ export const isProduction = env.NODE_ENV === 'production';
 export const isDevelopment = env.NODE_ENV === 'development';
 
 // CMS API URL with trailing slash handling
-export const cmsApiUrl = env.NEXT_PUBLIC_CMS_API_URL.replace(/\/$/, '').replace(/\/(api)$/, '');
+export const cmsApiUrl = (() => {
+  const fromEnv = env.NEXT_PUBLIC_CMS_API_URL;
+  const cleaned = fromEnv.replace(/\/$/, '').replace(/\/(api)$/, '');
+
+  if (
+    typeof window !== 'undefined' &&
+    window.location.protocol === 'https:' &&
+    window.location.hostname !== 'localhost' &&
+    window.location.hostname !== '127.0.0.1' &&
+    cleaned.startsWith('http://localhost')
+  ) {
+    return 'https://cms.digitalaksumite.com';
+  }
+
+  return cleaned;
+})();
 
 export const cmsOrigin = cmsApiUrl.replace(/\/(api)(\/)?$/, '');
 
