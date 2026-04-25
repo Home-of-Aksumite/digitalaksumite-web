@@ -1,6 +1,10 @@
 import type { NextConfig } from 'next';
 
-const cmsURL = process.env.NEXT_PUBLIC_CMS_API_URL || 'http://localhost:8000/api';
+const cmsURL =
+  process.env.NEXT_PUBLIC_CMS_API_URL ||
+  (process.env.NODE_ENV === 'production'
+    ? 'https://cms.digitalaksumite.com/api'
+    : 'http://localhost:8000/api');
 const cmsOrigin = cmsURL.replace(/\/(api)(\/)?$/, '');
 
 const securityHeaders = [

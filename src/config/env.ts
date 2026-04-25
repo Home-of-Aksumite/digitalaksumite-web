@@ -31,7 +31,9 @@ if (!parsedEnv.success) {
 
 const resolvedCmsApiUrl =
   parsedEnv.data.NEXT_PUBLIC_CMS_API_URL ||
-  (parsedEnv.data.NODE_ENV === 'production' ? undefined : 'http://localhost:8000');
+  (parsedEnv.data.NODE_ENV === 'production'
+    ? 'https://cms.digitalaksumite.com'
+    : 'http://localhost:8000');
 
 if (!resolvedCmsApiUrl) {
   throw new Error('Missing NEXT_PUBLIC_CMS_API_URL in production environment');
