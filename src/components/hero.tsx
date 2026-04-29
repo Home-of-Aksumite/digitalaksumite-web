@@ -66,10 +66,52 @@ export function Hero({ homePage, trustedPartners }: HeroProps) {
   const heroTitle = homePage?.heroTitle;
   // Split title by newlines or pipe character to support multi-line titles
   const titleLines = heroTitle ? heroTitle.split(/\n|\|/) : [];
-  // Only use defaults if no heroTitle provided at all
-  const line1 = titleLines[0]?.trim() || (heroTitle ? '' : 'We Build');
-  const line2 = titleLines[1]?.trim() || (heroTitle ? '' : 'Systems');
-  const line3 = titleLines[2]?.trim() || (heroTitle ? '' : 'That Last');
+
+  const defaultLine1 = 'We Build';
+  const defaultLine2 = 'Systems';
+  const defaultLine3 = 'That Lasts';
+
+  let line1 = defaultLine1;
+  let line2 = defaultLine2;
+  let line3 = defaultLine3;
+
+  if (heroTitle) {
+    const trimmedLines = titleLines.map((l) => l.trim()).filter(Boolean);
+
+    if (trimmedLines.length >= 3) {
+      line1 = trimmedLines[0] ?? defaultLine1;
+      line2 = trimmedLines[1] ?? defaultLine2;
+      line3 = trimmedLines[2] ?? defaultLine3;
+    } else if (trimmedLines.length === 2) {
+      line1 = trimmedLines[0] ?? defaultLine1;
+      line2 = trimmedLines[1] ?? defaultLine2;
+      line3 = defaultLine3;
+    } else if (trimmedLines.length === 1) {
+      const words = trimmedLines[0]!.split(/\s+/).filter(Boolean);
+
+      if (words.length >= 5) {
+        line1 = words.slice(0, 2).join(' ');
+        line2 = words.slice(2, 4).join(' ');
+        line3 = words.slice(4).join(' ');
+      } else if (words.length === 4) {
+        line1 = words.slice(0, 2).join(' ');
+        line2 = words.slice(2, 3).join(' ');
+        line3 = words.slice(3).join(' ');
+      } else if (words.length === 3) {
+        line1 = words[0] ?? defaultLine1;
+        line2 = words[1] ?? defaultLine2;
+        line3 = words[2] ?? defaultLine3;
+      } else if (words.length === 2) {
+        line1 = words.join(' ');
+        line2 = defaultLine2;
+        line3 = defaultLine3;
+      } else {
+        line1 = trimmedLines[0] ?? defaultLine1;
+        line2 = defaultLine2;
+        line3 = defaultLine3;
+      }
+    }
+  }
 
   const subtitle =
     homePage?.heroSubtitle || 'We create systems that define, protect and guide our society.';
@@ -103,19 +145,19 @@ export function Hero({ homePage, trustedPartners }: HeroProps) {
               {/* Title - 3 lines: editable from the CMS via heroTitle */}
               <motion.h1 className="w-full" variants={containerVariants}>
                 <motion.span
-                  className="block text-6xl leading-[1.06] font-bold tracking-tight text-white md:text-7xl lg:text-7xl lg:whitespace-nowrap xl:text-8xl 2xl:text-9xl"
+                  className="block text-6xl leading-[1.06] font-bold tracking-tight whitespace-nowrap text-white md:text-7xl lg:text-7xl xl:text-8xl 2xl:text-9xl"
                   variants={titleWordVariants}
                 >
                   {line1}
                 </motion.span>
                 <motion.span
-                  className="mt-2 block text-6xl leading-[1.06] font-bold tracking-tight text-white md:text-7xl lg:text-7xl lg:whitespace-nowrap xl:text-8xl 2xl:text-9xl"
+                  className="mt-2 block text-6xl leading-[1.06] font-bold tracking-tight whitespace-nowrap text-white md:text-7xl lg:text-7xl xl:text-8xl 2xl:text-9xl"
                   variants={titleWordVariants}
                 >
                   {line2}
                 </motion.span>
                 <motion.span
-                  className="mt-2 block text-6xl leading-[1.06] font-bold tracking-tight text-white md:text-7xl lg:text-7xl lg:whitespace-nowrap xl:text-8xl 2xl:text-9xl"
+                  className="mt-2 block text-6xl leading-[1.06] font-bold tracking-tight whitespace-nowrap text-white md:text-7xl lg:text-7xl xl:text-8xl 2xl:text-9xl"
                   variants={titleWordVariants}
                 >
                   {line3}
