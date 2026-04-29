@@ -65,7 +65,7 @@ export function Hero({ homePage, trustedPartners }: HeroProps) {
   // Use CMS data if available, otherwise fallback to defaults
   const heroTitle = homePage?.heroTitle;
   // Split title by newlines or pipe character to support multi-line titles
-  const titleLines = heroTitle ? heroTitle.split(/\n|\|/) : [];
+  const titleLines = heroTitle ? heroTitle.split(/[\r\n]+|[|｜¦┃│]/) : [];
 
   const defaultLine1 = 'We Build';
   const defaultLine2 = 'Systems';
