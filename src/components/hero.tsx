@@ -101,21 +101,21 @@ export function Hero({ homePage, trustedPartners }: HeroProps) {
               animate="visible"
             >
               {/* Title - 3 lines: editable from the CMS via heroTitle */}
-              <motion.h1 className="max-w-5xl" variants={containerVariants}>
+              <motion.h1 className="w-full" variants={containerVariants}>
                 <motion.span
-                  className="block text-6xl leading-[1.06] font-bold tracking-tight text-white md:text-7xl lg:text-7xl xl:text-8xl 2xl:text-9xl"
+                  className="block text-6xl leading-[1.06] font-bold tracking-tight text-white md:text-7xl lg:text-7xl lg:whitespace-nowrap xl:text-8xl 2xl:text-9xl"
                   variants={titleWordVariants}
                 >
                   {line1}
                 </motion.span>
                 <motion.span
-                  className="mt-2 block text-6xl leading-[1.06] font-bold tracking-tight text-white md:text-7xl lg:text-7xl xl:text-8xl 2xl:text-9xl"
+                  className="mt-2 block text-6xl leading-[1.06] font-bold tracking-tight text-white md:text-7xl lg:text-7xl lg:whitespace-nowrap xl:text-8xl 2xl:text-9xl"
                   variants={titleWordVariants}
                 >
                   {line2}
                 </motion.span>
                 <motion.span
-                  className="mt-2 block text-6xl leading-[1.06] font-bold tracking-tight text-white md:text-7xl lg:text-7xl xl:text-8xl 2xl:text-9xl"
+                  className="mt-2 block text-6xl leading-[1.06] font-bold tracking-tight text-white md:text-7xl lg:text-7xl lg:whitespace-nowrap xl:text-8xl 2xl:text-9xl"
                   variants={titleWordVariants}
                 >
                   {line3}
