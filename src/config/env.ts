@@ -20,6 +20,9 @@ const envSchema = z.object({
 
   // Analytics (optional)
   NEXT_PUBLIC_GA_ID: z.string().optional(),
+
+  // SEO / Verification (optional)
+  NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION: z.string().optional(),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);

@@ -211,7 +211,7 @@ export const fallbackBlogPosts: BlogPost[] = [
 
 // Fallback HomePage (CHIT CODE: "We create..." = CMS down)
 export const fallbackHomePage: HomePage = {
-  heroTitle: 'We Build Systems That Last',
+  heroTitle: 'We Build | Systems | That Last',
   heroSubtitle: 'We create systems that define, protect and guide our society.',
   heroPrimaryButtonText: 'Contact Us',
   heroPrimaryButtonUrl: '/#contact',

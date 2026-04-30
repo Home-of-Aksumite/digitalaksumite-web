@@ -70,7 +70,7 @@ export default async function TermsOfServicePage() {
   }
 
   const contactEmail =
-    siteSettings?.companyEmail || fallbackSiteSettings.companyEmail || 'legal@digitalaksumite.com';
+    siteSettings?.companyEmail || fallbackSiteSettings.companyEmail || 'info@digitalaksumite.com';
 
   const title = termsOfService?.pageTitle || 'Terms of Service';
   const description =
@@ -139,7 +139,7 @@ export default async function TermsOfServicePage() {
       id: 10,
       title: '10. Contact Information',
       content:
-        'For questions about these terms, please contact us at <a href="mailto:legal@digitalaksumite.com" class="text-[#C9A227] hover:underline">legal@digitalaksumite.com</a>.',
+        'For questions about these terms, please contact us at <a href="mailto:info@digitalaksumite.com" class="text-[#C9A227] hover:underline">info@digitalaksumite.com</a>.',
     },
   ];
 

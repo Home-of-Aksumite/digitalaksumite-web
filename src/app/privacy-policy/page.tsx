@@ -65,9 +65,7 @@ export default async function PrivacyPolicyPage() {
   }
 
   const contactEmail =
-    siteSettings?.companyEmail ||
-    fallbackSiteSettings.companyEmail ||
-    'privacy@digitalaksumite.com';
+    siteSettings?.companyEmail || fallbackSiteSettings.companyEmail || 'info@digitalaksumite.com';
 
   const title = privacyPolicy?.pageTitle || 'Privacy Policy';
   const description =
@@ -112,7 +110,7 @@ export default async function PrivacyPolicyPage() {
       id: 6,
       title: '6. Contact Us',
       content:
-        'If you have questions about this privacy policy or our data practices, please contact us at <a href="mailto:privacy@digitalaksumite.com" class="text-[#C9A227] hover:underline">privacy@digitalaksumite.com</a>.',
+        'If you have questions about this privacy policy or our data practices, please contact us at <a href="mailto:info@digitalaksumite.com" class="text-[#C9A227] hover:underline">info@digitalaksumite.com</a>.',
     },
   ];
 

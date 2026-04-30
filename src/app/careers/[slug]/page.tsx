@@ -83,7 +83,7 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
   }
 
   const descriptionText = job.description ? extractTextFromBlocks(job.description) : '';
-  const companyEmail = siteSettings?.companyEmail || 'careers@digitalaksumite.com';
+  const companyEmail = 'careers@digitalaksumite.com';
   const jobUrl = `${siteUrl}/careers/${slug}`;
 
   const jobDatePosted = job.publishedDate || job.createdAt;

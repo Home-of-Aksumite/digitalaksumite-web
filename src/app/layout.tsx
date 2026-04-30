@@ -5,7 +5,7 @@ import { Navbar } from '@/components/navbar';
 import { Footer } from '@/components/footer';
 import { OrganizationSchema } from '@/components/organization-schema';
 import { pageService } from '@/services/page.service';
-import { siteUrl } from '@/config/env';
+import { env, siteUrl } from '@/config/env';
 import 'react-phone-number-input/style.css';
 import './globals.css';
 
@@ -152,6 +152,9 @@ export const metadata: Metadata = {
     images: ['/og-image.png'],
     creator: '@digitalaksumite',
   },
+  verification: env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+    ? { google: env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }
+    : undefined,
   category: 'technology',
 };
 

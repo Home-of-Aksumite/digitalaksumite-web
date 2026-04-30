@@ -48,10 +48,7 @@ export default async function CareersPage() {
     }
   }
 
-  const companyEmail =
-    siteSettings?.companyEmail ||
-    fallbackSiteSettings.companyEmail ||
-    'careers@digitalaksumite.com';
+  const companyEmail = 'careers@digitalaksumite.com';
 
   // Separate internships from regular positions
   const regularJobs = jobOpenings.filter((job) => !job.isInternship);

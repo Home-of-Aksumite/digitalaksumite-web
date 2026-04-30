@@ -76,8 +76,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'monthly' as const,
       priority: 0.6,
     }));
-  } catch {
+  } catch (error) {
     // If blog service fails, continue without blog posts
+    console.log('Sitemap: blog posts skipped due to CMS error');
   }
 
   // Dynamic job openings
@@ -90,9 +91,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'weekly' as const,
       priority: 0.7,
     }));
-  } catch {
+  } catch (error) {
     // If job service fails, continue without job openings
+    console.log('Sitemap: job openings skipped due to CMS error');
   }
 
-  return [...staticRoutes, ...blogPosts, ...jobOpenings];
+  // Always return at minimum the static routes so sitemap never fails completely
+  const allRoutes = [...staticRoutes, ...blogPosts, ...jobOpenings];
+  console.log(`Sitemap generated with ${allRoutes.length} routes`);
+  return allRoutes;
 }
