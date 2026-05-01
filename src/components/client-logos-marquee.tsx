@@ -33,7 +33,7 @@ export function ClientLogosMarquee({ logos: initialLogos }: ClientLogosMarqueePr
   }, [initialLogos]);
 
   // Create seamless infinite scroll - duplicate enough times
-  const duplicatedLogos = [...logos, ...logos, ...logos, ...logos, ...logos, ...logos];
+  const duplicatedLogos = [...logos, ...logos];
 
   if (loading) {
     return (
@@ -81,7 +81,8 @@ export function ClientLogosMarquee({ logos: initialLogos }: ClientLogosMarqueePr
           ref={containerRef}
           className="flex items-center gap-2 py-5"
           style={{
-            animation: 'marquee-scroll 20s linear infinite',
+            animation: 'marquee-scroll var(--marquee-duration, 20s) linear infinite',
+            willChange: 'transform',
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.animationPlayState = 'paused';
@@ -94,7 +95,13 @@ export function ClientLogosMarquee({ logos: initialLogos }: ClientLogosMarqueePr
           <style>{`
             @keyframes marquee-scroll {
               0% { transform: translateX(0); }
-              100% { transform: translateX(-16.666%); }
+              100% { transform: translateX(-50%); }
+            }
+
+            @media (max-width: 640px) {
+              :root {
+                --marquee-duration: 12s;
+              }
             }
           `}</style>
 
