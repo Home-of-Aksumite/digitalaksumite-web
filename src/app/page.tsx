@@ -13,8 +13,8 @@ import type { ApiProject } from '@/components/projects-section';
 import type { ApiTestimonial } from '@/components/testimonials-section';
 import type { ApiBlogPost } from '@/components/blog-section';
 
-// ISR caching: revalidate every 60 seconds (1 minute delay acceptable per user)
-export const revalidate = 60;
+// ISR caching: revalidate every 10 seconds for near real-time content updates
+export const revalidate = 10;
 
 export default async function Home() {
   // Fetch all home data in a single optimized request
