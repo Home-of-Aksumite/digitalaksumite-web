@@ -133,94 +133,88 @@ export function Hero({ homePage, trustedPartners }: HeroProps) {
 
       {/* Content */}
       <Container className="relative z-10">
-        <div className="flex min-h-screen items-start pt-24 md:items-center md:pt-20 lg:min-h-[130vh] lg:items-start lg:pt-20">
-          <div className="grid w-full grid-cols-1 items-start gap-6 lg:grid-cols-2 lg:gap-8">
-            {/* Left side - Text content */}
-            <motion.div
-              className="flex flex-col items-center pt-0 text-center lg:items-start lg:pt-8 lg:text-left"
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-            >
-              {/* Title - 3 lines: editable from the CMS via heroTitle */}
-              <motion.h1 className="w-full" variants={containerVariants}>
-                <motion.span
-                  className="block text-5xl leading-[1.06] font-bold tracking-tight whitespace-nowrap text-white sm:text-6xl md:text-7xl lg:text-7xl xl:text-8xl 2xl:text-9xl"
-                  variants={titleWordVariants}
-                >
-                  {line1}
-                </motion.span>
-                <motion.span
-                  className="mt-2 block text-5xl leading-[1.06] font-bold tracking-tight whitespace-nowrap text-white sm:text-6xl md:text-7xl lg:text-7xl xl:text-8xl 2xl:text-9xl"
-                  variants={titleWordVariants}
-                >
-                  {line2}
-                </motion.span>
-                <motion.span
-                  className="mt-2 block text-5xl leading-[1.06] font-bold tracking-tight whitespace-nowrap text-white sm:text-6xl md:text-7xl lg:text-7xl xl:text-8xl 2xl:text-9xl"
-                  variants={titleWordVariants}
-                >
-                  {line3}
-                </motion.span>
-              </motion.h1>
-
-              {/* Subtitle - stepped back to let title dominate */}
-              <motion.p
-                className="mt-3 max-w-xl text-base leading-relaxed text-[#E5E7EB]/60 md:text-lg lg:text-xl"
-                variants={itemVariants}
-              >
-                {subtitle}
-              </motion.p>
-
-              {/* CTA Buttons */}
+        <div className="flex min-h-[100svh] flex-col pt-16 md:pt-12 lg:pt-16">
+          <div className="mt-3 flex flex-1 items-start md:mt-0 md:items-center">
+            <div className="grid w-full grid-cols-1 items-start gap-3 lg:grid-cols-2 lg:gap-5">
+              {/* Left side - Text content */}
               <motion.div
-                className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center md:mt-12 lg:mt-8"
-                variants={itemVariants}
+                className="flex flex-col items-center pt-0 text-center lg:items-start lg:pt-1 lg:text-left"
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
               >
-                <PremiumButton
-                  href={ctaButtonUrl}
-                  variant="primary"
-                  className="min-w-[160px] text-base"
-                >
-                  {ctaButtonText}
-                </PremiumButton>
+                {/* Title - 3 lines: editable from the CMS via heroTitle */}
+                <motion.h1 className="w-full" variants={containerVariants}>
+                  <motion.span
+                    className="block text-[4rem] leading-[1.01] font-bold tracking-tight text-white sm:text-[4.5rem] sm:leading-[1.05] sm:whitespace-nowrap md:text-[5.5rem] lg:text-[5.75rem] xl:text-[6.25rem] 2xl:text-[6.75rem]"
+                    variants={titleWordVariants}
+                  >
+                    {line1}
+                  </motion.span>
+                  <motion.span
+                    className="mt-1.5 block text-[4rem] leading-[1.01] font-bold tracking-tight text-white sm:text-[4.5rem] sm:leading-[1.05] sm:whitespace-nowrap md:text-[5.5rem] lg:text-[5.75rem] xl:text-[6.25rem] 2xl:text-[6.75rem]"
+                    variants={titleWordVariants}
+                  >
+                    {line2}
+                  </motion.span>
+                  <motion.span
+                    className="mt-1.5 block text-[4rem] leading-[1.01] font-bold tracking-tight text-white sm:text-[4.5rem] sm:leading-[1.05] sm:whitespace-nowrap md:text-[5.5rem] lg:text-[5.75rem] xl:text-[6.25rem] 2xl:text-[6.75rem]"
+                    variants={titleWordVariants}
+                  >
+                    {line3}
+                  </motion.span>
+                </motion.h1>
 
-                <PremiumButton
-                  href={secondaryButtonUrl}
-                  variant="secondary"
-                  className="min-w-[160px] text-base"
+                {/* Subtitle - stepped back to let title dominate */}
+                <motion.p
+                  className="mt-2 max-w-xl text-sm leading-relaxed text-[#E5E7EB]/65 sm:mt-3 sm:text-base md:text-lg lg:text-xl"
+                  variants={itemVariants}
                 >
-                  {secondaryButtonText}
-                </PremiumButton>
+                  {subtitle}
+                </motion.p>
+
+                {/* CTA Buttons */}
+                <motion.div
+                  className="mt-4 flex w-full flex-col gap-3 sm:mt-5 sm:w-auto sm:flex-row sm:items-center md:mt-7 lg:mt-6"
+                  variants={itemVariants}
+                >
+                  <PremiumButton
+                    href={ctaButtonUrl}
+                    variant="primary"
+                    className="min-w-[160px] text-base md:px-10 md:py-5 md:text-lg"
+                  >
+                    {ctaButtonText}
+                  </PremiumButton>
+
+                  <PremiumButton
+                    href={secondaryButtonUrl}
+                    variant="secondary"
+                    className="min-w-[160px] text-base md:px-10 md:py-5 md:text-lg"
+                  >
+                    {secondaryButtonText}
+                  </PremiumButton>
+                </motion.div>
               </motion.div>
-            </motion.div>
 
-            {/* Right side - Obelisk visualization with scroll effects */}
-            <motion.div
-              className="hidden items-start justify-center lg:flex"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1 }}
-              style={{ y: obeliskY, opacity: obeliskOpacity, scale: obeliskScale }}
-            >
-              <HeroObeliskVisualization />
-            </motion.div>
+              {/* Right side - Obelisk visualization with scroll effects */}
+              <motion.div
+                className="hidden items-start justify-center lg:flex"
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 1 }}
+                style={{ y: obeliskY, opacity: obeliskOpacity, scale: obeliskScale }}
+              >
+                <HeroObeliskVisualization />
+              </motion.div>
+            </div>
+          </div>
+
+          {/* Client Logos Marquee - Trust Banner - always visible above the fold */}
+          <div className="relative z-20 mt-6 pb-4 md:mt-auto md:pb-5 lg:pb-6">
+            <ClientLogosMarquee logos={trustedPartners} />
           </div>
         </div>
-
-        {/* Client Logos Marquee - Trust Banner - positioned lower */}
-        <div className="relative z-20 mt-24 pb-14 md:mt-10 md:pb-10 lg:absolute lg:right-0 lg:bottom-4 lg:left-0 lg:mt-0 lg:pb-0">
-          <Container>
-            <p className="mb-4 text-center text-lg font-bold text-white/60">
-              Trusted by industry leaders
-            </p>
-            <ClientLogosMarquee logos={trustedPartners} />
-          </Container>
-        </div>
-
-        {/* Logo marquee placeholder area */}
-        <div className="absolute right-0 bottom-0 left-0 hidden h-24 lg:block" />
       </Container>
 
       {/* Bottom accent line */}
