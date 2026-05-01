@@ -20,17 +20,17 @@ import type {
   Testimonial,
 } from '@/types/content';
 
-// Fallback Services (3 items with equal descriptions)
+// Fallback Services (6 items)
 export const fallbackServices: Service[] = [
   {
     id: 1,
     documentId: '1',
-    title: 'Custom Software Development',
-    slug: 'custom-software-development',
+    title: 'Website Strategy & Planning',
+    slug: 'website-strategy-planning',
     shortDescription:
-      'Tailored applications engineered for your specific workflow. Scalable, secure, and built to evolve.',
+      "Don't build blind. We map out exactly what your website needs to do, who it's for, and how to beat your competitors — before you write a single line of code.",
     fullDescription:
-      'Tailored applications engineered for your specific workflow. Scalable, secure, and built to evolve.',
+      "Don't build blind. We map out exactly what your website needs to do, who it's for, and how to beat your competitors — before you write a single line of code.",
     icon: null,
     features: [],
     order: 1,
@@ -41,12 +41,12 @@ export const fallbackServices: Service[] = [
   {
     id: 2,
     documentId: '2',
-    title: 'Web Development & Design',
-    slug: 'web-development-design',
+    title: 'Websites That Bring Customers',
+    slug: 'websites-that-bring-customers',
     shortDescription:
-      'High-performance websites that convert visitors into believers. Fast, accessible, visually striking.',
+      'Fast, stunning websites designed to turn visitors into buyers. We do not just make it look good — we make it work for your business 24/7.',
     fullDescription:
-      'High-performance websites that convert visitors into believers. Fast, accessible, visually striking.',
+      'Fast, stunning websites designed to turn visitors into buyers. We do not just make it look good — we make it work for your business 24/7.',
     icon: null,
     features: [],
     order: 2,
@@ -57,15 +57,63 @@ export const fallbackServices: Service[] = [
   {
     id: 3,
     documentId: '3',
-    title: 'System Architecture & Strategy',
-    slug: 'system-architecture-strategy',
+    title: 'Custom Tools That Save You Hours',
+    slug: 'custom-tools-save-hours',
     shortDescription:
-      'Technical roadmaps for organizations ready to modernize. We design what others will build.',
+      'Stop doing the same work twice. We build software that automates your daily tasks — inventory, tracking, reports, whatever eats your time.',
     fullDescription:
-      'Technical roadmaps for organizations ready to modernize. We design what others will build.',
+      'Stop doing the same work twice. We build software that automates your daily tasks — inventory, tracking, reports, whatever eats your time.',
     icon: null,
     features: [],
     order: 3,
+    featured: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: 4,
+    documentId: '4',
+    title: 'Online Stores Built for Sales',
+    slug: 'online-stores-built-for-sales',
+    shortDescription:
+      'Secure, smooth checkout experiences that customers trust. From product pages to payment confirmation — everything optimized to sell more.',
+    fullDescription:
+      'Secure, smooth checkout experiences that customers trust. From product pages to payment confirmation — everything optimized to sell more.',
+    icon: null,
+    features: [],
+    order: 4,
+    featured: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: 5,
+    documentId: '5',
+    title: 'Make Your Site Faster & Findable',
+    slug: 'speed-growth-optimization',
+    shortDescription:
+      'Your site exists. Now let us make it faster and get more people to it. We fix slow pages, improve Google ranking, and get you more leads.',
+    fullDescription:
+      'Your site exists. Now let us make it faster and get more people to it. We fix slow pages, improve Google ranking, and get you more leads.',
+    icon: null,
+    features: [],
+    order: 5,
+    featured: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: 6,
+    documentId: '6',
+    title: 'Your Tech Team on Retainer',
+    slug: 'tech-team-on-retainer',
+    shortDescription:
+      'Software breaks. Software ages. Hackers do not sleep. We maintain, update, and protect your systems so you never worry about tech again.',
+    fullDescription:
+      'Software breaks. Software ages. Hackers do not sleep. We maintain, update, and protect your systems so you never worry about tech again.',
+    icon: null,
+    features: [],
+    order: 6,
     featured: true,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
