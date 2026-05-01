@@ -81,7 +81,7 @@ export function ClientLogosMarquee({ logos: initialLogos }: ClientLogosMarqueePr
           ref={containerRef}
           className="flex items-center gap-2 py-5"
           style={{
-            animation: 'marquee-scroll 22s linear infinite',
+            animation: 'marquee-scroll 20s linear infinite',
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.animationPlayState = 'paused';

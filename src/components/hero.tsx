@@ -181,7 +181,7 @@ export function Hero({ homePage, trustedPartners }: HeroProps) {
                   <PremiumButton
                     href={ctaButtonUrl}
                     variant="primary"
-                    className="min-w-[160px] text-base md:px-10 md:py-5 md:text-lg"
+                    className="min-w-[160px] text-sm md:px-8 md:py-4 md:text-base"
                   >
                     {ctaButtonText}
                   </PremiumButton>
@@ -189,7 +189,7 @@ export function Hero({ homePage, trustedPartners }: HeroProps) {
                   <PremiumButton
                     href={secondaryButtonUrl}
                     variant="secondary"
-                    className="min-w-[160px] text-base md:px-10 md:py-5 md:text-lg"
+                    className="min-w-[160px] text-sm md:px-8 md:py-4 md:text-base"
                   >
                     {secondaryButtonText}
                   </PremiumButton>
