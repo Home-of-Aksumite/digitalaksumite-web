@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     template: '%s | Digital Aksumite',
   },
   description:
-    'Digital Aksumite - We build systems that define, protect and guide our society! Premium software development company delivering world-class web applications, mobile apps, and cloud solutions globally.',
+    'Digital Aksumite designs customer acquisition systems that turn digital presence into measurable business inquiries. We combine websites, lead capture, and automation into one conversion-focused system.',
   keywords: [
     // Primary keywords
     'Digital Aksumite',
@@ -128,9 +128,9 @@ export const metadata: Metadata = {
     shortcut: '/favicon.png',
   },
   openGraph: {
-    title: 'Digital Aksumite | Premium Software Development Company',
+    title: 'Digital Aksumite | Customer Acquisition Systems',
     description:
-      'We build systems that define, protect and guide our society! Premium software development company delivering world-class web applications, mobile apps, and cloud solutions globally.',
+      'Digital Aksumite designs customer acquisition systems that transform digital presence into measurable business inquiries. We combine websites, lead capture, and automation into one conversion-focused system.',
     type: 'website',
     locale: 'en_US',
     siteName: 'Digital Aksumite',
@@ -146,9 +146,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Digital Aksumite | Premium Software Development Company',
+    title: 'Digital Aksumite | Customer Acquisition Systems',
     description:
-      'We build systems that define, protect and guide our society! Premium software development company delivering world-class solutions.',
+      'Digital Aksumite designs customer acquisition systems that turn digital presence into measurable business inquiries.',
     images: ['/og-image.png'],
     creator: '@digitalaksumite',
   },
