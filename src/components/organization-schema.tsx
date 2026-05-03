@@ -12,6 +12,13 @@ interface OrganizationSchemaProps {
 }
 
 export function OrganizationSchema({ siteUrl, siteSettings }: OrganizationSchemaProps) {
+  const websiteSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Digital Aksumite',
+    url: siteUrl,
+  };
+
   const organizationSchema = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
@@ -98,7 +105,7 @@ export function OrganizationSchema({ siteUrl, siteSettings }: OrganizationSchema
     <Script
       id="organization-schema"
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+      dangerouslySetInnerHTML={{ __html: JSON.stringify([websiteSchema, organizationSchema]) }}
     />
   );
 }
