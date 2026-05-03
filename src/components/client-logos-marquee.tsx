@@ -6,7 +6,7 @@
 
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, type CSSProperties } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
@@ -32,8 +32,41 @@ export function ClientLogosMarquee({ logos: initialLogos }: ClientLogosMarqueePr
     }
   }, [initialLogos]);
 
-  // Create seamless infinite scroll - duplicate enough times
+  // Duplicate exactly 2x; then animate by the exact pixel width of 1 copy.
+  // This avoids rounding issues from percentage-based translateX that can cause a visible reset.
   const duplicatedLogos = [...logos, ...logos];
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const updateShift = () => {
+      // With 2 copies, half the scrollWidth corresponds to one full set.
+      const total = el.scrollWidth;
+      const shift = total / 2;
+      if (Number.isFinite(shift) && shift > 0) {
+        el.style.setProperty('--marquee-shift', `${shift}px`);
+
+        const speedRaw = getComputedStyle(el).getPropertyValue('--marquee-speed');
+        const speed = Number.parseFloat(speedRaw);
+        const resolvedSpeed = Number.isFinite(speed) && speed > 0 ? speed : 70;
+        el.style.setProperty('--marquee-duration', `${shift / resolvedSpeed}s`);
+      }
+    };
+
+    updateShift();
+
+    const ro = new ResizeObserver(() => updateShift());
+    ro.observe(el);
+
+    // Recompute once images settle (common cause of a seam if widths change post-mount).
+    const t = window.setTimeout(updateShift, 250);
+
+    return () => {
+      window.clearTimeout(t);
+      ro.disconnect();
+    };
+  }, [logos.length]);
 
   if (loading) {
     return (
@@ -79,11 +112,15 @@ export function ClientLogosMarquee({ logos: initialLogos }: ClientLogosMarqueePr
         {/* Scrolling container */}
         <div
           ref={containerRef}
-          className="flex items-center gap-2 py-5"
-          style={{
-            animation: 'marquee-scroll var(--marquee-duration, 20s) linear infinite',
-            willChange: 'transform',
-          }}
+          className="da-marquee flex flex-nowrap items-center py-5"
+          style={
+            {
+              animation: 'marquee-scroll var(--marquee-duration, 20s) linear infinite',
+              willChange: 'transform',
+              // Luxury/calm default speed (px/sec). Duration is computed from content width.
+              '--marquee-speed': '70',
+            } as CSSProperties
+          }
           onMouseEnter={(e) => {
             e.currentTarget.style.animationPlayState = 'paused';
           }}
@@ -95,12 +132,12 @@ export function ClientLogosMarquee({ logos: initialLogos }: ClientLogosMarqueePr
           <style>{`
             @keyframes marquee-scroll {
               0% { transform: translateX(0); }
-              100% { transform: translateX(-50%); }
+              100% { transform: translateX(calc(-1 * var(--marquee-shift, 0px))); }
             }
 
             @media (max-width: 640px) {
-              :root {
-                --marquee-duration: 12s;
+              .da-marquee {
+                --marquee-speed: 90;
               }
             }
           `}</style>
